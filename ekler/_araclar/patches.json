@@ -1,0 +1,34 @@
+{
+ "210": [
+  [
+   "| Karşı tarafta bekleyen sadece en<br>iyi fiyat kademesindeki emirler |\n|  |  | ile eşleşirler. |",
+   "| Karşı tarafta bekleyen sadece en<br>iyi fiyat kademesindeki emirler<br>ile eşleşirler. |"
+  ]
+ ],
+ "206": [
+  [
+   "| 12 | OUCH 2 | X / X | X / X | X / X | X / X | X / X | X / X |",
+   "| 12 | OUCH 2 | X / X | X / X | X / X | X / X | X / X | X / X |\n\n*(Görsel not: Kaynakta mavi gölgeli hücreler, kullanıcıların kendi emirleri üzerindeki yetkisini gösteren köşegen hücrelerdir: satır 1–A, 3–B, 5–C, 7–D, 9–E, 11–F. Gölge bilgisi sayfa görüntüsünden okunmuştur.)*"
+  ]
+ ],
+ "191": [
+  [
+   "Ortaklık Unvanı\nAd, Soyad Ad, Soyad Unvan Unvan\nİmza İmza\n",
+   "Ortaklık Unvanı\n\n|  |  |\n|---|---|\n| Ad, Soyad | Ad, Soyad |\n| Unvan | Unvan |\n| İmza | İmza |\n\n"
+  ]
+ ],
+ "192": [
+  [
+   "Adı, Soyadı: Adı, Soyadı:\nUnvanı: Unvanı:\nİmzası: İmzası:\n",
+   "\n|  |  |\n|---|---|\n| Adı, Soyadı: | Adı, Soyadı: |\n| Unvanı: | Unvanı: |\n| İmzası: | İmzası: |\n\n"
+  ]
+ ],
+ "140": [
+  [
+   "block",
+   "| X U | 0 3 0 L/S/X",
+   "| 1 | DAYANAK | 5 | Dayanak varl",
+   ""
+  ]
+ ]
+}

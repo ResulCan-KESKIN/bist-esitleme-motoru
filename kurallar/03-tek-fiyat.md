@@ -1,0 +1,178 @@
+# Tek Fiyat Yöntemi
+Kaynak: Pay Piyasası Prosedürü 5.2.2 Tek Fiyat Yöntemi (s. 55–66: işleyiş esasları, açılış seansı, kapanış seansı, kapanış fiyatından işlemler); ilgili Ekler (içerikleri bu dosyada tekrarlanmaz, `../ekler/` klasöründe doğrulanmış aktarımlarına atıf yapılır): Ek-16 Açılış Fiyatı Örnekleri (`../ekler/ek16.md`, s. 196–200); Ek-18 madde 4 Dengeleyici Emirler (`../ekler/ek18.md`, s. 211); Ek-10 Seans Akış Çizelgeleri (`../ekler/ek10.md`, s. 156–175); Ek-11 Seans Bölümleri ve Açıklamaları (`../ekler/ek11.md`, s. 176–190); Ek-19 (`../ekler/ek19.md`). Sayfa numaraları PDF sayfa numarasıyla aynıdır (kayma yok).
+İlgili kod: eşleştirme motoru (tek fiyat / açılış-kapanış denge fiyatı hesabı ve dağıtım), emir defteri yeniden kurucu (emir toplama aşamasında derinlik yok)
+
+Madde numarası notu: Prosedürde alt başlıklar şöyle numaralıdır: 5.2.2.1 İşleyiş Esasları (s. 56), 5.2.2.2.1 Açılış Seansı İşleyiş Esasları (s. 59), 5.2.2.3.1 Kapanış Seansı İşleyiş Esasları (s. 63). "Açılış Fiyatının Belirlenmesi ve İşlem Algoritması", "Emirlerin İşlem Görme Sırası", "Kapanış Fiyatından İşlemler" başlıklarının numarası belgede görünmüyor; bu kısımlar başlık adı ve sayfa ile anılmıştır.
+
+## Kurallar
+
+### A. Genel işleyiş
+1. Tek fiyat yöntemi, bir sermaye piyasası aracı için Sisteme iletilen emirlerin Borsa tarafından belirlenen zaman dilimleri boyunca toplanarak, gün içinde bir kere veya birden fazla kez tekrar edilmek suretiyle, en çok işlem miktarını gerçekleştirecek şekilde ve öncelik kurallarına uygun olarak belirlenen tek bir işlem fiyatından eşleştirilmesi yöntemidir. [5.2.2]
+2. Emirler belirli bir zaman dilimi boyunca eşleştirme yapılmaksızın kabul edilir; bu süre sonunda en yüksek miktarda işlemi sağlayan fiyat seviyesi hesaplanır ve tüm işlemler bu fiyat seviyesinden gerçekleşir. [5.2.2.1]
+3. Süreç iki aşamadan oluşur: Emir Toplama ve Fiyat Belirleme. [5.2.2.1, s. 57]
+4. Emir toplama süresi boyunca işlem gerçekleşmez. [5.2.2.1 c]
+5. Emir toplama süresi boyunca Sisteme iletilen emirlerin iptal edilmesi ve değiştirilmesi mümkündür. [5.2.2.1 ç]
+6. Emir toplama sona erdikten sonra en çok işlem miktarının gerçekleşmesini sağlayan tek fiyat belirlenir ve ilan edilir; ilgili emir toplama süresine tekabül eden tüm işlemler bu fiyat üzerinden öncelik kurallarına göre gerçekleştirilir. [5.2.2.1 d]
+7. Emir girişlerinde miktar veya tutar olarak Yönetim Kurulunca getirilen azami sınırlara uyulur. [5.2.2.1 b]
+8. Tek fiyat yöntemi uygulanan araçlar: (a) sürekli işlem yöntemiyle işlem görebilmesi için piyasa yapıcısı atanması zorunlu olan araçlardan (varant ve sertifikalar hariç) piyasa yapıcısı bulunmayanlar (mevcut durumda yalnızca BYF'ler); (b) PÖİP ve YİP'te işlem gören paylar ile Borsa Genel Müdürlüğünce geçici veya sürekli olarak tek fiyat yöntemiyle işlem görmesi kararlaştırılan araçlar. [5.2.2.1, s. 56]
+9. YÜFP'de işlem gören BYF'ler; atanmış piyasa yapıcı üye olmaması, piyasa yapıcı faaliyetinin sona ermesi, yedek piyasa yapıcı olmaması veya yedek piyasa yapıcının faaliyete başlayamaması hâllerinde, duyurulan tarihten itibaren tek fiyat yöntemiyle işlem görmeye başlar; piyasa yapıcı üyenin faaliyete başlayabileceği belirlenirse duyurulan tarihten itibaren yeniden piyasa yapıcılı sürekli işlem yöntemiyle işlem görür. [5.2.2.1, s. 56]
+10. Süreli olarak açılan geçici işlem sıralarında (Tablo-9) tek fiyat yöntemi uygulanmaz. [5.2.1, s. 55]
+11. Tek fiyat işlem yönteminin uygulandığı araçlarda her seans, açılış ve kapanış seansları dâhil, günde 5 kez fiyat belirlenir ve işlemler bu fiyatlarla gerçekleştirilir. [5.2.2.1, s. 56]
+12. Seansın ilk emir toplama ve fiyat belirleme süreci açılış seansıdır; ikinci emir toplama ve fiyat belirleme süreci sürekli işlem bölümünün başlangıcı ile başlar. [5.2.2.1, s. 56]
+13. Tek fiyat süreçleri ve zamanları Tablo-10'dadır (aşağıda). [5.2.2.1, s. 56–57]
+14. Geçici olarak işleme kapalı olduğu için birinci tek fiyat sürecine (açılış seansı) katılamayan bir işlem sırası aynı gün içinde tekrar işleme açılırsa, açılışı itibarıyla ilgili saatte devrede olan tek fiyat sürecine dâhil edilir ve işlemlere devam edilir. [5.2.2.1, s. 57 ve s. 62]
+15. Aynı gün içinde tek fiyat belirleme süreçlerinde işlem görmeyerek kalan ve geçerliliği devam eden emirler bir sonraki tek fiyat sürecine aktarılır. [5.2.2.1, s. 57–58]
+16. Açılış fiyatı / tek fiyat belirlenemediği takdirde girilmiş olan limit fiyatlı emirler ve mevcut kurallar dâhilinde takip eden emir toplama sürecine aktarılır. [5.2.2.1, s. 59]
+17. Tüm gün boyunca işlem görmeyen emirler bir sonraki güne aktarılmaz, günün sonunda iptal edilir. [5.2.2.1, s. 59]
+
+**Tablo-10: Tek Fiyat İşlem Yöntemi Süreçleri ve Zamanları (tablodan)** [5.2.2.1, s. 56–57]
+
+| Tek Fiyat Süreci                                   | Tek Fiyat Bölümü | Emir Toplama       | Fiyat Belirleme ve İşlemler |
+| -------------------------------------------------- | ---------------- | ------------------ | --------------------------- |
+| 1. Tek Fiyat (Açılış Seansı)                       | 09:40 – 10:00    | 09:40 – 09:55 (+)* | 09:55 (+)**                 |
+| 2. Tek Fiyat                                       | 10:00 – 13:00    | 10:00 – 12:55      | 12:55 (+)**                 |
+| 3. Tek Fiyat (Gün Ortası)                          | 13:00 – 14:00    | 13:00 – 13:55      | 13:55 (+)**                 |
+| 4. Tek Fiyat                                       | 14:00 – 18:00    | 14:00 – 17:55      | 17:55 (+)**                 |
+| 5. Tek Fiyat (Kapanış Seansı)                      | 18:01 – 18:07    | 18:01 – 18:05      | 18:05 (+)**                 |
+| 6. Kapanış Fiyatından/Tek Fiyattan İşlemler Bölümü | 18:08 – 18:10    |                    |                             |
+
+- (+)*: Emir toplama aşamasını takip eden eşleştirme aşaması 30 saniye içinde herhangi bir anda başlayacak ve bu süreye kadar emir girişi devam edecektir.
+- (+)**: İşlemlerin tamamlanmasına bağlı olarak değişebilecek bir saati ifade eder.
+
+### B. Emir toplama aşaması
+18. Emir girişi emir toplama aşamasında yapılır; emir toplama aşaması seansın açılış, gün ortası (tek fiyat yöntemi ile işlem gören kıymetlerde), tek fiyat ve kapanış bölümlerinde söz konusudur. [5.2.2.1, s. 57]
+19. Emir toplama aşamasında emirler Sisteme iletilir ve fiyat-zaman önceliği kurallarına göre sıralanır; eşleştirme yapılmaz. [5.2.2.1, s. 57]
+20. Emir toplama aşamasında girilmiş emirlerin fiyatları iyileştirilebilir veya kötüleştirilebilir, miktarları azaltılabilir veya artırılabilir; fiyat değiştirildiğinde ve/veya miktar arttırıldığında emrin önceliği değişir. [5.2.2.1, s. 57]
+21. Emirler emir toplama aşamasında iptal edilebilir. [5.2.2.1, s. 57]
+22. Paylarda açılış seansının emir toplama aşamasının son 5 dakikalık bölümünde emirler iptal edilemez, emirlerin fiyatı kötüleştirilemez ve miktarı azaltılamaz. Emir toplamanın rastlantısal olarak kesildiği maksimum 30 saniyelik süre söz konusu beş dakikalık süreye ilave edilir. [5.2.2.1, s. 57]
+23. Açığa satış yapılmasına izin verilen işlem sıralarında açılış seansları haricinde açığa satış emri girilebilir. [5.2.2.1, s. 58]
+24. Emir toplama aşamasında girilebilecek emir türleri: Limit, Piyasa, Piyasadan Limite, Kalanı İptal Et ve Dengeleyici emirler. Yıldız Pazar ve Ana Pazar'da yer almayan paylarda açılış seansında piyasa ve piyasadan limite emir türleri ile emir girilemez. [5.2.2.1, s. 58]
+25. Seansın Açılış ve Kapanış bölümleri hariç olmak üzere emir toplama aşamasında özel işlem bildirimi gerçekleştirilebilir. [5.2.2.1, s. 58]
+26. Emir toplama süresi belli bir zaman aralığında rastlantısal bir anda kesilir; bu zaman aralığı 30 saniyedir. Emir toplamayı takip eden eşleştirme aşaması bu 30 saniye içinde herhangi bir anda başlayabilir ve eşleştirme başlayıncaya kadar emir girişi devam eder. [5.2.2.1, s. 58]
+27. Emir toplama aşamasında Sisteme seansın başladığına dair mesaj gönderilir. [5.2.2.1, s. 58]
+28. Emir toplama aşamasında Emir Derinliği, Fiyat Derinliği ve Gerçekleşen İşlemler ekranları kapalı; Emir Defteri, Enstrüman Bilgisi ve Piyasa Mesajları ekranları açıktır. Emir toplama aşaması bittiğinde tüm ekranlar açık hâle gelir. [5.2.2.1, s. 58–59]
+29. Emir toplama aşamasında üyeler/temsilciler kendi emir bilgilerini emir defteri ekranından, denge seviyesine ilişkin fiyat, miktar ve kalan miktar değerlerini fiyat bilgisi ekranından görür; bunlar haricinde fiyat ve emir derinliğine ilişkin bilgi gösterilmez. [5.2.2.1, s. 57]
+30. Açılış, kapanış ve sürekli işlem içinde tekil olarak tek fiyat yöntemiyle işlem gören araçlarda derinlik bilgileri gösterilmez; teorik eşleşme fiyatı, bu fiyattan gerçekleşme olasılığı olan işlem miktarı ve varsa kalan emir miktarı sürekli gösterilir. [5.2.2.1, s. 57]
+31. Açığa satışa izin verilen sıralarda denge (teorik eşleşme) fiyatı, miktarı ve denge fiyatından karşılanmayan emir miktarları yayımlanır; yatırım aracı bazında emir toplama süresince fiyat, miktar ve diğer bilgilerin yayını gerekli görülmesi hâlinde kısıtlanabilir. [5.2.2.1, s. 58 ve dipnot 36]
+
+### C. Fiyat belirleme aşaması
+32. Fiyat belirleme aşaması, emir toplama sonrasında Sisteme iletilmiş alım satım emirlerinin değerlendirilip hesaplamaların yapılarak işlem fiyatının belirlenmesi ve uygun emirlerin eşleştirilmesi sonucu işlemlerin gerçekleştirilmesiyle sonuçlanan aşamadır. [5.2.2.1, s. 58]
+33. Bu aşama için ayrılan maksimum süre 5 dakikadır. [5.2.2.1, s. 58]
+34. Fiyat belirleme aşamasında emir girilemez, emirler üzerinde değişiklik yapılamaz, emirler iptal edilemez ve özel işlem bildirimi yapılamaz. [5.2.2.1, s. 58]
+35. Eşleştirme, önceden tanımlanan eşleştirme zamanının başlangıcından ilk 30 saniye içinde rastlantısal olarak başlar. Devre kesicileri takip eden eşleştirme seansı rastlantısal olarak değil, belirlenen saatinde başlar. [5.2.2.1, s. 58]
+36. Eşleştirme sonrası işlem fiyatları ve kalan emir bilgileri yayınlanır; emir ve fiyat derinliği ekranında birer kademe olarak gösterilir. [5.2.2.1, s. 58]
+
+### D. Açılış fiyatı (denge fiyatı) algoritması
+Bu algoritma kapanış seansı dâhil tüm tek fiyat yöntemi uygulamalarında geçerlidir. [5.2.2.2.1, s. 60]
+
+37. Adım 1: En çok işlem miktarının gerçekleşmesini sağlayan fiyat açılış fiyatıdır. [5.2.2.2.1, s. 60]
+38. Adım 2: En fazla işlemi gerçekleştiren birden fazla fiyat seviyesi varsa, bu fiyat seviyelerinde arta kalan (işlem görmeyen) miktarın en az olmasını sağlayan fiyat seviyesi açılış fiyatıdır (minimum surplus). [5.2.2.2.1, s. 60]
+39. Adım 3: İlk iki koşulu sağlayan birden fazla fiyat varsa piyasanın yönüne (bekleyen emirlerin içerdiği miktar olarak alış veya satış tarafının ağırlığına) bakılır; piyasa alış ağırlıklı ise söz konusu iki fiyattan yüksek olan, satış ağırlıklı ise düşük olan açılış fiyatıdır (market pressure). [5.2.2.2.1, s. 60]
+40. Adım 4: Hâlâ tüm koşulları sağlayan birden fazla fiyat seviyesi varsa referans fiyata bakılır; referans fiyata en yakın fiyat açılış fiyatıdır. [5.2.2.2.1, s. 60]
+41. Adım 5: Referans fiyat yoksa muhtemel açılış fiyatlarından en yüksek ve en düşüğünün aritmetik ortalamasının en yakın fiyat adımına yuvarlanması ile ulaşılan fiyat denge fiyatıdır. [5.2.2.2.1, s. 60]
+42. Aday fiyat aralığı: İlgili sıradaki en yüksek fiyatlı limit emre bir fiyat adımı eklenerek ve en düşük fiyatlı limit emirden bir fiyat adımı çıkarılarak bulunan fiyatlar ile bunların arasındaki tüm geçerli fiyatlar hesaplamada kullanılır. Emir bulunmayan kademeler de hesaplamaya dâhildir ve açılış fiyatı bu kademelerden birinde oluşabilir. İki emirli fiyat seviyesi arasındaki tüm fiyat adımları, o adımlarda emir olmasa dahi, kümülatif tutarların ve açılış fiyatının hesaplanmasında dikkate alınır. [5.2.2.2.1 Adım 6, s. 60; Ek-16, s. 196]
+43. Adım 7: Aday aralığın uç fiyatları (madde 42) fiyat limitlerini aşıyorsa açılış fiyatının fiyat limitlerini geçmesine izin verilmez; açılış fiyatı taban ya da tavan fiyat olarak belirlenir. [5.2.2.2.1, s. 60]
+44. Hesaplamaya dâhil edilen emirler: limit fiyatlı emirler, piyasa emirleri (market orders), piyasadan limite emirler, kalanı iptal et emirleri (fill and kill), kısmi görünme koşullu (rezerv) emirler (gösterilen ve gizli miktarları ile) ve kotasyonlar. [5.2.2.2.1 Adım 8, s. 60]
+45. Hesaplamaya dâhil edilmeyen emirler: küsurat emirler, hepsi ya da hiçbiri (AON) emirleri, gerçekleşmezse iptal et (fill or kill) emirleri, dengeleyici emirler (imbalance orders), tetiklenmemiş emirler (untriggered stop ve stop limit orders). [5.2.2.2.1 Adım 9, s. 60; Ek-16, s. 196]
+46. Sırada fiyatları uyuşan emirler olmadığında ya da sadece piyasa emirleri bulunduğunda açılış fiyatı hesaplanmaz. [Ek-16, s. 196]
+47. Açılış Referans Fiyatı (ARF): Kapanış fiyatı, baz fiyat, son işlem fiyatı ve Borsa tarafından belirlenen referans fiyat arasından en son güncellenen fiyat ARF olarak seçilir. Borsa Yönetim Kurulu, önceden ilan etmek koşuluyla, ARF'nin farklı bir şekilde belirlenmesine karar verebilir. [5.2.2.2.1, s. 60–61]
+
+### E. Eşleştirme ve emirlerin işlem görme sırası
+48. Emirlerin işlem görme sırası: 1) Piyasa emirleri, 2) Piyasadan limite emirler, 3) Limit fiyatlı emirler, 4) Dengeleyici emirler. Piyasa emirleri ile piyasadan limite emirler arasında zaman önceliğine bakılır. [Emirlerin İşlem Görme Sırası, s. 61]
+49. Piyasa emirlerinin limit fiyatlı emirlere göre fiyat öncelikleri vardır; piyasa emirleri kendi aralarında zaman önceliğine göre değerlendirilir. [s. 61]
+50. Piyasa emirleri belirlenen denge fiyatı üzerinden eşleştikten sonra, varsa pasifte kalan piyasa emirleri limit fiyatlı emirlerle yine denge fiyatı üzerinden eşleşir. Piyasa emirleri eşleştikten sonra pasifte kalan limit fiyatlı emirler varsa bu limit fiyatlı emirler kendi aralarında eşleşir. [s. 61]
+51. Açılış fiyatından daha iyi fiyat seviyelerindeki limit fiyatlı emirler (alışta daha yüksek, satışta daha düşük fiyatlı) ve açılış fiyatı seviyesindeki limit fiyatlı emirler, önce fiyat sonra zaman önceliği dikkate alınarak açılış fiyatından eşleşerek işlem görür. [s. 61]
+52. Bir tarafta açılış fiyatı seviyesinde bekleyen limit fiyatlı emirler kalmasına rağmen karşı tarafta eşleşebilecek fiyat seviyesinde limit fiyatlı emir bulunmuyorsa, bu limit fiyatlı emirler karşı taraftaki dengeleyici emirlerle eşleşerek işlem görür. [s. 61]
+53. Dengeleyici emirler, açılış ve kapanış seansları dâhil tek fiyat yönteminin uygulandığı tüm seans bölümlerinde, fiyat belirleme sürecinde hesaba katılmayan ancak belirlenen eşleşme fiyatı seviyesinde karşılanmadan kalan emirlerle işlem yapmak üzere girilen emirlerdir. [s. 61]
+54. Dengeleyici emirler arasındaki öncelik sıralaması emrin Sisteme giriş zamanına göre belirlenir. [s. 61]
+55. Her iki tarafta da açılış fiyatı seviyesindeki limit fiyatlı emirler tükendikten sonra alış ve satış tarafındaki dengeleyici emirler birbirleriyle açılış fiyatından işleme dönüşür; herhangi bir eşleşme işlemine konu olmayan dengeleyici emirler iptal edilir. [s. 61]
+
+### F. Açılış seansı
+56. Açılış seansı, Borsaya iletilen emirlerin seans başlangıcında eşleştirilerek açılış fiyatının tespit edildiği zaman dilimidir. [5.2.2.2]
+57. Emir Toplama ve Fiyat Belirleme aşamaları açılış seansında da geçerlidir; emir değiştirme ve iptal için emir toplama aşamasındaki kural geçerlidir. [5.2.2.2.1, s. 59]
+58. Bir önceki işlem gününün kapanış fiyatı baz fiyat olarak belirlenir; fiyat marjları baz fiyat kullanılarak hesaplanır. Baz fiyat ve marjlar hem açılış seansında hem de bu süreci takip eden tek fiyat aşamasında geçerlidir. [5.2.2.2.1, s. 59; 5.2.2.1, s. 59]
+59. Paylara ilişkin açılış seansında gerçekleşen fiyat Günlük Bültende "Açılış Seansı Fiyatı" sütununda, gün içinde gerçekleşen ilk işlemin fiyatı "Açılış Fiyatı" sütununda ilan edilir; açılış seansında gerçekleşen işlem miktarı, hacmi ve sözleşme sayısı pay bazında ayrı yayımlanır. [s. 63]
+60. Pay, şirketle ilgili haber veya belirsizlik gibi nedenlerle açılış seansı öncesinde ya da açılış seansının emir toplama aşamasında durdurulabilir; yeterli zaman varsa tekrar işleme açılarak açılış seansına dâhil edilebilir. [s. 62]
+61. Sürekli işlem yöntemindeki bir pay seansın başında açılış seansına alınmadıysa sürekli işlem bölümünde tekil olarak açılış seansına konu olabilir; bu durumda açılış seansı kuralları aynen geçerlidir. [s. 62]
+62. Tek fiyat yöntemindeki bir pay geçici olarak işleme kapalı olduğu için açılış seansına alınmadıysa aynı gün içinde tekrar işleme açılırsa açılışı itibarıyla ilgili saatte devrede olan tek fiyat sürecine girer. [s. 62]
+63. Açılış seansında durdurulmuş bir işlem sırası kapanış seansı sürecinde yeniden işleme açılırsa kapanış seansı emir ve işlem esasları geçerlidir (açığa satış emri girilebilir; oluşan fiyat kapanış seansı fiyatı olarak tescil edilir). [s. 62]
+64. Pay geçici olarak işleme kapatıldığında (sürekli işlem veya tek fiyat) ve açılış seansının emir toplama sürecinde işlemleri durdurulmuş payda: emirler değiştirilebilir (miktar artırılamaz ancak azaltılabilir ve emrin önceliği korunur, fiyat kötüleştirilebilir) ve iptal edilebilir; bu işlevler geçici kapalılık hâli devam ettiği sürece kullanılabilir. [s. 62]
+65. Açılış seansının emir toplama sürecinde işlemleri durdurulan payda açılış seansı yapılmamasına karar verilirse bekleyen emirlerle açılış yapılarak doğrudan sürekli işlem bölümüne geçilebilir veya sırada bekleyen tüm emirler Borsa tarafından iptal edilebilir; bu durumda pay açılış seansı yapılmaksızın doğrudan sürekli işlem yönteminde işleme açılabilir. [s. 62–63]
+
+### G. Kapanış seansı
+66. Kapanış seansı, bu seansın başladığı ana kadar gerçekleşmemiş emirler ile bu bölümde girilen yeni emirlerin kapanış fiyatını belirlemeye yönelik olarak eşleştirildiği zaman dilimidir. Seans kapanış fiyatı, o seansta Borsa kaydına alınan en son fiyattır. [5.2.2.3]
+67. Kapanış seansı, normal seans sürecinden kalan tüm emirlerin aktarılması suretiyle, belirlenmiş zaman dilimi boyunca yeni emirlerin eşleştirme yapılmaksızın kabul edildiği ve sonunda tek fiyat (Kapanış Seansı Fiyatı) hesaplanarak tüm işlemlerin bu fiyattan gerçekleştirildiği özel bir seans uygulamasıdır. [5.2.2.3.1, s. 63]
+68. Pay Piyasası pazarlarında sürekli işlem ve tek fiyat yöntemiyle işlem görmekte olan E (Eski) ve F (BYF) özellik kodlu araçlarda kapanış seansı sadece seansın son bölümünde uygulanır. [5.2.2.3.1, s. 63]
+69. Varant, sertifika, temerrüt ve yeni pay alma hakkı işlem sıraları kapanış seansına dâhil değildir. BYF'ler 30/03/2020 tarihinden itibaren kapanış seansına dâhildir. [5.2.2.3.1, s. 63 ve dipnot 41]
+70. Emir Toplama ve Fiyat Belirleme aşamaları kapanış seansında da geçerlidir. Kapanış için belirlenen yeni fiyat marjlarının hesaplanması ve diğer teknik işlemler sonrasında kapanış seansı başlar. [5.2.2.3.1, s. 63]
+71. Kapanış seansı emir toplama aşamasında sürekli işlem ve tek fiyat yöntemiyle işlem gören E (Eski) özellik kodlu kıymetlerde bekleyen pasif emirlere ilaveten yeni alış ve satış emirleri Sisteme iletilir; bu aşama süresince emirler eşleştirilmez. [5.2.2.3.1, s. 63]
+72. Kapanış seansında girilen emirlerin fiyatları, aracın normal emir dosyasında gerçekleşen son işlem fiyatının ±%3'ünden daha fazla farklı olamaz. %3 marj uygulanarak bulunan üst fiyat en yakın aşağı fiyat adımına, alt fiyat en yakın yukarı fiyat adımına yuvarlanarak belirlenir. Serbest marjlı paylarda da son işlem fiyatına göre ±%3 fiyat marjı uygulanır. [5.2.2.3.1, s. 63–64]
+73. Kapanış seansında, o seans için hesaplanan baz fiyata göre belirlenmiş fiyat değişim sınırlarının dışında bir fiyattan emir girilmesine izin verilmez. [5.2.2.3.1, s. 64]
+74. Kapanış seansının yapıldığı seansın ne açılış seansı bölümünde ne de sürekli işlem bölümünde işlem gerçekleşmişse, ilgili seans için geçerli baz fiyata göre belirlenmiş fiyat marjı sınırları dâhilinde emir girilebilir. Bu durumdaki araç serbest marjlı ise kapanış seansında herhangi bir fiyat sınırı olmaksızın emir girilebilir. [5.2.2.3.1, s. 64]
+75. Kapanış seansına aktarılan emirler arasında, son işlem fiyatının ±%3'ü içinde belirlenen kapanış seansı üst fiyat sınırından yüksek fiyatlı alış emri veya alt fiyat sınırından düşük fiyatlı satış emri varsa, o seansın baz fiyatına göre hesaplanmış o gün için geçerli fiyat değişim sınırları uygulanır (son işlem fiyatına göre ±%3 marjla hesaplanan sınırlar kullanılmaz). [5.2.2.3.1, s. 64]
+76. Kapanış seansı emir toplama aşamasında iletilmiş emirler mevcut kurallar dâhilinde değiştirilebilir ve iptal edilebilir. Kapanış seansı için belirlenen marjın dışında kalan ve kapanış seansına aktarılmış emirler iptal edilebilir veya fiyatları kapanış seansı fiyat marjları içine çekilerek fiyat/miktar değişikliği yapılabilir. [5.2.2.3.1, s. 64]
+77. Açılış seansı aşamasında durdurulmuş bir araç kapanış seansında işleme açılırsa kapanış seansı emir giriş kuralları uygulanır (açığa satış emri girişi mümkündür). [5.2.2.3.1, s. 64]
+78. Kapanış fiyatı, açılış fiyatı belirleme sistematiği (Bölüm D) ile aynı yöntemle, kapanış seansında emir toplanmış işlem sıralarında belirlenir; belirlenen kapanış seansı fiyatı ilgili işlem sırasının kapanış fiyatıdır. [5.2.2.3.1, s. 64]
+79. Kapanış seansında fiyat belirlenemezse ilgili işlem sırasında seansın önceki bölümlerinde gerçekleşen son işlem fiyatı kapanış fiyatı olarak tescil edilir. [5.2.2.3.1, s. 64]
+80. Kapanış seansında ve seansın önceki bölümlerinde tescil edilmiş işlem olmayıp sadece açılışta işlem olmuşsa Borsa Bülteninde kapanış fiyatı ve tüm fiyat alanlarında açılış fiyatı bilgisi yer alır. Açılış fiyatı da yoksa Bültendeki tüm fiyat alanları sıfır olarak belirtilir. [5.2.2.3.1, s. 64]
+81. Kapanış seansında gerçekleşen işlemler, açılış seansı ve sürekli işlem aşamasındaki işlemlerle birlikte günlük ağırlıklı ortalama fiyat hesabında dikkate alınır. [5.2.2.3.1, s. 64]
+82. Kapanış fiyatı belirleme aşamasının sonunda Sistem kapanış fiyatından işlemler aşamasına hazır hâle gelir; kapanış seansı öncesinde ve kapanış seansında girilmiş ancak işlem görmemiş tüm emirler, kapanış fiyatından işlemler aşaması marjı dışında olsalar dahi bu aşamaya aktarılır. [5.2.2.3.1, s. 64]
+83. Paylarda kapanış seansında gerçekleşen fiyatlar Günlük Bültende "Kapanış Seansı Fiyatı" sütununda; kapanış seansında işlem olmaması durumunda gün içinde gerçekleşen son işlemin fiyatı "Kapanış Fiyatı" sütununda ilan edilir; kapanış seansında gerçekleşen işlem miktarı, hacmi ve sözleşme sayısı pay bazında ayrı yayımlanır. [s. 65]
+84. Yarım iş günlerinde seansın son bölümünde kapanış seansı ve kapanış/son işlem fiyatından ve tek fiyattan işlemler aşamaları aynı sürelerle uygulanır. [s. 66]
+
+### H. Kapanış fiyatından (tek fiyattan) işlemler
+85. Kapanış fiyatından işlemler aşaması 2 dakika sürer. [Kapanış Fiyatından İşlemler, s. 65; Tablo-10: 18:08 – 18:10]
+86. Bu aşamada, kapanış seansında belirlenmiş fiyat veya kapanış seansında gerçekleşen işlem olmaması hâlinde son işlem fiyatı ile sınırlı olmak üzere Sisteme yeni emirler girilebilir. Bu emirler kapanış seansında işlem görmediği için bu aşamaya aktarılmış kapanış seansı/son işlem fiyatından bekleyen pasif emirlerle veya bu aşamada girilen emirlerle öncelik kurallarına göre karşılaşarak işleme dönüşür. [s. 65]
+87. Bu aşamada sadece o ana kadar işlem görmüş kıymetlere emir girilebilir. [s. 65]
+88. Yeni alış ve satış emirleri sadece belirlenmiş kapanış/son işlem fiyatından olabilir; aynı fiyattaki bir pasif emirle karşılaşması hâlinde öncelik sırasına göre işleme dönüşür, işlem görmemesi hâlinde öncelik kuralları çerçevesinde pasif emir olarak bekler. [s. 65]
+89. Bu aşamada girilen emirlerin fiyatları değiştirilemez; miktarları artırılıp azaltılabilir veya emirler iptal edilebilir. [s. 65]
+90. Bu aşamaya aktarılmış emirlerden kapanış seansı/son işlem fiyatına eşit olanların fiyatları değiştirilemez ancak miktarları azaltılıp arttırılabilir veya iptal edilebilir. [s. 65]
+91. Bu aşamaya aktarılmış emirlerden kapanış seansı/son işlem fiyatından farklı fiyatta bekleyenlerin miktarları azaltılabilir fakat arttırılamaz; bu emirler iptal edilebilir veya fiyatları sadece kapanış seansı/son işlem fiyatına değiştirilebilir. [s. 65]
+92. Bu aşamada limit fiyatlı emirler (KİE ve açığa satış) girilebilir ve özel işlem bildirimi yapılabilir; emir fiyatı son işlem fiyatı olmak zorundadır. [s. 65]
+93. Seansın hiçbir aşamasında işlem gerçekleşmemiş kıymetlerde bu aşamada emir girilemez ve bekleyen emirler üzerinde değişiklik yapılamaz. [s. 65]
+94. Bu aşamada gerçekleşen işlemler günlük AOF hesabında dikkate alınır. Bekleyen emir ve fiyat derinliği bilgisi yayımlanmaya devam eder. [s. 65]
+
+### I. Seans akışı ve seans bölümü kuralları (Ek-10, Ek-11, Ek-18)
+95–97. Tek fiyat akışları (5 kez ve 10 kez tek fiyat, tam gün ve yarım gün), açılışın son 5 dakikasında emir iptali/azaltma/kötüleştirme yapılamayan sıralar (09:50:00 başlayan P_ACS_EMR_TP_EIY ve P_ACS_EMR_TP2_PY_EIY durumları) ve bu durumların emir türü/izin açıklamaları: bkz. `../ekler/ek10.md` (s. 156–161, 164–168) ve `../ekler/ek11.md` (P_ACILIS_EMIR_TPL, P_ACS_EMR_*, P_TEKFIYAT_EMIR_TPL, P_KAPANIS_EMIR_TPL, P_ESLESTIRME_TEKFIYAT bölümleri). Bu dosyada tekrarlanmaz.
+98. Açılış emir toplama seans durumunda girilebilen emirler, izinler ve yayımlanan bilgiler: bkz. `../ekler/ek11.md` (P_ACILIS_EMIR_TPL bölümü).
+99. Dengeleyici (Imbalance/IMB) emir tanımı ve örneği: bkz. `../ekler/ek18.md` madde 4 (s. 211). Tanım, bu dosyada madde 53–55'te de verilmiştir.
+
+## Açık sorular
+- [DOĞRULA] Madde 39 (market pressure): "Piyasanın yönü" hangi miktardan hesaplanır, belgede tanımlı değil. Ek-16 örneklerinde "Taraf" sütunu aday fiyat seviyesindeki kalan miktarın hangi tarafta olduğunu gösteriyor (Örnek 3-A: iki aday seviyede de Satış; Örnek 4: Eşit). Kural metni bu hesabı açıkça yazmıyor.
+- [DOĞRULA] Madde 39: İlk iki koşulu sağlayan ikiden fazla fiyat seviyesi varsa "yüksek olan/düşük olan" hangi fiyatı seçer? Metin "söz konusu iki fiyat" diyor. Ek-16 Örnek 4'te 6 seviye var ve yön "Eşit" çıkıyor, sonuç 4. adımda belirleniyor; yön Alış/Satış olup ikiden fazla seviye kalması hâli örneklenmemiş.
+- [DOĞRULA] Madde 40: 3. adımda yön eşit ise 4. adıma geçildiği yalnızca Ek-16 Örnek 4'ten anlaşılıyor; Adım 3 metni eşitlik durumunu yazmıyor.
+- [DOĞRULA] Madde 40 ve 47: Adım 4'teki "referans fiyat"ın ARF mi yoksa 5.1.10'daki Referans Fiyat mı olduğu yazılı değil (ARF "sadece açılış seansına özgü" deniyor). Ayrıca Ek-16 (s. 196) referans fiyat listesinde baz fiyat yok (son işlem fiyatı, kapanış fiyatı, Borsa tarafından belirlenen fiyat), 5.2.2.2.1'deki ARF listesinde var (kapanış fiyatı, baz fiyat, son işlem fiyatı, Borsa referans fiyatı). Kapanış seansında hangi referans fiyatın kullanıldığı da belirtilmemiş.
+- [DOĞRULA] Madde 40: Referans fiyata eşit uzaklıkta iki fiyat seviyesi kalırsa hangisinin seçileceği yazılı değil.
+- [DOĞRULA] Madde 41: Ortalamanın iki fiyat adımının tam ortasına denk gelmesi hâlinde yuvarlama yönü yazılı değil. Fiyat adımının fiyat aralığına göre değişmesi durumunda hangi adımın kullanılacağı da belirtilmemiş (bkz. 02-fiyat.md).
+- [DOĞRULA] Madde 42: "En yüksek fiyatlı limit emir" ve "en düşük fiyatlı limit emir" alış ve satış tarafı birlikte mi (tüm limit emirler) yoksa taraf bazında mı değerlendirilecek, belirsiz.
+- [DOĞRULA] Ek-16 Örnek 3-B (`../ekler/ek16.md`, s. 199): Bir taraftaki piyasa emirlerinin toplamı karşı taraftaki tüm emirlerin toplamından fazlaysa "algoritma piyasa emirleri lehine çalışır" ve "aynı koşulları sağlayan en iyi limit fiyatlı satış emrinin (20,00) bir kademe üzerindeki 20,10" açılış fiyatı olur. Bu kural 5.2.2.2.1'deki 9 adımlı algoritma metninde yok, yalnızca Ek-16 açıklamasında geçiyor. Algoritmadaki sırası (3. adımdan önce mi sonra mı) ve satış tarafında piyasa emri fazlası hâlinin simetrisi yazılı değil.
+- [DOĞRULA] Madde 46: "Sırada fiyatları uyuşan emirler olmadığında ya da sadece piyasa emirleri bulunduğunda açılış fiyatı hesaplanmaz" (Ek-16 s. 196) ile madde 42'deki "emir bulunmayan kademede de açılış fiyatı oluşabilir" ve Örnek 3-B'deki piyasa emri lehine kuralın birlikte nasıl işlediği belirtilmemiş. Örnek 3-B'de alış tarafında sadece piyasa emri var, yine de fiyat oluşuyor (karşı tarafta limit ve piyasa emri var).
+- [DOĞRULA] Madde 15–17: Madde 17 ("Tüm gün boyunca işlem görmeyen emirler bir sonraki güne aktarılmaz, günün sonunda iptal edilir") ile 05-emirler.md'de kodlanacak geçerlilik süreleri (KİE, İKG, Tarihli, Askıya Alma; 5.6.5) arasındaki ilişki belirsiz: İKG/Tarihli emirler tek fiyat sıralarında da bir sonraki güne aktarılır mı?
+- [DOĞRULA] Madde 22: "Emir toplamanın rastlantısal olarak kesildiği maksimum 30 saniyelik süre söz konusu beş dakikalık süreye ilave edilir" ifadesinde 30 saniyenin kısıta nasıl eklendiği belirsiz; 5.2.2.1 son 5 dakikanın başlangıç saatini vermiyor (`../ekler/ek10.md`'de kısıtlı sıralar için 09:50:00 görünüyor).
+- [DOĞRULA] Madde 24 ve dipnotlar 38, 39, 40, 72, 73: Gövde metni, Yıldız Pazar ve Ana Pazar'da yer almayan paylarda açılış seansında piyasa ve piyasadan limite emir girilemeyeceğini söylüyor; dipnotlar 25/09/2023'ten itibaren Yıldız Pazar, Ana Pazar ve "açılış seansına dahil olan pay dışındaki sermaye piyasası araçlarında" bu emir türlerinin girilebileceğini belirtiyor. Kapsamın tam sınırı (özellikle diğer pazarlardaki paylar) açık değil. Gövde metni dipnota göre güncel görünüyor, ancak doğrulanmalı.
+- [DOĞRULA] Madde 13 / Tablo-10: Satır etiketleri tabloda "1. Tek Fiyat (Açılış Seansı), 2. Tek Fiyat, 3. Tek Fiyat (Gün Ortası), 4. Tek Fiyat, 5. Tek Fiyat (Kapanış Seansı)" biçiminde; "Gün Ortası" etiketi 13:00–14:00 satırında. Bu zamanların sürekli işlem seans saatleriyle (Ek-9) ilişkisi 01-seanslar.md'de doğrulanmalı. Yarım iş günü saatleri bu belgede yok (madde 84 Ek-9'a atıf veriyor).
+- [DOĞRULA] Madde 11: "Her seans ... günde 5 kez fiyat belirlenir" ifadesindeki "her seans" ile Tablo-10'daki gün içi tek bir seans yapısının (5 fiyat belirleme: 09:55, 12:55, 13:55, 17:55, 18:05) ilişkisi doğrulanmalı; sabah/öğleden sonra ayrı seans uygulaması varsa belirtilmemiş.
+- [DOĞRULA] Madde 72 ve 5.2.2.1 (s. 59): Kapanış marjı için "son işlem fiyatı" iki yerde farklı tanımlanıyor: s. 59'da "seansın tek fiyat bölümlerinde belirlenen en son fiyat", s. 63'te "normal emir dosyasında gerçekleşen son işlemin fiyatı". Açılış seansı fiyatının bu "son işlem" sayılıp sayılmadığı açık değil (madde 74 açılış seansını ayrı sayıyor). Marj tablosu için s. 59 dipnot 37 "Tablo-4"e atıf veriyor; bu belge kapsamı dışında (02-fiyat.md).
+- [DOĞRULA] Madde 72, 75: Fiyat adımı gösterim/yuvarlama ve "serbest marjlı" payların tanımı bu bölümde yok (bkz. 02-fiyat.md).
+- [DOĞRULA] Madde 35 ve Tablo-10 (+)**: Rastlantısal başlangıç yalnızca açılış satırında (+)* ile tanımlı; diğer satırlar (+)** ile "işlemlerin tamamlanmasına bağlı olarak değişebilecek saat" olarak geçiyor. Madde 35 genel olarak tüm eşleştirme zamanları için ilk 30 saniye içinde rastlantısal başlama diyor. Rastlantı dağılımı ve tüm satırlara uygulanıp uygulanmadığı kesin değil. Tarihsel ITCH verisinde gerçek eşleşme zamanı veriden okunmalıdır.
+- [DOĞRULA] Madde 33 ve s. 58: Fiyat belirleme aşaması için "maksimum süre 5 dakika, fiilen yaklaşık 1 dakika" deniyor; ancak Tablo-10'da fiyat belirleme saati (+)** ile "değişebilir" olarak gösteriliyor ve bir sonraki emir toplama başlangıcı sabit (ör. 13:00). Fiyat belirleme 5 dakikayı aşarsa sonraki sürecin nasıl kaydığı yazılı değil.
+- [DOĞRULA] Madde 44 ve 45: Ek-16'daki (*) işaretli emir türleri (hepsi ya da hiçbiri, gösterge emirler, tetiklenmemiş stop/stop limit) "BISTECH Sistemine geçişte devreye alınmamıştır, devreye alınma tarihi ayrıca duyurulacaktır" notuyla geliyor; güncel durumları belgede belirtilmemiş. "Gösterge emir" 5.2.2.2.1 Adım 9 listesinde yok, Ek-16 listesinde var.
+- [DOĞRULA] Madde 48–55: Dengeleyici emirlerin yönü (alış/satış) ve miktarının eşleşmeden sonra nasıl kullanıldığı, dengeleyici emirlerin birbirleriyle eşleşme miktarının hesabı belgede ayrıntılandırılmamış. Aynı MKK sicil numaralı emirler için dağıtım kuralı (Ek-1, birincil piyasa) bu bölüm kapsamında değildir.
+- [DOĞRULA] 5.2.2 madde başlıklarının (Açılış Fiyatının Belirlenmesi ve İşlem Algoritması, Emirlerin İşlem Görme Sırası, Kapanış Fiyatından İşlemler) numaraları belgede görünmüyor; bu dosyada başlık adı ve sayfa ile atıf yapıldı.
+- [DOĞRULA] `../ekler/ek10.md` (P_TEK_10): Ek-10'da "10 Kez Tek Fiyat" akışı var; 5.2.2.1 metni yalnızca "günde 5 kez" diyor. Hangi araçların 10 kez tek fiyatla işlem gördüğü bu bölümde yazılı değil.
+- [DOĞRULA] `../ekler/ek19.md` (emir tipi matrisi) tek fiyat durumları (P_ACILIS_EMIR_TPL, P_TEKFIYAT_EMIR_TPL, P_KAPANIS_EMIR_TPL vb.) için emir tipi izinlerini verir; bu dosyada kodlanmaz, 05-emirler.md kapsamında ele alınmalıdır.
+
+## Test örnekleri
+Ek-16 emir defteri tabloları ve Ek-18 dengeleyici emir örneği bu dosyada tekrarlanmaz; birim testi verisi olarak `../ekler/ek16.md` (s. 197–200) ve `../ekler/ek18.md` (s. 211) kullanılır. Tablolarda kümülatif toplam, işlem = min(alış, satış) ve kalan = |alış − satış| aritmetiği otomatik kontrol edilmiştir. Beklenen sonuçlar:
+
+| Örnek                                                                                                                                  | Kaynak               | Fiyat adımı / referans | Beklenen denge fiyatı                                                       | İşlem               |
+| -------------------------------------------------------------------------------------------------------------------------------------- | -------------------- | ---------------------- | --------------------------------------------------------------------------- | ------------------- |
+| Ek-16 Örnek 1: tek fiyat seviyesi                                                                                                      | `ek16.md` s. 197     | –                      | 20,10                                                                       | 60 lot              |
+| Ek-16 Örnek 2: en fazla işlem şartını sağlayan iki seviye (20,00 ve 20,10); 20,10'da arta kalan daha az                                | `ek16.md` s. 198     | 0,10                   | 20,10                                                                       | 60 lot              |
+| Ek-16 Örnek 3-A: iki seviye aynı en fazla işlem ve arta kalan miktarı sağlar; satış ağırlıklı, düşük fiyat                             | `ek16.md` s. 198–199 | –                      | 19,90                                                                       | 800 lot             |
+| Ek-16 Örnek 3-B: alış tarafında yalnızca piyasa emri, piyasa emirleri lehine kural (en iyi limit satış emri 20,00'ın bir kademe üzeri) | `ek16.md` s. 199     | 0,10                   | 20,10                                                                       | 20 lot              |
+| Ek-16 Örnek 4: 6 seviye en fazla işlem, en az arta kalan ve eşit piyasa yönü; referans fiyata en yakın seviye                          | `ek16.md` s. 200     | 0,50; referans 55,00   | 57,50                                                                       | 100 lot             |
+| Ek-18 Örnek 4.1: dengeleyici emir; eşleşmeden kalan 5 lot satış, 50 lotluk IMB ile eşleşir, kalan 45 lot IMB iptal edilir              | `ek18.md` s. 211     | –                      | metinde yazılı değil (tabloda en çok işlem 65 lot ile 20,20 seviyesindedir) | 5 lot IMB eşleşmesi |
+
+**Kapanış seansı emir fiyatı marjı** [5.2.2.3.1, s. 64]
+- Marj ±%20; seans için baz fiyat 3,00; fiyat değişim sınırları 2,40 – 3,60; kapanış seansı başlangıcı öncesindeki son işlem fiyatı 3,58. Beklenen: kapanış seansında %3 marj kapsamında girilebilecek minimum emir fiyatı 3,48; maksimum emir fiyatı 3,60.

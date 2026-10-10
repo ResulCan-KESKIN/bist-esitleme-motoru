@@ -1,0 +1,11 @@
+{
+ "1": "Bu Ek, birincil piyasa (halka arz) talep toplama ve dağıtım örneklerini içerir; eşleştirme motoruyla doğrudan ilgisi yoktur.",
+ "3": "Varant kodu örneklerindeki 32 karakterlik şema tabloları, birleşik başlık hücreleri nedeniyle yeniden düzenlenmiştir: “Başlık hücresinin kapsadığı sütunlar” satırı, başlık hücrelerinin sayfadaki konumundan türetilmiştir.",
+ "4": "Sertifika kodu örneklerindeki şema tabloları (varsa) Ek-3 ile aynı yöntemle yeniden düzenlenmiştir.",
+ "9": "Tablo altındaki dipnotlar kaynakta tablonun son hücresinin içindedir.",
+ "10": "Her akış tablosunda ilk sütun satır numarası, ikinci sütun seans durumu, üçüncü sütun o durumun başlangıç saatidir. s. 164'teki P_STANDRT_YG tablosunda “SAAT” başlığı kaynakta yoktur. EBDKS akışlarının (s. 172–175) bir kısmı 06-devre-kesici.md kapsamındadır.",
+ "11": "Bu dosya kaynaktaki tek tabloyu seans durumu bazlı bölümlere ayırır. Sol sütundaki durum adı, birleşik hücre olduğu için kapsadığı açıklama bloğunun başlığı yapılmıştır; sayfa sınırını aşan bloklarda ad, bloğun başladığı sayfadadır. “P_ACS_EMR_TP_ EIY” adındaki boşluk kaynaktadır.",
+ "18": "s. 209'daki “Alış Tafı” kaynaktaki yazım hatasıdır. s. 206'daki matriste mavi gölgeli köşegen hücreler görüntüden eklenmiş bir notla belirtilmiştir.",
+ "19": "Matris sütunları: A Limit, B Piyasa, C Piyasadan Limite, D Kalanı İptal Et, E Orta Nokta, F Dengeleyici, G Kısmi Görünme Koşullu, H Kotasyon, I Fiyat kötüleştirme, J Fiyat iyileştirme, K Miktar azaltma, L Miktar artırma, M Emir İptali, N Özel işlem bildirimi, O Açığa Satış, P Emir derinlik bilgisi açık mı? (s. 229). 1 = var, 0 = yok; “1*” yalnızca İKG limit fiyatlı emirler girilebilir.",
+ "21": "s. 234–241 tarihsel gelişim tablosu, s. 242–257 revizyon özet tablosu, s. 258–380 “Eski Metin / Yeni Metin” karşılaştırma cetvelleridir. Karşılaştırma cetvellerinde sol sütun eski metni, sağ sütun yeni metni gösterir; satır satır aktarılmıştır, üstü çizili ve altı çizili işaretler aktarılmamıştır, bu yüzden hangi ifadenin silindiği/eklendiği iki sütun karşılaştırılarak anlaşılır."
+}

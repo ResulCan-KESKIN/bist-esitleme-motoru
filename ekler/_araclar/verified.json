@@ -1,0 +1,65 @@
+{
+ "1": {
+  "visual": "Sayfa görüntüsüyle karşılaştırma yapılmadı. Bunun yerine sayısal tutarlılık kontrolü yapıldı: tüm “Toplam” satırları sütun toplamlarına eşit (sayfa sınırında bölünen tablo iki sayfa birleştirilerek kontrol edildi)."
+ },
+ "2": {
+  "visual": "s. 111 sayfa görüntüsüyle karşılaştırıldı; s. 112 aynı yapıdadır (görüntü incelenmedi)."
+ },
+ "3": {
+  "visual": "s. 116, 124 ve 134 sayfa görüntüsüyle karşılaştırıldı; diğer tablo sayfaları (118, 120, 122, 123, 125–128) için görüntü incelenmedi."
+ },
+ "4": {
+  "visual": "s. 140 sayfa görüntüsüyle karşılaştırıldı (bir bozuk tablo parçası yamayla silindi); s. 139 ve 142 için görüntü incelenmedi."
+ },
+ "5": {
+  "visual": "Görüntü incelenmedi (otomatik çıkarım + kelime kapsamı)."
+ },
+ "6": {
+  "visual": "Görüntü incelenmedi (otomatik çıkarım + kelime kapsamı)."
+ },
+ "7": {
+  "visual": "s. 149 sayfa görüntüsüyle karşılaştırıldı; s. 148 ve 150 düzyazıdır."
+ },
+ "8": {
+  "visual": "Görüntü incelenmedi (düzyazı ve tek küçük tablo)."
+ },
+ "9": {
+  "visual": "s. 154–155 sayfa görüntüsüyle karşılaştırıldı."
+ },
+ "10": {
+  "visual": "s. 172, 173 ve 174 sayfa görüntüsüyle karşılaştırıldı (bu üç sayfa elle yazıldı). Tüm numaralı akış tablolarında satır numaralarının ardışık ve saatlerin artan olduğu otomatik kontrol edildi (hatasız). s. 156–170 satırları ayrıca koordinat tabanlı ikinci bir çıkarımla gözle karşılaştırıldı."
+ },
+ "11": {
+  "visual": "s. 177 ve 181 sayfa görüntüsüyle karşılaştırıldı. Durum adı–açıklama eşleşmesi Ek-19 matrisiyle çapraz doğrulandı (ör. P_ACS_EMR_TP_EIY ve P_ACS_EMR_TP_PY satırları)."
+ },
+ "12": {
+  "visual": "s. 191 sayfa görüntüsüyle karşılaştırıldı."
+ },
+ "13": {
+  "visual": "Görüntü incelenmedi (form metni)."
+ },
+ "14": {
+  "visual": "Görüntü incelenmedi (form ve düzyazı)."
+ },
+ "15": {
+  "visual": "Görüntü incelenmedi (düzyazı)."
+ },
+ "16": {
+  "visual": "5 tablonun tamamı kullanıcının verdiği ekran görüntüleriyle hücre hücre karşılaştırıldı. Ayrıca her tabloda kümülatif toplamlar, işlem = min(alış, satış) ve kalan = |alış − satış| aritmetiği otomatik kontrol edildi (hatasız)."
+ },
+ "17": {
+  "visual": "Görüntü incelenmedi (düzyazı)."
+ },
+ "18": {
+  "visual": "s. 206, 210 ve 224 sayfa görüntüsüyle karşılaştırıldı (s. 206 ve 210 yamalı). Emir defteri tablolarında (s. 207, 209, 211) kümülatif toplam ve işlem/kalan aritmetiği otomatik kontrol edildi (hatasız). Diğer sayfalar için görüntü incelenmedi."
+ },
+ "19": {
+  "visual": "s. 228 sayfa görüntüsüyle karşılaştırıldı. Matris ayrıca Ek-11 açıklamalarıyla çapraz doğrulandı."
+ },
+ "20": {
+  "visual": "s. 230 ve 231 sayfa görüntüsüyle karşılaştırıldı (s. 230 elle yazıldı). s. 232–233 düzyazı kutularının görüntüsü incelenmedi."
+ },
+ "21": {
+  "visual": "s. 236 ve 361 sayfa görüntüsüyle karşılaştırıldı. Tarihçe tablosunda (s. 234–241) tüm satırların tarihle başladığı otomatik kontrol edildi. s. 258–380 karşılaştırma cetvelleri sol/sağ sütun metni olarak aktarılmıştır; diğer sayfalar için görüntü incelenmedi."
+ }
+}

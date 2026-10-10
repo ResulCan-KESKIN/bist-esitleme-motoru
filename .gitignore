@@ -1,0 +1,5 @@
+# Ham ITCH verisi (arşivler ve çıkarılmış dosyalar; çok büyük)
+veri/itch/
+
+# Ham kaynak PDF'ler (telif/boyut; push edilmez)
+kaynaklar/
