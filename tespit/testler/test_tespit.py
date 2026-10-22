@@ -13,7 +13,7 @@ from ozellikler import uzak_kisa_omurlu, fiyat_adimi
 
 
 def test_b_penceresi(tmp_path=None):
-    """B: tedbirden onceki is gununde biter, N = 20 islem gunu (tatil haric)."""
+    """B: tedbirden 3 is gunu once biter, N = 20 islem gunu (tatil haric); onceki 2 is gunu belirsiz."""
     yol = os.path.join(os.path.dirname(os.path.abspath(__file__)), "_vaka_test.csv")
     pd.DataFrame([dict(pay_kodu="ABC", seviye_nihai="B", etiket_nihai="1", nihai_tedbir_bas="2025-04-03",
                        nihai_donem_bas=None, nihai_donem_bit=None, bulten="x")]).to_csv(yol, index=False)
@@ -21,10 +21,10 @@ def test_b_penceresi(tmp_path=None):
         e = y.etiketler(yol)
     finally:
         os.remove(yol)
-    g = sorted(e["tarih"])
+    g = sorted(e.loc[e["seviye"] == "B", "tarih"])
     assert len(g) == y.N_B
-    assert g[-1] == pd.Timestamp("2025-04-02")
-    assert pd.Timestamp("2025-03-31") not in g and pd.Timestamp("2025-04-01") not in g   # bayram
+    assert g[-1] == pd.Timestamp("2025-03-27")                                            # 03-31, 04-01 bayram
+    assert sorted(e.loc[e["seviye"] == "B_belirsiz", "tarih"]) == [pd.Timestamp("2025-03-28"), pd.Timestamp("2025-04-02")]
 
 
 def test_zskor_yalniz_gecmis():

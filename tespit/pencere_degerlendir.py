@@ -16,11 +16,13 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import sentetik_degerlendir as sd
 import pencere as pn
 import yontemler as y
+import motor_ozellikleri as mo
 from motor import veri
 from motor.gun import Gun
 from ozellikler import gunsonu_ozellikleri
 
 PUANLAR = ["puan_zskor", "puan_kural", "puan_iforest"]
+KAPANIS_GECMISI = os.environ.get("KAPANIS_GECMISI", "1") == "1"   # kapanis penceresi gecmis kapanislara gore
 
 
 if __name__ == "__main__":
@@ -53,6 +55,10 @@ if __name__ == "__main__":
                 continue
             W0 = pn.puanla(pn.pencere_ozellikleri(g0, pn.emir_olaylari(df)))
             W1 = pn.puanla(pn.pencere_ozellikleri(g1, pn.emir_olaylari(df, g1)))
+            if KAPANIS_GECMISI:
+                gecmis = T[(T["islem_kodu"] == kod) & (T["tarih"] < r.tarih)]
+                W0 = pn.kapanis_gecmisi(W0, mo.satir(g0, df, gs), gecmis)
+                W1 = pn.kapanis_gecmisi(W1, mo.satir(g1, df, gs), gecmis)
         except Exception as ex:
             print(gun, kod, senaryo, "HATA", type(ex).__name__, ex, flush=True)
             continue

@@ -15,7 +15,8 @@ Birim: pay-gun (.E siralari, pay pazarlari). Gruplar ve VI-104.1 md 5/1 bentleri
 Aktor gerektiren bentler (c yon degistiren emir, c kendinden kendine islem) gercek veride olculemez (uye/hesap yok).
 
 Kullanim: python -I tespit/ozellikler.py GUNLUK_EMIR_KLASORU ISLEM.parquet GUNSONU.parquet CIKTI.parquet [GUN ...]
-          (gun verilmezse klasordeki butun gunler)
+          (gun verilmezse klasordeki butun gunler; gun basina ara dosyalar CIKTI_gunluk/ altinda, var olan gun atlanir;
+          CIKTI o ana kadar hesaplanan butun gunlerin birlesimidir)
 """
 import datetime, glob, os, sys, time
 
@@ -176,11 +177,17 @@ def gun_ozellikleri(gunluk, islem_parquet, gunsonu, gun):
 if __name__ == "__main__":
     gunluk, islem_parquet, gunsonu, cikti = sys.argv[1:5]
     gunler = sys.argv[5:] or sorted(os.path.basename(p) for p in glob.glob(os.path.join(gunluk, "20*")))
-    parcalar = []
+    # gun basina ara dosya (kaldigi yerden devam): CIKTI'nin yanindaki <ad>_gunluk/ klasoru
+    ara = os.path.splitext(os.path.abspath(cikti))[0] + "_gunluk"
+    os.makedirs(ara, exist_ok=True)
     for gun in gunler:
+        f = os.path.join(ara, gun + ".parquet")
+        if os.path.exists(f):
+            continue
         t0 = time.time()
-        parcalar.append(gun_ozellikleri(gunluk, islem_parquet, gunsonu, gun))
-        print(gun, len(parcalar[-1]), f"{time.time() - t0:.0f} sn", flush=True)
-    os.makedirs(os.path.dirname(os.path.abspath(cikti)), exist_ok=True)
-    pd.concat(parcalar, ignore_index=True).to_parquet(cikti)
-    print("yazildi", cikti)
+        x = gun_ozellikleri(gunluk, islem_parquet, gunsonu, gun)
+        x.to_parquet(f)
+        print(gun, len(x), f"{time.time() - t0:.0f} sn", flush=True)
+    tum = sorted(glob.glob(os.path.join(ara, "20*.parquet")))
+    pd.concat([pd.read_parquet(f) for f in tum], ignore_index=True).to_parquet(cikti)
+    print("yazildi", cikti, len(tum), "gun")

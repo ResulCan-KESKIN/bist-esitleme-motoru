@@ -9,6 +9,10 @@ hesaplanir; enjeksiyonlu ve enjeksiyonsuz kosu ayni yolla olculur. Muzayede isle
 - Puanlar: ayni pay-gunun diger pencerelerine gore saglam Z (ortanca, 1,4826 x MAD); pencere puani en buyuk |z|.
   Kurallar (VI-104.1 md 5/1): a/b z(iptal_orani) ya da z(uzak_kisa_pay) >= ESIK; f |z(getiri)| >= ESIK ve
   |z(aktif_dengesizlik)| >= ESIK_2 ayni yonde; d kapanis muzayedesi penceresinde |z(getiri)| >= ESIK.
+- Kapanis penceresi (kapanis_gecmisi): kapanis muzayedesi her gun ayni gunun diger pencerelerine gore uc degerdir;
+  bu pencere payin onceki gunlerdeki kapanislarina gore puanlanir (kapanis fiyatinin AOF'den sapmasi, kapanis seansi
+  hacim payi, kapanis oncesi getiri; z, payin onceki en az 5 gunune gore). Kural d: |z(kapanis_aof_sapma)| >= ESIK ve
+  z(kapanis_seansi_payi) >= ESIK_2 (yontemler.kurallar ile ayni).
 """
 import numpy as np
 import pandas as pd
@@ -100,6 +104,33 @@ def pencere_ozellikleri(g, E):
         W[c] = W[c].fillna(0)
     W["kapanis_muzayedesi"] = W["kapanis_muzayedesi"].astype("boolean").fillna(False).astype(bool)
     return W[OZ + ["kapanis_muzayedesi"]]
+
+
+KAPANIS_OZ = ["kapanis_aof_sapma", "kapanis_seansi_payi", "kapanis_oncesi_getiri"]
+
+
+def kapanis_gecmisi(W, gun_ozellik, gecmis, en_az=5):
+    """Kapanis muzayedesi penceresinin puanini payin gecmis kapanislarina gore yeniden hesaplar.
+    gun_ozellik: o gunun pay-gun ozellikleri (dict; motor_ozellikleri.satir); gecmis: payin onceki gunlerine ait
+    pay-gun ozellik tablosu (ozellikler.parquet satirlari)."""
+    W = W.copy()
+    k = W["kapanis_muzayedesi"].to_numpy()
+    if not k.any() or len(gecmis) < en_az:
+        return W
+    z = {}
+    for c in KAPANIS_OZ:
+        x = gecmis[c].dropna()
+        ss = x.std()
+        z[c] = (gun_ozellik.get(c, np.nan) - x.mean()) / ss if len(x) >= en_az and ss and ss > 0 else 0.0
+        z[c] = 0.0 if not np.isfinite(z[c]) else z[c]
+    puan = max(abs(v) for v in z.values())
+    d = abs(z["kapanis_aof_sapma"]) >= ESIK and z["kapanis_seansi_payi"] >= ESIK_2
+    W.loc[k, "puan_zskor"] = puan
+    W.loc[k, "kural_sayisi"] = int(d)
+    W.loc[k, "puan_kural"] = int(d) + puan / 1000
+    for c in KAPANIS_OZ:
+        W.loc[k, "z_kapanis_" + c] = z[c]
+    return W
 
 
 def puanla(W):

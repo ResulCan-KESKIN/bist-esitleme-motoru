@@ -48,7 +48,7 @@ Durum (12.10.2026): kurallar `veri/araclar/spk_bulten_etiket.py` ile 197 bülten
 | Seviye | Koşul | Hisse-gün etiketi |
 |---|---|---|
 | A | Pay kodu + açık dönem + kural 4 dayanağı | Dönemin işlem günleri "şüpheli" |
-| B | Pay kodu + yasak başlangıcı, dönem yok (`tedbir_gecici`, `tedbir_kesin`) | Bitiş = başlangıçtan önceki iş günü; başlangıç N = 20 işlem günü (duyarlılık analizi N = 10, 40) |
+| B | Pay kodu + yasak başlangıcı, dönem yok (`tedbir_gecici`, `tedbir_kesin`) | Bitiş = başlangıçtan 3 iş günü önce (önceki 2 iş günü belirsiz, değerlendirme dışı); başlangıç N = 20 işlem günü (duyarlılık analizi N = 10, 40) |
 | C | Pay kodu + dönemsiz İPC/suç duyurusu | Etiket yok; vaka kaydı; aynı vakaya bağlanan A veya B kaydı varsa o seviye devralınır |
 | D | Kodsuz, "muhtelif", varant | Etiket yok; vaka kaydı |
 
@@ -78,7 +78,7 @@ Etiketsiz gün negatif değildir (bilinmiyor). Etiketler sağdan kesiktir: karar
     | 40 | 0,90 | 0,57 | 0,70 | 1,00 | 0,44 | 0,61 |
 
   - Gerekçe: N = 20 iki kümede de F1'in en yüksek olduğu bölgededir (0,75 / 0,76). N = 25 aynı F1'i daha düşük saflıkla verir. Etiketsiz gün negatif sayılmadığı için (bkz. Etiket seviyeleri) saflık kapsamadan önemlidir. N = 20 dönem ortancasına (23,5) yakındır ve 1 aya karşılık gelir. n = 12 küçüktür; N = 10 ve 40 duyarlılık analizi olarak kalır.
-  - [DOĞRULA] Gözlenen 4 vakada dönem, yasaktan 3 hafta içi gün önce bitiyor. B seviyesi tablosundaki "bitiş = başlangıçtan önceki iş günü" kuralı pencereyi 2 gün sağa kaydırır. Bitişin yasaktan 3 iş günü önceye alınıp alınmayacağı kullanıcı kararıdır.
+  - [DOĞRULANDI 22.10.2026 – kullanıcı kararı] Pencere bitişi. Gözlenen 4 vakada (EUREN, ALKLC, TDGYO, KRGYO) dönem, yasaktan 3 iş günü önce biter. Uygulama kararı (kullanıcı, 22.10.2026): B penceresi yasaktan 3 iş günü önce biter; yasaktan önceki 2 iş günü "belirsiz" sayılır ve değerlendirmeden çıkarılır (ne pozitif ne negatif). Gerekçe: eski kural (bitiş = yasaktan önceki iş günü) her pencereye 4/4 vakada dönem dışında kalan 2 gün katıyordu (20 günlük pencerede pozitiflerin ≈ %10'u); boşluk SPK inceleme penceresinin kesilmesinden de kaynaklanabileceği için bu 2 gün negatif de sayılmaz. Kanıt 4 A vakasına dayanır; yeni A vakalarıyla yeniden kontrol edilir.
 - [DOĞRULA] Kural 13: geçici yasağın kaldırıldığı veya uzatıldığı bültenlerde (varsa) bitiş tarihinin nasıl yazıldığı henüz görülmedi.
 - [DOĞRULANDI 19.10.2026] `2024-4.pdf`: PDF başlığı "2024/04 18/01/2024" (bülten 4, 18.01.2024). `ad_no_uyumsuz=True` yalnızca iç numaranın sıfır dolgulu (`2024/04`) yazılmasından gelen sahte uyumsuzluktu; betik artık sıra numarasını tamsayıya çevirir (`2024/4`) ve `bulten_indeks.csv`'de uyumsuz bülten kalmadı. `2024 15.pdf` dosyası `2024-15.pdf` yapıldı.
 - [DOĞRULA] Kural 13: `tedbir_bas` ile dönem bitişi arasındaki ilişki yalnızca 3 vakada (KRGYO, TDGYO, ALKLC) ve EUREN'de (dönem 14–21.04.2025, tedbir 24.04.2025) görüldü; hepsinde dönem bitişi yasak başlangıcından 1–3 gün önce.

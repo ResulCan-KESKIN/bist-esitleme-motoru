@@ -21,6 +21,7 @@ if __name__ == "__main__":
     d = y.kesitsel(y.isolation_forest(y.kurallar(y.z_skorlari(d))))
     e = y.etiketler(vaka)
     d = d.merge(e, on=["islem_kodu", "tarih"], how="left")
+    d = d[d["seviye"] != "B_belirsiz"]   # tedbirden onceki 2 is gunu: ne pozitif ne negatif
     sonuc = []
     for ad, kosul in [("A+B", d["seviye"].notna()), ("A", d["seviye"] == "A"), ("B", d["seviye"] == "B")]:
         x = d[kosul | d["seviye"].isna()].assign(pozitif=kosul)

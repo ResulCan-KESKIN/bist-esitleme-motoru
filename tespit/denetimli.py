@@ -1,7 +1,10 @@
 """Denetimli model (TASARIM.md 6.3): sentetik enjeksiyon etiketli 5 dakikalik pencereler (pencere_degerlendir.py
 ciktisi pencereler.parquet) uzerinde gradyan artirmali karar agaci.
 
-- Girdi: pencere ozellikleri (ham, log donusumlu) ve ayni pay-gune gore saglam z'ler; kapanis muzayedesi penceresi.
+- Girdi: pencere ozellikleri (ham, log donusumlu) ve ayni pay-gune gore saglam z'ler.
+- Model yalniz surekli islem pencerelerinde egitilir ve puanlar. Kapanis muzayedesi penceresi her gun uc degerdir ve
+  kapanis senaryosunda pozitif pencere hep odur; model bu pencereyi taniyabildigi surece "kapanis penceresi pozitiftir"
+  ogrenir. Kapanis penceresi pencere.kapanis_gecmisi ile (payin gecmis kapanislarina gore) puanlanir.
 - Dogrulama: pay-gune gore gruplu 5 katli capraz dogrulama (ayni pay-gunun pencereleri egitim ve testte bir arada
   olmaz). Katin modeli, test pay-gunlerinin enjeksiyonsuz (kontrol) pencerelerini de puanlar.
 - Olcutler: ROC-AUC, ortalama kesinlik; gun icinde pozitif pencerelerden biri ilk 3'te mi; kontrolde ayni pencerelerin
@@ -25,7 +28,6 @@ def girdi(A):
     for c in pn.OZ:
         X[c] = np.log1p(A[c].clip(lower=0)) if c in pn.LOG else A[c]
         X["z_" + c] = A["z_" + c].clip(-50, 50)
-    X["kapanis_muzayedesi"] = A["kapanis_muzayedesi"].astype(int)
     return X
 
 
@@ -39,6 +41,7 @@ if __name__ == "__main__":
     os.makedirs(out, exist_ok=True)
     A = pd.read_parquet(src)
     A["grup"] = A["gun"].astype(str) + "|" + A["kod"]
+    A = A[~A["kapanis_muzayedesi"]]
     E, K = A[A["kume"] == "enjeksiyonlu"].copy(), A[A["kume"] == "kontrol"].copy()
     E["puan_denetimli"], K["puan_denetimli"] = np.nan, np.nan
     XE, XK = girdi(E), girdi(K)

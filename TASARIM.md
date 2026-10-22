@@ -308,68 +308,66 @@ Kullanıcı kararı (22.10.2026): görselleştirme zorunludur. Öneri formundan 
 ### 6.6 İlk sürüm (22.10.2026)
 
 Kod `tespit/`:
-- `ozellikler.py`: pay-gün özellikleri (6.2'deki emir akışı, işlem ve referans grupları; defter özellikleri henüz yok). Mart 2025: 20 gün × 590 sıra, gün başına ≈ 50 sn. Çıktı `veri/gunici-dogrulama/2025-03/tespit/ozellikler.parquet` (git dışı).
-- `yontemler.py`:
-  - Z-skor (payın önceki günlerine göre);
-  - iktisadi kurallar (VI-104.1 md 5/1 a, b, d, f; eşikler tasarım parametresidir);
-  - Isolation Forest (Z-skorlar üzerinde);
-  - kesitsel karşılaştırma (aynı gün aynı pazardaki paylar içinde yüzdelik sıra; 5 günlük birikimli getiri ve hacim artışı dahil) ve onun üzerinde Isolation Forest;
-  - SPK etiketlerinin pay-güne çevrilmesi (A dönem; B tedbirden önceki 20 işlem günü).
-- `degerlendir.py`: pay-gün sıralama ölçütleri. Etiketsiz gün negatif sayılmadığından ölçütler alt sınırdır.
+- `ozellikler.py`: pay-gün özellikleri (6.2'deki emir akışı, işlem, defter ve referans grupları). Mart 2025: 20 gün × 590 sıra, gün başına ≈ 160 sn. Gün başına ara dosyalar tutulur, iş yarıda kalırsa kaldığı yerden devam eder. Çıktı `veri/gunici-dogrulama/2025-03/tespit/ozellikler.parquet` (git dışı).
+- `yontemler.py`: Z-skor (payın önceki günlerine göre), iktisadi kurallar (VI-104.1 md 5/1 a, b, d, f; eşikler tasarım parametresidir), Isolation Forest, kesitsel karşılaştırma (aynı gün aynı pazardaki paylar içinde yüzdelik sıra; 5 günlük birikimli getiri ve hacim artışı dahil) ve SPK etiketlerinin pay-güne çevrilmesi.
+- `degerlendir.py`: SPK etiketleriyle pay-gün sıralama ölçütleri.
+- `motor_ozellikleri.py`: aynı özellikler motor çıktısından (enjeksiyonlu koşu için).
+- `pencere.py`: 5 dakikalık pencere özellikleri ve puanları; kapanış penceresi payın geçmiş kapanışlarına göre.
+- `sentetik_degerlendir.py`, `pencere_degerlendir.py`, `denetimli.py`: sentetik enjeksiyonla değerlendirme ve denetimli model.
 
-Sonuç (Mart 2025; `veri/gunici-dogrulama/2025-03/tespit/degerlendirme.csv`). Pozitifler: A ALKLC (12 pay-gün); B HEDEF, SEGMN, ENSRI, BAKAB, SMRTG, VKFYO (56 pay-gün).
+**Özellikler.** 6.2'deki gruplara ek olarak:
+- *Kısa ömürlü uzak emir payı:* sürekli işlemde aynı taraftaki en iyi fiyattan en az 3 adım uzakta girilip 60 sn içinde işlem görmeden iptal edilen emirlerin miktar payı. Yanıltıcı emir (spoofing/layering) göstergesidir; bent a/b kuralına bağlıdır. Verideki olay anındaki en iyi alış/satış fiyatından hesaplanır. Mart 2025 ortancası %1,2; ALKLC'nin manipülasyon günlerinde %7'nin üstünde.
+- *Makas:* sürekli işlemde göreli makasın ortancası.
+
+**SPK etiketleri.** A: dönemin işlem günleri. B: tedbirden önceki 20 işlem günü; pencere tedbirden 3 iş günü önce biter, tedbirden önceki 2 iş günü belirsizdir ve değerlendirmeden çıkarılır (kullanıcı kararı 22.10.2026; gerekçe: dönemi ve tedbiri birlikte bilinen 4 A vakasının dördünde de dönem tedbirden 3 iş günü önce biter; bu 2 gün eski kuralda pozitiflerin ≈ %10'unu oluşturuyordu ve dönem dışıydı, ancak SPK'nın inceleme penceresinin kesilmesinden kaynaklanabileceği için negatif de sayılmaz). Etiketsiz gün negatif değildir (bilinmiyor); ölçütler bu nedenle alt sınırdır.
+
+**SPK etiketleriyle sonuç** (Mart 2025; `veri/gunici-dogrulama/2025-03/tespit/degerlendirme.csv`). Pozitifler: A ALKLC (12 pay-gün); B HEDEF, SEGMN, ENSRI, BAKAB, KRGYO, OZATD, SMRTG, VKFYO (64 pay-gün).
 
 | Puan | ROC-AUC (A) | ROC-AUC (B) | ROC-AUC (A+B) |
 |---|---|---|---|
-| Z-skor (kendi geçmişi) | 0,64 | 0,50 | 0,52 |
-| İktisadi kurallar | 0,47 | 0,57 | 0,55 |
-| Isolation Forest (Z-skor) | 0,50 | 0,54 | 0,54 |
-| Kesitsel uç sıra | 0,82 | 0,52 | 0,58 |
-| Kesitsel Isolation Forest | 0,85 | 0,55 | 0,61 |
+| Z-skor (kendi geçmişi) | 0,65 | 0,52 | 0,53 |
+| İktisadi kurallar | 0,47 | 0,59 | 0,57 |
+| Isolation Forest (Z-skor) | 0,53 | 0,53 | 0,53 |
+| Kesitsel uç sıra | 0,89 | 0,50 | 0,56 |
+| Kesitsel Isolation Forest | 0,90 | 0,53 | 0,59 |
+
+- Payın kendi geçmişine dayanan yöntemler haftalarca süren manipülasyonda zayıftır: geçmiş de manipülasyon içerir (ALKLC dönemi 04.02'de başlar).
+- Kesitsel karşılaştırma bu kirlenmeye duyarlı değildir. ALKLC pay-günleri gün içinde ortalama 91. yüzdeliktedir. Yeni iki özellik ALKLC'de ROC-AUC'yi 0,85'ten 0,90'a çıkardı.
+- B'de sonuç rastgeleye yakındır. B pencereleri bir varsayımdır (N = 20) ve B tedbirleri çoğunlukla "işlem bazlı piyasa dolandırıcılığı" şüphesine dayanır; Mart'a düşen günlerin bir kısmı pencerenin başındadır (KRGYO, OZATD, VKFYO).
+- Pozitif sayısı azdır; sonuçlar 12 aylık veriyle yeniden ölçülmelidir.
+
+**Sentetik enjeksiyonla değerlendirme.** Yöntem:
+- Rastgele pay-günler: 10.03 sonrası, sürekli işlemde en az 300 işlem, özsermaye günleri ile SPK etiketli ve belirsiz günler hariç.
+- Senaryolar sırayla, payın o günkü işlem miktarına (H) göre ölçekli:
+  - kapanış: kapanış emir toplamanın sonunda H × %3, bandın ucundan;
+  - yanıltıcı emir: 3 katman × H × %2, son işlem fiyatından 4–6 adım uzakta, 30 sn sonra iptal; arada karşı tarafta H × %0,2 agresif emir;
+  - fiyat yükseltme: 20 sn arayla 10 agresif alış (KİE piyasadan limite), her biri H × %0,5;
+  - karşılıklı işlem: 60 sn arayla 10 kez aynı aktörün satış ve alışı, her biri H × %0,5.
+- Özellikler motor çıktısından hesaplanır. Kontrol: enjeksiyonsuz motor özellikleri veriden hesaplananlarla neredeyse aynıdır; kontrol kümesinde ROC-AUC ≈ 0,5 (yöntem farkı sahte tespit üretmez).
+
+*Pay-gün düzeyi* (`veri/gunici-dogrulama/2025-03/tespit/sentetik/`): 80 enjeksiyonda yöntemler kısa süreli enjeksiyonları ayırt edemez: ROC-AUC 0,43–0,71, enjeksiyonsuz kontrol kümesinde 0,48–0,62. Kuralların kontrolde de 0,62 alması, seçilen likit pay-günlerin genel olarak daha yüksek puan almasındandır; enjeksiyonun katkısı ≈ 0,05'tir. Yeni iki özellik bu düzeyde sonucu değiştirmedi; motordan ve veriden hesaplanan değerleri birebir aynıdır. Kısa bir epizot (30 sn'lik yanıltıcı emir, 200 sn'lik fiyat yükseltme) günün toplamında kaybolur; bu, pencere düzeyine geçişin gerekçesidir.
+
+*5 dakikalık pencere* (79 pay-gün, pozitif pencere oranı %1,5; `veri/gunici-dogrulama/2025-03/tespit/pencere/`). Pencere, aynı pay-günün diğer pencerelerine göre sağlam z (ortanca, MAD) ile puanlanır. Kapanış müzayedesi penceresi ise payın önceki günlerdeki kapanışlarına göre puanlanır (kapanışın AOF'den sapması, kapanış seansı hacim payı, kapanış öncesi getiri), çünkü bu pencere her gün aynı günün diğer pencerelerine göre uç değerdir. Denetimli model (gradyan artırmalı karar ağacı) yalnız sürekli işlem pencerelerinde, pay-güne göre gruplu 5 katlı çapraz doğrulamayla eğitilir. "İlk 3": pozitif pencerelerden biri günün en yüksek puanlı 3 penceresinde. "Kontrol": aynı pencerelerin enjeksiyonsuz koşuda ilk 3'e girme oranı (yanlış alarm tabanı).
+
+| Senaryo | Kurallar: ROC-AUC / ilk 3 / kontrol | Denetimli: ROC-AUC / ilk 3 / kontrol |
+|---|---|---|
+| Yanıltıcı emir | 0,90 / %84 / %5 | 0,89 / %74 / %0 |
+| Karşılıklı işlem | 0,49 / %0 / %0 | 0,89 / %80 / %20 |
+| Fiyat yükseltme | 0,56 / %0 / %0 | 0,64 / %30 / %5 |
+| Kapanış | 0,60 / %0 / %0 | — |
 
 Yorum:
-- Payın kendi geçmişine dayanan yöntemler, haftalarca süren manipülasyonda zayıftır: geçmiş de manipülasyon içerir (ALKLC dönemi 04.02'de başlar).
-- Kesitsel karşılaştırma bu kirlenmeye duyarlı değildir; ALKLC pay-günleri gün içinde ortalama 87. yüzdeliktedir.
-- B seviyesinde pencere bir varsayımdır (N = 20). Mart'a düşen B günlerinin bir kısmı pencere kenarındadır (SMRTG 3, VKFYO 2 gün); düşük sonuç beklenir.
-- Pozitif sayısı azdır; sonuçlar 12 aylık veriyle ve sentetik enjeksiyon etiketleriyle yeniden ölçülmelidir.
-
-Eklenen özellikler (22.10.2026): kısa ömürlü uzak emir payı (sürekli işlemde aynı taraftaki en iyi fiyattan ≥ 3 adım uzakta girilip 60 sn içinde işlem görmeden iptal edilen miktar payı; yanıltıcı emir göstergesi; bent a/b kuralına bağlı) ve göreli makas ortancası. İkisi de verideki olay anındaki en iyi alış/satış fiyatından hesaplanır.
-
-#### Sentetik enjeksiyonla değerlendirme (22.10.2026)
-
-Yöntem (`tespit/sentetik_degerlendir.py`, `motor_ozellikleri.py`, `pencere.py`, `pencere_degerlendir.py`, `denetimli.py`):
-- Rastgele pay-günler: 10.03 sonrası, sürekli işlemde en az 300 işlem, özsermaye ve SPK etiketli günler hariç.
-- Senaryolar sırayla ve payın günlük işlem miktarına (H) göre ölçekli:
-  - kapanış: H × %3;
-  - yanıltıcı emir: 3 katman × H × %2, son işlem fiyatından 4–6 adım uzakta, 30 sn sonra iptal;
-  - fiyat yükseltme: 10 agresif alış × H × %0,5;
-  - karşılıklı işlem: 10 tekrar × H × %0,5.
-- Özellikler motor çıktısından hesaplanır. Enjeksiyonsuz motor özellikleri veriden hesaplananlarla neredeyse aynıdır (kontrol).
-
-**Pay-gün düzeyi** (80 enjeksiyon; `veri/gunici-dogrulama/2025-03/tespit/sentetik/`): yöntemler kısa süreli enjeksiyonları ayırt edemez (ROC-AUC 0,40–0,74; en iyisi kapanış senaryosunda iktisadi kurallar). Kısa bir epizot günün toplamında kaybolur.
-
-**5 dakikalık pencere** (77 pay-gün, pozitif pencere oranı %2; `veri/gunici-dogrulama/2025-03/tespit/pencere/`). Pencere, aynı pay-günün diğer pencerelerine göre sağlam z ile puanlanır; denetimli model gradyan artırmalı karar ağacıdır (pay-güne göre gruplu 5 katlı çapraz doğrulama). "İlk 3" = pozitif pencerelerden biri günün en yüksek puanlı 3 penceresinde; "kontrol" = aynı pencerelerin enjeksiyonsuz koşuda ilk 3'e girme oranı.
-
-| Senaryo | Kurallar: ROC-AUC / ilk 3 | Denetimli: ROC-AUC / ilk 3 | Denetimli: kontrol ilk 3 |
-|---|---|---|---|
-| Yanıltıcı emir | 0,85 / %70 | 0,89 / %60 | %5 |
-| Karşılıklı işlem | 0,47 / %5 | 0,86 / %68 | %5 |
-| Fiyat yükseltme | 0,58 / %5 | 0,74 / %21 | %5 |
-| Kapanış | 0,84 / %42 | 0,92 / %95 | %84 |
-| Hepsi | 0,67 / %31 | 0,85 / %61 | %25 |
-
-Yorum:
-- Yanıltıcı emir, kısa ömürlü uzak emir payıyla kurallarla da yakalanır; kontrolde yanlış alarm yoktur.
-- Kapanış senaryosunda sonuç şişkindir: kapanış müzayedesi penceresi her gün uç değerdir. Denetimli model "kapanış penceresi pozitiftir" öğrenir; enjeksiyonsuz günde de %84 alarm verir. Kapanışı etkileme, kapanış penceresinin payın kendi geçmiş kapanışlarıyla karşılaştırılmasını gerektirir.
-- Denetimli modelin en önemli özelliği hacim z'sidir: karşılıklı işlem hacim artışıyla yakalanır, aktör belirlenemez.
-- Fiyat yükseltme en zor senaryodur.
-- Sentetik senaryoların büyüklüğü bir varsayımdır; sonuçlar bu büyüklüklere bağlıdır.
+- *Yanıltıcı emir* iyi yakalanır: kısa ömürlü uzak emir payı bu senaryonun doğrudan izidir; kurallar enjekte edilen pencereyi 19 günün 16'sında günün ilk 3 penceresine koyar, enjeksiyonsuz günde yanlış alarm %5'tir.
+- *Karşılıklı işlem* yalnız denetimli modelle yakalanır ve bunu hacim artışından yapar (modelin en önemli özelliği hacim z'sidir). Aktör kimliği olmadan "aynı kişinin iki tarafı" ayırt edilemez; kontrol yanlış alarmı %20'dir.
+- *Fiyat yükseltme* en zor senaryodur: 10 küçük agresif alış, likit paylarda günün olağan dalgalanmasından ayrışmaz.
+- *Kapanış:* kapanış penceresi aynı günün pencerelerine göre puanlandığında sonuç yüksek görünüyordu (ROC-AUC 0,84, ilk 3 %42), ama enjeksiyonsuz günde de aynı oranda alarm veriyordu; yani ayırt edicilik yoktu. Geçmiş kapanışlara göre puanlanınca yanlış alarm sıfıra iner ama günlük hacmin %3'ü büyüklüğündeki bir kapanış emri payın olağan kapanış oynaklığından ayrışmaz. Bu büyüklükte kapanış etkilemesi bu veriyle tespit edilemez; daha büyük senaryolarla ve 12 aylık geçmişle yeniden ölçülmelidir.
+- Pay-gün düzeyi kısa epizotları kaçırır; pencere düzeyi gereklidir.
+- Senaryo büyüklükleri bir varsayımdır; sonuçlar bu büyüklüklere bağlıdır.
 
 Sonraki adımlar:
-- kapanışı etkileme için kapanış penceresinin payın geçmiş kapanışlarıyla karşılaştırılması;
+- senaryo büyüklüğüne duyarlılık (ör. H × %1, %3, %10);
 - defter derinliği ve dengesizliği (motorla yeniden kurulan defterden);
-- 12 aylık veriyle ve daha çok enjeksiyonla yeniden ölçüm;
-- SPK etiketli pay-günlerde pencere düzeyi.
+- 12 aylık veriyle ve daha çok enjeksiyonla yeniden ölçüm; SPK etiketli pay-günlerde pencere düzeyi.
 
 ## 7. Klasör yapısı (öneri)
 

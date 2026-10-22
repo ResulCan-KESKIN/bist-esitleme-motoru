@@ -11,8 +11,9 @@
      ya da z(kucuk_islem_payi) >= ESIK ve |z(getiri)| >= ESIK_2.
   Puan: tetiklenen bent sayisi (esitlikte Z-skor puanina gore siralanir).
 - Isolation Forest: z ozellikleri uzerinde (sklearn; random_state sabit).
-- SPK etiketleri (veri/etiketler/vaka.csv, seviye_nihai A/B, etiket_nihai 1): A donemin islem gunleri; B tedbir
-  baslangicindan onceki N = 20 islem gunu, bitis tedbirden onceki is gunu (etiket-cikarim-kurallari.md).
+- SPK etiketleri (veri/etiketler/vaka.csv, seviye_nihai A/B, etiket_nihai 1): A donemin islem gunleri; B N = 20 islem
+  gunu, bitis tedbirden 3 is gunu once; tedbirden onceki 2 is gunu "B_belirsiz" (degerlendirme disi; kullanici karari
+  22.10.2026, etiket-cikarim-kurallari.md).
 """
 import numpy as np
 import pandas as pd
@@ -20,6 +21,7 @@ import pandas as pd
 GECMIS_EN_AZ = 5
 ESIK, ESIK_2 = 3.0, 2.0
 N_B = 20
+B_BOSLUK = 2   # tedbirden onceki belirsiz is gunu sayisi
 TATILLER = ["2025-01-01", "2025-03-31", "2025-04-01", "2025-04-23", "2025-05-01", "2025-05-19",
             "2024-06-17", "2024-06-18", "2024-06-19", "2024-07-15", "2024-08-30", "2024-10-29"]   # resmi tatiller (tam gun)
 OZELLIKLER = ["getiri", "aralik", "hacim_tl", "kapanis_aof_sapma", "acilis_sapma", "kapanis_seansi_payi", "kfi_payi",
@@ -113,14 +115,16 @@ def etiketler(vaka_csv):
             gunler = is_gunleri(r.nihai_donem_bas, r.nihai_donem_bit)
         elif r.seviye_nihai == "B" and isinstance(r.nihai_tedbir_bas, str):
             t = np.datetime64(r.nihai_tedbir_bas, "D")
-            bit = np.busday_offset(t, -1, roll="backward", holidays=TATILLER)
+            son = np.busday_offset(t, -1, roll="backward", holidays=TATILLER)
+            bit = np.busday_offset(t, -(B_BOSLUK + 1), roll="backward", holidays=TATILLER)
             bas = np.busday_offset(bit, -(N_B - 1), roll="backward", holidays=TATILLER)
             gunler = is_gunleri(str(bas), str(bit))
+            satir += [(r.pay_kodu + ".E", g, "B_belirsiz", r.bulten) for g in is_gunleri(str(bit + 1), str(son))]
         else:
             continue
         satir += [(r.pay_kodu + ".E", g, r.seviye_nihai, r.bulten) for g in gunler]
     e = pd.DataFrame(satir, columns=["islem_kodu", "tarih", "seviye", "bulten"])
-    # ayni pay-gun birden cok kayitta: A onceliklidir
+    # ayni pay-gun birden cok kayitta: A, sonra B, sonra B_belirsiz onceliklidir
     return e.sort_values("seviye").drop_duplicates(["islem_kodu", "tarih"], keep="first")
 
 

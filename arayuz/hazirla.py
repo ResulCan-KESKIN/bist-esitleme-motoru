@@ -4,7 +4,8 @@
 - Bolum bantlari: muzayede emir toplama, eslestirme, EBDKS durdurmasi (veriden).
 - Dakikalik hacim serisi (grafik icin).
 - Uyarilar: tespit/pencere.py 5 dakikalik pencere kurallari (VI-104.1 md 5/1 a/b, d, f; ayni pay-gunun diger
-  pencerelerine gore saglam z). Kural tetiklenen pencere uyaridir; puan ve bentler tabloda gorulur.
+  pencerelerine gore saglam z; kapanis penceresi ozellik tablosu varsa payin gecmis kapanislarina gore). Kural
+  tetiklenen pencere uyaridir; puan ve bentler tabloda gorulur.
 """
 import glob, os, sys
 
@@ -18,6 +19,15 @@ from motor.gun import Gun, kosular, kategori
 
 sys.path.insert(0, os.path.join(KOK, "tespit"))
 import pencere as pn
+import motor_ozellikleri as mo
+from ozellikler import gunsonu_ozellikleri
+
+
+def gecmis_tablo(gun):
+    """Pay-gun ozellik tablosu (tespit/ozellikler.py ciktisi); kapanis penceresini gecmis kapanislara gore puanlamak
+    icin. Yoksa None (kapanis penceresi ayni gunun pencerelerine gore puanlanir)."""
+    f = os.path.join(KOK, "veri", "gunici-dogrulama", f"{gun[:7]}", "tespit", "ozellikler.parquet")
+    return pd.read_parquet(f) if os.path.exists(f) else None
 
 GUNLUK = os.path.join(KOK, "veri", "gun-ici-emir", "gunluk")
 ESIK = 3.0
@@ -79,12 +89,18 @@ def dakikalik(islemler):
     return m.reset_index().rename(columns={"zaman": "dakika"})
 
 
-def pencere_uyarilari(g, df, islemler):
-    W = pn.puanla(pn.pencere_ozellikleri(g, pn.emir_olaylari(df, g if g.kabul else None))).reset_index(names="p")
+def pencere_uyarilari(g, df, islemler, gun=None, kod=None):
+    W = pn.puanla(pn.pencere_ozellikleri(g, pn.emir_olaylari(df, g if g.kabul else None)))
+    T = gecmis_tablo(gun) if gun else None
+    if T is not None:
+        gecmis = T[(T["islem_kodu"] == kod) & (T["tarih"] < pd.Timestamp(gun))]
+        gs = gunsonu_ozellikleri(gunsonu_dosyasi(gun), gun).loc[kod]
+        W = pn.kapanis_gecmisi(W, mo.satir(g, df, gs), gecmis)
+    W = W.reset_index(names="p")
     W["bas"] = pd.to_datetime(W["p"], unit="us")
     a_b = (W["z_iptal_orani"] >= pn.ESIK) | (W["z_uzak_kisa_pay"].fillna(0) >= pn.ESIK)
     f = (W["z_getiri"].abs() >= pn.ESIK) & (W["z_aktif_dengesizlik"].abs() >= pn.ESIK_2) &         (np.sign(W["z_getiri"]) == np.sign(W["z_aktif_dengesizlik"]))
-    d = W["kapanis_muzayedesi"] & (W["z_getiri"].abs() >= pn.ESIK)
+    d = W["kapanis_muzayedesi"] & (W["kural_sayisi"] >= 1)
     W["bentler"] = ["".join(x) for x in zip(np.where(a_b, "a/b ", ""), np.where(d, "d ", ""), np.where(f, "f", ""))]
     W = W[W["kural_sayisi"] >= 1]
     son = islemler.set_index("zaman")["fiyat"]
@@ -102,7 +118,7 @@ def oynat(gun, kod, senaryo=None, saat=None, **param):
     tb.calistir()
     taban = _islem_tablosu(tb)
     out = dict(taban=taban, bantlar=bolum_bantlari(df), dakika_taban=dakikalik(taban), olaylar=[],
-               uyarilar=pencere_uyarilari(tb, df, taban),
+               uyarilar=pencere_uyarilari(tb, df, taban, gun, kod),
                enjeksiyonlu=None, dakika_enj=None, reddedilen=pd.DataFrame(columns=["zaman", "emir", "bolum", "sebep"]))
     if senaryo:
         sirali = sorted((i for _, i in tb.islemler), key=lambda i: i.zaman)
@@ -121,7 +137,7 @@ def oynat(gun, kod, senaryo=None, saat=None, **param):
         ej = Gun(df, gun, kod, gunsonu, tepe)
         ej.calistir(olaylar)
         enj = _islem_tablosu(ej)
-        out.update(enjeksiyonlu=enj, dakika_enj=dakikalik(enj), olaylar=olaylar, uyarilar=pencere_uyarilari(ej, df, enj),
+        out.update(enjeksiyonlu=enj, dakika_enj=dakikalik(enj), olaylar=olaylar, uyarilar=pencere_uyarilari(ej, df, enj, gun, kod),
                    reddedilen=pd.DataFrame([(pd.to_datetime(o.zaman, unit="us"), o.no, b, r) for o, b, r in ej.reddedilen],
                                            columns=["zaman", "emir", "bolum", "sebep"]))
     son = out["enjeksiyonlu"] if out["enjeksiyonlu"] is not None else taban
