@@ -54,7 +54,11 @@ Açık soru sayısı (21.10.2026; `- [DOĞRULA` ile başlayan satırlar): 01: 13
 - Enjeksiyon: `python -I motor/enjeksiyon.py GUNLUK GUNSONU GUN KOD SENARYO SAAT [ad=deger ...]`.
 - Arayüz: `streamlit run arayuz/uygulama.py` (`TASARIM.md` 6.5).
 - Tespit ilk sürüm `tespit/` (`TASARIM.md` 6.6): pay-gün özellikleri, Z-skor, VI-104.1 bent kuralları, Isolation Forest, kesitsel karşılaştırma; Mart 2025'te A (ALKLC) için kesitsel ROC-AUC 0,85, B için 0,55.
-- Kapsam dışı: kotasyon, orta nokta, özel işlem bildirimi; defter özellikleri ve 5 dk pencere (tespit).
+- Sentetik değerlendirme: pay-gün düzeyinde ROC-AUC 0,40–0,74. 5 dk pencere (`tespit/pencere.py`) ve denetimli model (`tespit/denetimli.py`): yanıltıcı emir kurallarla 0,85 (yanlış alarm yok), denetimli model genel 0,85; kapanış senaryosu şişkin (kapanış penceresi her gün uç). Ayrıntı `TASARIM.md` 6.6.
+- Yeni özellikler: kısa ömürlü uzak emir payı, makas (veri ve motor tarafında). Arayüz uyarıları 5 dk pencere kurallarıdır.
+- `veri/gunici-dogrulama/2025-03/tespit/ozellikler.parquet` henüz yeni iki özelliği içermiyor: yeniden hesaplama (gün başına ≈ 170 sn, ≈ 1 saat) 22.10.2026'da sistem belleği azaldığı için durduruldu. Yeniden çalıştırılınca `degerlendir.py` ve `sentetik_degerlendir.py` tekrarlanmalı.
+- Motor: seans durum makinesi ajan tabanlı simülasyon çıkarıldığı için gereksiz; kotasyon ve orta nokta öncelikli değil.
+- Kapsam dışı: kotasyon, orta nokta, özel işlem bildirimi.
 - Karar (22.10.2026): madde 24 sentetik emirlerde geçerli (MPF-AFK-Hesap No değişikliği reddedilir); tekrar oynatmada AFK dolu emirdeki öncelik kaybı uygulanır.
 
 ## Öneri formu ve veri talebi (proje klasörü, 22.10.2026'da eklendi)

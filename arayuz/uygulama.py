@@ -4,7 +4,8 @@ Calistirma: streamlit run arayuz/uygulama.py
 - Pay ve gun secilir; gercek emir akisi motorda oynatilir (taban cizgisi).
 - Senaryo secilirse sentetik emirler enjekte edilir; enjeksiyonlu fiyat taban cizgisiyle ayni grafikte gosterilir,
   sentetik aktorun islemleri isaretlenir.
-- Uyarilar: Z-skor temel cizgisi (dakikalik hacim ve |getiri|). Bolum bantlari: muzayede, devre kesici, EBDKS.
+- Uyarilar: 5 dakikalik pencere kurallari (tespit/pencere.py; VI-104.1 md 5/1 a/b, d, f). Bolum bantlari: muzayede,
+  devre kesici, EBDKS.
 """
 import os, sys
 
@@ -76,7 +77,7 @@ c[1].metric("Kapanış (enjeksiyonlu)" if r["enjeksiyonlu"] is not None else "Ka
             f"{oz['kapanis']:.2f}" if oz["kapanis"] else "—",
             f"{oz['kapanis'] - oz['kapanis_taban']:+.2f}" if r["enjeksiyonlu"] is not None and oz["kapanis"] else None)
 c[2].metric("Sentetik işlem / adet", f"{oz['sentetik_islem']} / {oz['sentetik_adet']:,}".replace(",", "."))
-c[3].metric("Z-skor uyarısı (dakika)", oz["uyari"])
+c[3].metric("Kural uyarısı (5 dk pencere)", oz["uyari"])
 
 
 def bantlar(fig):
@@ -111,11 +112,11 @@ if ej is not None:
                              customdata=s[["adet", "bolum"]], hovertemplate="%{y:.2f} TL · %{customdata[0]} lot · "
                              "%{customdata[1]}<extra>sentetik</extra>"))
 dk = r["dakika_enj"] if r["dakika_enj"] is not None else r["dakika_taban"]
-u = dk[dk["uyari"]]
-fig.add_trace(go.Scatter(x=u["dakika"], y=u["son"], mode="markers", name="⚠ Z-skor uyarısı",
+u = r["uyarilar"]
+fig.add_trace(go.Scatter(x=u["bas"], y=u["fiyat"], mode="markers", name="⚠ Kural uyarısı (5 dk)",
                          marker=dict(symbol="triangle-up", color=UYARI, size=11, line=dict(color=R["yuzey"], width=2)),
-                         customdata=u[["z_hacim", "z_getiri"]],
-                         hovertemplate="⚠ z hacim %{customdata[0]:.1f} · z |getiri| %{customdata[1]:.1f}<extra>uyarı</extra>"))
+                         customdata=u[["bentler", "puan_zskor"]],
+                         hovertemplate="⚠ bent %{customdata[0]} · en büyük |z| %{customdata[1]:.1f}<extra>uyarı</extra>"))
 duzen(fig, "İşlem fiyatı", "TL")
 st.plotly_chart(fig, width="stretch")
 
@@ -124,14 +125,13 @@ fig2 = go.Figure()
 bantlar(fig2)
 fig2.add_trace(go.Bar(x=dk["dakika"], y=dk["hacim"], marker=dict(color=R["s1"], line_width=0), name="Dakikalık hacim",
                       hovertemplate="%{y:,} lot<extra>hacim</extra>"))
-fig2.add_trace(go.Scatter(x=u["dakika"], y=u["hacim"], mode="markers", name="⚠ Z-skor uyarısı",
-                          marker=dict(symbol="triangle-up", color=UYARI, size=11, line=dict(color=R["yuzey"], width=2)),
-                          hovertemplate="⚠ %{y:,} lot<extra>uyarı</extra>"))
 duzen(fig2, "Sürekli işlem dakikalık hacim" + (" (enjeksiyonlu)" if ej is not None else ""), "lot")
 fig2.update_layout(bargap=0.15)
 st.plotly_chart(fig2, width="stretch")
 
-t1, t2, t3 = st.tabs(["Sentetik işlemler", "Reddedilen sentetik olaylar", "Dakikalık tablo"])
+t0, t1, t2, t3 = st.tabs(["Uyarılar (5 dk)", "Sentetik işlemler", "Reddedilen sentetik olaylar", "Dakikalık tablo"])
+with t0:
+    st.dataframe(u, width="stretch", hide_index=True)
 with t1:
     st.dataframe(ej[ej["sentetik"]] if ej is not None else pd.DataFrame(), width="stretch", hide_index=True)
 with t2:

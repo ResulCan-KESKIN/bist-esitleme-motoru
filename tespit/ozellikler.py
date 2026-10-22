@@ -3,7 +3,10 @@
 Birim: pay-gun (.E siralari, pay pazarlari). Gruplar ve VI-104.1 md 5/1 bentleriyle iliskisi:
 - Emir akisi (bent a, b): yeni / degisiklik / iptal sayilari ve oranlari, emir/islem orani; piyasa emri, KIE,
   aciga satis ve AFK paylari; yeni limit emirlerdeki farkli fiyat kademesi sayisi; acilis emir toplamada (09:40-09:50)
-  iptal orani; kapanis emir toplamada degisiklik ve iptal yogunlugu.
+  iptal orani; kapanis emir toplamada degisiklik ve iptal yogunlugu; kisa omurlu uzak emir payi (surekli islemde ayni
+  taraftaki en iyi fiyattan en az UZAK_ADIM adim uzakta girilip KISA_SN icinde islem gormeden iptal edilen emirlerin
+  miktar payi; yaniltici emir gostergesi).
+- Defter (veride olay anindaki en iyi alis / satis fiyatindan): surekli islemde goreli makasin ortancasi.
 - Islem (bent d, f): getiri, gun ici aralik, aktif taraf dengesizligi, kucuk islem payi (1.000 TL alti), kapanis
   seansi ve kapanis fiyatindan islemlerin hacim payi, kapanis fiyatinin AOF'den sapmasi, acilis seansi fiyatinin
   baz fiyattan sapmasi, kapanis oncesi (17:45 sonrasi surekli islem) getiri.
@@ -22,12 +25,51 @@ import pyarrow as pa
 import pyarrow.compute as pc
 import pyarrow.parquet as pq
 
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "veri", "araclar"))
+
 PAY_PAZARLARI = ("Z", "N", "T", "W", "S")
 ACILIS_TOPLAMA = ("P_ACILIS_EMIR_TPL", "P_ACS_EMR_TP2_PY")          # 09:40-09:50 (son 5 dk haric)
 KAPANIS_TOPLAMA = ("P_KAPANIS_EMIR_TPL", "P_KAPANIS_EMIR_TPL2")
 KUCUK_ISLEM_TL = 1000
-EMIR_SUTUN = ["islem_kodu", "emir_degistirilme_zamani", "emir_fiyat_turu", "emir_turu", "emir_kategorisi",
-              "gecerlilik_turu", "degisiklik_sebebi", "seans", "fiyat", "afk"]
+UZAK_ADIM, KISA_SN = 3, 60
+EMIR_SUTUN = ["islem_kodu", "emir_no", "emir_degistirilme_zamani", "emir_fiyat_turu", "emir_turu", "emir_kategorisi",
+              "gecerlilik_turu", "degisiklik_sebebi", "seans", "fiyat", "afk", "alis_satis", "emir_miktari",
+              "en_iyi_alis_fiyati", "en_iyi_satis_fiyati"]
+
+
+def fiyat_adimi(fiyat_tl):
+    """Pay fiyat adimi (TL), Tablo-7 (tek_fiyat_algoritma.TABLO7)."""
+    from tek_fiyat_algoritma import TABLO7
+    bas, ad = TABLO7
+    m = np.rint(np.asarray(fiyat_tl, dtype=float) * 1000).astype(np.int64)
+    return ad[np.clip(np.searchsorted(bas, m, side="right") - 1, 0, len(ad) - 1)] / 1000
+
+
+def uzak_kisa_omurlu(d):
+    """Kod basina (pay, payda): kisa omurlu uzak emir miktari ve surekli islemde yeni limit emir miktari."""
+    z = d["emir_degistirilme_zamani"].astype("int64")
+    seb = d["degisiklik_sebebi"]
+    gir = d[(seb == 6) & (d["seans"] == "P_SUREKLI_ISLEM") & (d["emir_fiyat_turu"] == 1)
+            & (d["en_iyi_alis_fiyati"] > 0) & (d["en_iyi_satis_fiyati"] > 0)]
+    if gir.empty:
+        return pd.DataFrame(columns=["uzak_kisa", "surekli_yeni_miktar"])
+    alis = gir["alis_satis"] == "A"
+    en_iyi = np.where(alis, gir["en_iyi_alis_fiyati"], gir["en_iyi_satis_fiyati"])
+    mesafe = np.where(alis, en_iyi - gir["fiyat"], gir["fiyat"] - en_iyi) / fiyat_adimi(en_iyi)
+    iptal = z[seb == 1].groupby(d.loc[seb == 1, "emir_no"]).min()
+    dolu = set(d.loc[seb.isin([3, 13]), "emir_no"])
+    omur = iptal.reindex(gir["emir_no"]).to_numpy() - z[gir.index].to_numpy()
+    kisa = (omur <= KISA_SN * 1_000_000) & ~gir["emir_no"].isin(dolu).to_numpy()
+    q = gir["emir_miktari"].to_numpy()
+    x = pd.DataFrame({"islem_kodu": gir["islem_kodu"].to_numpy(), "uzak_kisa": np.where((mesafe >= UZAK_ADIM - 1e-9) & kisa, q, 0),
+                      "surekli_yeni_miktar": q})
+    return x.groupby("islem_kodu").sum()
+
+
+def makas(d):
+    s = d[(d["seans"] == "P_SUREKLI_ISLEM") & (d["en_iyi_alis_fiyati"] > 0) & (d["en_iyi_satis_fiyati"] > 0)]
+    m = (s["en_iyi_satis_fiyati"] - s["en_iyi_alis_fiyati"]) / ((s["en_iyi_satis_fiyati"] + s["en_iyi_alis_fiyati"]) / 2)
+    return m.groupby(s["islem_kodu"]).median()
 
 
 def emir_ozellikleri(gunluk, gun):
@@ -37,7 +79,7 @@ def emir_ozellikleri(gunluk, gun):
         t = t.filter(pc.and_(pc.equal(t["emir_kategorisi"], 1),
                              pc.ends_with(pc.cast(t["islem_kodu"], pa.string()), ".E")))
         d = t.to_pandas()
-        for c in ("islem_kodu", "gecerlilik_turu", "seans", "afk"):
+        for c in ("islem_kodu", "gecerlilik_turu", "seans", "afk", "alis_satis"):
             d[c] = d[c].astype(str)
         seb = d["degisiklik_sebebi"]
         yeni = seb == 6
@@ -54,8 +96,10 @@ def emir_ozellikleri(gunluk, gun):
         })
         g = x.groupby("islem_kodu").sum()
         g["fiyat_kademesi"] = d[lim].groupby("islem_kodu")["fiyat"].nunique()
+        g = g.join(uzak_kisa_omurlu(d), how="left")
+        g["makas"] = makas(d)
         parcalar.append(g)
-    e = pd.concat(parcalar).groupby(level=0).sum()
+    e = pd.concat(parcalar).groupby(level=0).sum(min_count=1)
     y = e["yeni"].clip(lower=1)
     out = pd.DataFrame({
         "emir_yeni": e["yeni"], "emir_degisiklik": e["degisiklik"], "emir_iptal": e["iptal"],
@@ -64,6 +108,8 @@ def emir_ozellikleri(gunluk, gun):
         "fiyat_kademesi": e["fiyat_kademesi"].fillna(0),
         "acilis_iptal_orani": e["acilis_iptal"] / e["acilis_yeni"].clip(lower=1),
         "kapanis_degisiklik_yogunlugu": e["kapanis_degisiklik"] / e["kapanis_yeni"].clip(lower=1),
+        "kisa_omurlu_uzak_pay": e["uzak_kisa"] / e["surekli_yeni_miktar"].where(e["surekli_yeni_miktar"] > 0),
+        "makas": e["makas"],
     })
     out.index.name = "islem_kodu"
     return out

@@ -333,11 +333,43 @@ Yorum:
 - B seviyesinde pencere bir varsayımdır (N = 20). Mart'a düşen B günlerinin bir kısmı pencere kenarındadır (SMRTG 3, VKFYO 2 gün); düşük sonuç beklenir.
 - Pozitif sayısı azdır; sonuçlar 12 aylık veriyle ve sentetik enjeksiyon etiketleriyle yeniden ölçülmelidir.
 
+Eklenen özellikler (22.10.2026): kısa ömürlü uzak emir payı (sürekli işlemde aynı taraftaki en iyi fiyattan ≥ 3 adım uzakta girilip 60 sn içinde işlem görmeden iptal edilen miktar payı; yanıltıcı emir göstergesi; bent a/b kuralına bağlı) ve göreli makas ortancası. İkisi de verideki olay anındaki en iyi alış/satış fiyatından hesaplanır.
+
+#### Sentetik enjeksiyonla değerlendirme (22.10.2026)
+
+Yöntem (`tespit/sentetik_degerlendir.py`, `motor_ozellikleri.py`, `pencere.py`, `pencere_degerlendir.py`, `denetimli.py`):
+- Rastgele pay-günler: 10.03 sonrası, sürekli işlemde en az 300 işlem, özsermaye ve SPK etiketli günler hariç.
+- Senaryolar sırayla ve payın günlük işlem miktarına (H) göre ölçekli:
+  - kapanış: H × %3;
+  - yanıltıcı emir: 3 katman × H × %2, son işlem fiyatından 4–6 adım uzakta, 30 sn sonra iptal;
+  - fiyat yükseltme: 10 agresif alış × H × %0,5;
+  - karşılıklı işlem: 10 tekrar × H × %0,5.
+- Özellikler motor çıktısından hesaplanır. Enjeksiyonsuz motor özellikleri veriden hesaplananlarla neredeyse aynıdır (kontrol).
+
+**Pay-gün düzeyi** (80 enjeksiyon; `veri/gunici-dogrulama/2025-03/tespit/sentetik/`): yöntemler kısa süreli enjeksiyonları ayırt edemez (ROC-AUC 0,40–0,74; en iyisi kapanış senaryosunda iktisadi kurallar). Kısa bir epizot günün toplamında kaybolur.
+
+**5 dakikalık pencere** (77 pay-gün, pozitif pencere oranı %2; `veri/gunici-dogrulama/2025-03/tespit/pencere/`). Pencere, aynı pay-günün diğer pencerelerine göre sağlam z ile puanlanır; denetimli model gradyan artırmalı karar ağacıdır (pay-güne göre gruplu 5 katlı çapraz doğrulama). "İlk 3" = pozitif pencerelerden biri günün en yüksek puanlı 3 penceresinde; "kontrol" = aynı pencerelerin enjeksiyonsuz koşuda ilk 3'e girme oranı.
+
+| Senaryo | Kurallar: ROC-AUC / ilk 3 | Denetimli: ROC-AUC / ilk 3 | Denetimli: kontrol ilk 3 |
+|---|---|---|---|
+| Yanıltıcı emir | 0,85 / %70 | 0,89 / %60 | %5 |
+| Karşılıklı işlem | 0,47 / %5 | 0,86 / %68 | %5 |
+| Fiyat yükseltme | 0,58 / %5 | 0,74 / %21 | %5 |
+| Kapanış | 0,84 / %42 | 0,92 / %95 | %84 |
+| Hepsi | 0,67 / %31 | 0,85 / %61 | %25 |
+
+Yorum:
+- Yanıltıcı emir, kısa ömürlü uzak emir payıyla kurallarla da yakalanır; kontrolde yanlış alarm yoktur.
+- Kapanış senaryosunda sonuç şişkindir: kapanış müzayedesi penceresi her gün uç değerdir. Denetimli model "kapanış penceresi pozitiftir" öğrenir; enjeksiyonsuz günde de %84 alarm verir. Kapanışı etkileme, kapanış penceresinin payın kendi geçmiş kapanışlarıyla karşılaştırılmasını gerektirir.
+- Denetimli modelin en önemli özelliği hacim z'sidir: karşılıklı işlem hacim artışıyla yakalanır, aktör belirlenemez.
+- Fiyat yükseltme en zor senaryodur.
+- Sentetik senaryoların büyüklüğü bir varsayımdır; sonuçlar bu büyüklüklere bağlıdır.
+
 Sonraki adımlar:
-- defter özellikleri (motorla yeniden kurulan derinlik, makas, dengesizlik);
-- 5 dakikalık pencere;
-- sentetik enjeksiyonla etiketli değerlendirme (kesinlik, duyarlılık, F1);
-- denetimli model (etiket sayısı arttığında).
+- kapanışı etkileme için kapanış penceresinin payın geçmiş kapanışlarıyla karşılaştırılması;
+- defter derinliği ve dengesizliği (motorla yeniden kurulan defterden);
+- 12 aylık veriyle ve daha çok enjeksiyonla yeniden ölçüm;
+- SPK etiketli pay-günlerde pencere düzeyi.
 
 ## 7. Klasör yapısı (öneri)
 

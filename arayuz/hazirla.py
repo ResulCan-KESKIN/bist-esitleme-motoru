@@ -2,9 +2,9 @@
 
 - Taban cizgisi (enjeksiyonsuz) ve enjeksiyonlu oynatma (motor/enjeksiyon.py ile ayni akis).
 - Bolum bantlari: muzayede emir toplama, eslestirme, EBDKS durdurmasi (veriden).
-- Dakikalik seriler ve Z-skor temel cizgisi (TASARIM.md 6.3): surekli islem dakikalarinda hacim ve |getiri| icin
-  gunun ortalama ve standart sapmasina gore z; z >= ESIK uyari. Bu, tespit modulunun ilk temel cizgisidir; kural ve
-  model uyarilari tespit modulu yazildikca eklenecektir.
+- Dakikalik hacim serisi (grafik icin).
+- Uyarilar: tespit/pencere.py 5 dakikalik pencere kurallari (VI-104.1 md 5/1 a/b, d, f; ayni pay-gunun diger
+  pencerelerine gore saglam z). Kural tetiklenen pencere uyaridir; puan ve bentler tabloda gorulur.
 """
 import glob, os, sys
 
@@ -15,6 +15,9 @@ KOK = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, KOK)
 from motor import veri, senaryolar
 from motor.gun import Gun, kosular, kategori
+
+sys.path.insert(0, os.path.join(KOK, "tespit"))
+import pencere as pn
 
 GUNLUK = os.path.join(KOK, "veri", "gun-ici-emir", "gunluk")
 ESIK = 3.0
@@ -76,6 +79,20 @@ def dakikalik(islemler):
     return m.reset_index().rename(columns={"zaman": "dakika"})
 
 
+def pencere_uyarilari(g, df, islemler):
+    W = pn.puanla(pn.pencere_ozellikleri(g, pn.emir_olaylari(df, g if g.kabul else None))).reset_index(names="p")
+    W["bas"] = pd.to_datetime(W["p"], unit="us")
+    a_b = (W["z_iptal_orani"] >= pn.ESIK) | (W["z_uzak_kisa_pay"].fillna(0) >= pn.ESIK)
+    f = (W["z_getiri"].abs() >= pn.ESIK) & (W["z_aktif_dengesizlik"].abs() >= pn.ESIK_2) &         (np.sign(W["z_getiri"]) == np.sign(W["z_aktif_dengesizlik"]))
+    d = W["kapanis_muzayedesi"] & (W["z_getiri"].abs() >= pn.ESIK)
+    W["bentler"] = ["".join(x) for x in zip(np.where(a_b, "a/b ", ""), np.where(d, "d ", ""), np.where(f, "f", ""))]
+    W = W[W["kural_sayisi"] >= 1]
+    son = islemler.set_index("zaman")["fiyat"]
+    W["fiyat"] = [son[:b + pd.Timedelta(minutes=5)].iloc[-1] if len(son[:b + pd.Timedelta(minutes=5)]) else np.nan for b in W["bas"]]
+    return W[["bas", "fiyat", "bentler", "kural_sayisi", "puan_zskor", "z_uzak_kisa_pay", "z_iptal_orani", "z_getiri",
+              "z_aktif_dengesizlik", "hacim", "islem_sayisi"]].reset_index(drop=True)
+
+
 def oynat(gun, kod, senaryo=None, saat=None, **param):
     """Donus: dict(taban, enjeksiyonlu, bantlar, dakika_taban, dakika_enj, reddedilen, olaylar, ozet)."""
     gunsonu = gunsonu_dosyasi(gun)
@@ -85,6 +102,7 @@ def oynat(gun, kod, senaryo=None, saat=None, **param):
     tb.calistir()
     taban = _islem_tablosu(tb)
     out = dict(taban=taban, bantlar=bolum_bantlari(df), dakika_taban=dakikalik(taban), olaylar=[],
+               uyarilar=pencere_uyarilari(tb, df, taban),
                enjeksiyonlu=None, dakika_enj=None, reddedilen=pd.DataFrame(columns=["zaman", "emir", "bolum", "sebep"]))
     if senaryo:
         sirali = sorted((i for _, i in tb.islemler), key=lambda i: i.zaman)
@@ -103,12 +121,12 @@ def oynat(gun, kod, senaryo=None, saat=None, **param):
         ej = Gun(df, gun, kod, gunsonu, tepe)
         ej.calistir(olaylar)
         enj = _islem_tablosu(ej)
-        out.update(enjeksiyonlu=enj, dakika_enj=dakikalik(enj), olaylar=olaylar,
+        out.update(enjeksiyonlu=enj, dakika_enj=dakikalik(enj), olaylar=olaylar, uyarilar=pencere_uyarilari(ej, df, enj),
                    reddedilen=pd.DataFrame([(pd.to_datetime(o.zaman, unit="us"), o.no, b, r) for o, b, r in ej.reddedilen],
                                            columns=["zaman", "emir", "bolum", "sebep"]))
     son = out["enjeksiyonlu"] if out["enjeksiyonlu"] is not None else taban
     kap = lambda d: d.loc[d["bolum"] != veri.KAPANIS_FIYATI, "fiyat"].iloc[-1] if len(d) else None
     out["ozet"] = dict(islem_taban=len(taban), kapanis_taban=kap(taban), islem=len(son), kapanis=kap(son),
                        sentetik_islem=int(son["sentetik"].sum()), sentetik_adet=int(son.loc[son["sentetik"], "adet"].sum()),
-                       uyari=int(dakikalik(son)["uyari"].sum()))
+                       uyari=len(out["uyarilar"]))
     return out

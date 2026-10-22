@@ -24,7 +24,7 @@ import collections
 from . import veri, parametreler
 from .defter import Defter
 from .dogrulama import Dogrulayici
-from .emir import Iptal
+from .emir import Iptal, YeniEmir
 from .surekli_islem import SurekliIslem
 from .tek_fiyat import TekFiyat
 from tek_fiyat_algoritma import GRUP_TABLO, yukari_adim, asagi_adim
@@ -86,6 +86,8 @@ class Gun:
         self.dogrulayici = Dogrulayici(self.tablo, self.taban, self.tavan, aciga, izinli)
         self.islemler = []           # (bolum, Islem)
         self.reddedilen = []         # (sentetik olay, bolum, sebep)
+        self.kabul = []              # (sentetik olay, bolum)
+        self.sentetik_en_iyi = {}    # sentetik yeni emir -> (en iyi alis, en iyi satis) giris aninda (surekli islem)
         self.sentetik_nolar = set()
         self.muzayedeler = []        # (eslestirme ani, bolum, denge sonucu)
         self.anlik = []              # (eslestirme ani, {emir_no: (alis, fiyat, kalan, fiyat_turu)}) tani icin
@@ -164,6 +166,8 @@ class Gun:
             r = self.dogrulayici.kontrol(o, bolum, mevcut.get(o.no), son_fiyat, kapanis_fiyati)
             if r:
                 self.reddedilen.append((o, bolum, r))
+            else:
+                self.kabul.append((o, bolum))
             return r is None
 
         for k, (seans, bas, bit) in enumerate(kos):
@@ -199,6 +203,8 @@ class Gun:
                         continue
                     if not gecerli(o, s_, seans, surekli.defter.emirler):
                         continue
+                    if s_ and isinstance(o, YeniEmir):
+                        self.sentetik_en_iyi[o.no] = (surekli.defter.en_iyi(True), surekli.defter.en_iyi(False))
                     surekli.isle(o)
                     if surekli.dk_tetiklendi:
                         tf, defter = TekFiyat(surekli.defter.emirler.values()), None

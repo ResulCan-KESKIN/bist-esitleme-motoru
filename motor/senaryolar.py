@@ -9,7 +9,7 @@ import bisect
 
 from tek_fiyat_algoritma import adim, yukari_adim, asagi_adim
 
-from .emir import YeniEmir, Iptal, LIMIT
+from .emir import YeniEmir, Iptal, LIMIT, PIYASADAN_LIMITE, KIE
 
 US = 1_000_000
 
@@ -57,13 +57,11 @@ def yaniltici_emir(t, tablo, ref, yon_alis=False, katman=3, adim_uzak=2, miktar=
 
 
 def fiyat_yukseltme(t, tablo, ref, adim_sayisi=10, aralik_sn=20, miktar=1000):
-    """Adim adim fiyat yukseltme (ramping): aralik_sn arayla, her biri bir oncekinden bir adim yuksek fiyatli
-    agresif alis emirleri."""
-    out, p = [], ref
-    for k in range(adim_sayisi):
-        p = p + adim(p, tablo)
-        out.append(YeniEmir(t + k * aralik_sn * US, _no("yukseltme", k + 1), True, p, miktar, LIMIT))
-    return out
+    """Adim adim fiyat yukseltme (ramping): aralik_sn arayla agresif alis emirleri. Emirler piyasadan limite ve KIE'dir:
+    her biri en iyi satis seviyesinden islem gorur, kalan iptal edilir; ardisik emirler satis seviyelerini tuketerek
+    fiyati yukari iter (ref yalniz arayuz uyumu icin; fiyat defterden belirlenir)."""
+    return [YeniEmir(t + k * aralik_sn * US, _no("yukseltme", k + 1), True, 0, miktar, PIYASADAN_LIMITE, KIE)
+            for k in range(adim_sayisi)]
 
 
 def karsilikli_islem(t, tablo, ref, tekrar=5, aralik_sn=60, miktar=2000):

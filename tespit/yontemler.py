@@ -25,7 +25,7 @@ TATILLER = ["2025-01-01", "2025-03-31", "2025-04-01", "2025-04-23", "2025-05-01"
 OZELLIKLER = ["getiri", "aralik", "hacim_tl", "kapanis_aof_sapma", "acilis_sapma", "kapanis_seansi_payi", "kfi_payi",
               "iptal_orani", "degisiklik_orani", "piyasa_payi", "kie_payi", "afk_payi", "fiyat_kademesi",
               "acilis_iptal_orani", "kapanis_degisiklik_yogunlugu", "aktif_dengesizlik", "kucuk_islem_payi",
-              "kapanis_oncesi_getiri", "emir_islem_orani"]
+              "kapanis_oncesi_getiri", "emir_islem_orani", "kisa_omurlu_uzak_pay", "makas"]
 LOG = {"hacim_tl", "fiyat_kademesi", "emir_islem_orani"}
 
 
@@ -47,7 +47,7 @@ def z_skorlari(df):
 def kurallar(d):
     z = lambda c: d["z_" + c]
     a = (z("iptal_orani") >= ESIK) | (z("emir_islem_orani") >= ESIK)
-    b = z("fiyat_kademesi") >= ESIK
+    b = (z("fiyat_kademesi") >= ESIK) | (z("kisa_omurlu_uzak_pay") >= ESIK)
     dd = ((z("kapanis_aof_sapma").abs() >= ESIK) & (z("kapanis_seansi_payi") >= ESIK_2)) | \
          ((z("acilis_iptal_orani") >= ESIK) & (z("acilis_sapma").abs() >= ESIK_2))
     f = ((z("getiri").abs() >= ESIK) & (z("aktif_dengesizlik").abs() >= ESIK_2) & (np.sign(z("getiri")) == np.sign(z("aktif_dengesizlik")))) | \

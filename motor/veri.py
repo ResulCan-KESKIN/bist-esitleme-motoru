@@ -25,7 +25,7 @@ NORMAL, ORTA_NOKTA = 1, 64
 KESINTI = ("P_DK_", "P_GECICI_DUR", "P_TF_EMIR_TPL", "P_ESLESTIRME_EBDK")
 EMIR_SUTUN = ["emir_no", "emir_degistirilme_zamani", "alis_satis", "emir_fiyat_turu", "emir_turu", "emir_kategorisi",
               "gecerlilik_turu", "emir_durumu", "degisiklik_sebebi", "emir_miktari", "kalan_miktar", "fiyat", "seans",
-              "islem_numarasi", "eslesen_miktar", "guncelleme_no", "afk"]
+              "islem_numarasi", "eslesen_miktar", "guncelleme_no", "afk", "en_iyi_alis_fiyati", "en_iyi_satis_fiyati"]
 
 
 def milli(x):

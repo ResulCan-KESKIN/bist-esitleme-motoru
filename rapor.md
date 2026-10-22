@@ -422,6 +422,27 @@ Yorum:
 - B pencereleri varsayımdır; Mart'taki B günlerinin bir kısmı pencere kenarındadır.
 - Pozitif sayısı azdır. Sonuçlar 12 aylık veriyle ve sentetik enjeksiyon etiketleriyle yeniden ölçülmelidir.
 
+Sentetik enjeksiyonla değerlendirme (`tespit/sentetik_degerlendir.py`, `motor_ozellikleri.py`; 80 rastgele pay-gün, dört senaryo, payın günlük hacmine göre ölçekli; `veri/gunici-dogrulama/2025-03/tespit/sentetik/`):
+- Kontrol: enjeksiyonsuz motor özellikleri veriden hesaplananlarla neredeyse aynıdır; kontrol kümesinde ROC-AUC ≈ 0,5 (yöntem farkı sahte tespit üretmez).
+- Pay-gün düzeyinde yöntemler kısa süreli enjeksiyonları ayırt edemez: ROC-AUC 0,40–0,74. En iyisi kapanış senaryosunda iktisadi kurallar (0,74). Kısa bir epizot günün toplamında kaybolur; 5 dakikalık pencere gerekir. Karşılıklı işlem aktör kimliği olmadan ölçülemez.
+- Ardından yanıltıcı emir göstergesi eklendi: kısa ömürlü uzak emir payı (en iyi fiyattan ≥ 3 adım uzakta girilip 60 sn içinde işlem görmeden iptal edilen miktar payı) ve makas. ALKLC 11.03'te %7,4 (gün ortancası %1,4). Bu özelliklerle değerlendirme yeniden yapılacak.
+
+5 dakikalık pencere ve denetimli model (`tespit/pencere.py`, `pencere_degerlendir.py`, `denetimli.py`; 77 pay-gün, pozitif pencere oranı %2; `veri/gunici-dogrulama/2025-03/tespit/pencere/`):
+
+| Senaryo | Kurallar: ROC-AUC / ilk 3 | Denetimli: ROC-AUC / ilk 3 | Denetimli: kontrol ilk 3 |
+|---|---|---|---|
+| Yanıltıcı emir | 0,85 / %70 | 0,89 / %60 | %5 |
+| Karşılıklı işlem | 0,47 / %5 | 0,86 / %68 | %5 |
+| Fiyat yükseltme | 0,58 / %5 | 0,74 / %21 | %5 |
+| Kapanış | 0,84 / %42 | 0,92 / %95 | %84 |
+| Hepsi | 0,67 / %31 | 0,85 / %61 | %25 |
+
+- "İlk 3": pozitif pencerelerden biri günün en yüksek puanlı 3 penceresinde. "Kontrol": aynı pencerelerin enjeksiyonsuz koşuda ilk 3'e girme oranı (yanlış alarm tabanı).
+- Pencere düzeyi pay-gün düzeyinden belirgin biçimde iyidir. Yanıltıcı emir kurallarla da yakalanır ve kontrolde yanlış alarm yoktur.
+- Kapanış senaryosunda sonuç şişkindir: kapanış müzayedesi penceresi her gün uç değerdir; denetimli model enjeksiyonsuz günde de %84 alarm verir.
+- Denetimli modelin en önemli özelliği hacim z'sidir; karşılıklı işlem hacim artışıyla yakalanır, aktör belirlenemez. Fiyat yükseltme en zor senaryodur.
+- Senaryo büyüklükleri bir varsayımdır; sonuçlar bu büyüklüklere bağlıdır (`TASARIM.md` 6.6).
+
 ### 3.10 Toplu ölçüm (bütün paylar)
 
 `motor/toplu_oynat.py` ile günün bütün `.E` sıraları baştan sona oynatıldı (`veri/gunici-dogrulama/2025-03/motor/toplu_GUN.csv`).
