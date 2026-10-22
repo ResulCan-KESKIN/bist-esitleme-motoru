@@ -31,6 +31,7 @@ GUNLUK = os.path.join(KOK, "veri", "gun-ici-emir", "gunluk")
 ISLEM_EN_AZ = 300
 KAPANIS_ORAN = 0.03
 YANILTICI_ADIM = 4   # katmanlar son islem fiyatindan 4, 5, 6 adim uzakta (defterin derininde)
+OLCEK = float(os.environ.get("OLCEK", "1"))   # senaryo buyuklugu carpani (duyarlilik analizi)
 SENARYO_SIRASI = ["kapanis", "yaniltici", "yukseltme", "karsilikli"]
 PUANLAR = ["puan_zskor", "puan_kural", "puan_iforest", "puan_kesit_uc", "puan_kesit_iforest"]
 
@@ -40,6 +41,7 @@ def gunsonu(gun):
 
 
 def senaryo_olaylari(senaryo, g, df, gun, H, rng):
+    H = H * OLCEK
     sirali = sorted((i for _, i in g.islemler), key=lambda i: i.zaman)
     tb = g.tablo
     if senaryo == "kapanis":

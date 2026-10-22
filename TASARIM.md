@@ -362,10 +362,35 @@ Yorum:
 - *Fiyat yükseltme* en zor senaryodur: 10 küçük agresif alış, likit paylarda günün olağan dalgalanmasından ayrışmaz.
 - *Kapanış:* kapanış penceresi aynı günün pencerelerine göre puanlandığında sonuç yüksek görünüyordu (ROC-AUC 0,84, ilk 3 %42), ama enjeksiyonsuz günde de aynı oranda alarm veriyordu; yani ayırt edicilik yoktu. Geçmiş kapanışlara göre puanlanınca yanlış alarm sıfıra iner ama günlük hacmin %3'ü büyüklüğündeki bir kapanış emri payın olağan kapanış oynaklığından ayrışmaz. Bu büyüklükte kapanış etkilemesi bu veriyle tespit edilemez; daha büyük senaryolarla ve 12 aylık geçmişle yeniden ölçülmelidir.
 - Pay-gün düzeyi kısa epizotları kaçırır; pencere düzeyi gereklidir.
-- Senaryo büyüklükleri bir varsayımdır; sonuçlar bu büyüklüklere bağlıdır.
+- Senaryo büyüklükleri bir varsayımdır; sonuçlar bu büyüklüklere bağlıdır (aşağıdaki duyarlılık analizi).
+
+*Senaryo büyüklüğüne duyarlılık* (pencere düzeyi; büyüklükler ×0,3, ×1, ×3; her biri 80 enjeksiyon; `veri/gunici-dogrulama/2025-03/tespit/olcek_duyarlilik.csv`, `pencere_olcek_0.3/`, `pencere_olcek_3/`). Hücreler: ROC-AUC / ilk 3 / kontrol ilk 3.
+
+| Senaryo | Ölçek | Kurallar | Denetimli |
+|---|---|---|---|
+| Yanıltıcı emir | ×0,3 | 0,90 / %84 / %5 | 0,86 / %58 / %0 |
+| Yanıltıcı emir | ×1 | 0,90 / %84 / %5 | 0,89 / %74 / %0 |
+| Yanıltıcı emir | ×3 | 0,90 / %84 / %5 | 0,91 / %79 / %0 |
+| Karşılıklı işlem | ×0,3 | 0,44 / %0 / %0 | 0,79 / %45 / %25 |
+| Karşılıklı işlem | ×1 | 0,49 / %0 / %0 | 0,89 / %80 / %20 |
+| Karşılıklı işlem | ×3 | 0,57 / %0 / %0 | 0,96 / %100 / %5 |
+| Fiyat yükseltme | ×0,3 | 0,54 / %0 / %0 | 0,65 / %20 / %10 |
+| Fiyat yükseltme | ×1 | 0,56 / %0 / %0 | 0,64 / %30 / %5 |
+| Fiyat yükseltme | ×3 | 0,57 / %0 / %0 | 0,62 / %35 / %0 |
+| Kapanış | ×0,3 | 0,41 / %0 / %0 | — |
+| Kapanış | ×1 | 0,60 / %0 / %0 | — |
+| Kapanış | ×3 | 0,70 / %15 / %0 | — |
+
+Yorum:
+- Yanıltıcı emir kuralı ölçekten bağımsızdır: kısa ömürlü uzak emir payı bir orandır; katmanlar küçük olsa da pencerede bu tür emirlerin payını belirgin artırır. Bu, kuralın büyüklüğe değil davranış biçimine duyarlı olduğunu gösterir.
+- Karşılıklı işlem tespiti büyüklüğe güçlü biçimde bağlıdır: model bunu hacim artışından yakalar; küçük karşılıklı işlemler olağan hacim dalgalanmasında kaybolur.
+- Fiyat yükseltme her ölçekte zayıftır; mevcut özellikler bu senaryonun izini taşımaz. Yeni gösterge gerekir (sonraki adımlar).
+- Kapanış etkilemesi ancak büyük emirlerde (günlük hacmin ≈ %9'u) belirmeye başlar.
+- Denetimli modelin kapanış satırı yoktur: model yalnız sürekli işlem pencerelerinde çalışır, kapanış penceresi geçmiş kapanışlarla puanlanır.
 
 Sonraki adımlar:
-- senaryo büyüklüğüne duyarlılık (ör. H × %1, %3, %10);
+- fiyat yükseltme göstergesi: pencerede net agresif adım (agresif alışların fiyatı yukarı ittiği adım sayısı eksi agresif satışların aşağı ittiği adım sayısı), bent f kuralına bağlanır;
+- kapanış etkilemesi için daha güçlü göstergeler (kapanış denge fiyatının son sürekli işlem fiyatından sapması, kapanış emir toplamadaki alış/satış dengesizliği ve son dakikalardaki değişiklikler);
 - defter derinliği ve dengesizliği (motorla yeniden kurulan defterden);
 - 12 aylık veriyle ve daha çok enjeksiyonla yeniden ölçüm; SPK etiketli pay-günlerde pencere düzeyi.
 
