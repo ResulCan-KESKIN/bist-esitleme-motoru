@@ -1,6 +1,6 @@
 import struct, sys, io, collections, glob
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
-D = r"E:\DERSLER\7. DÖNEM\Bitirme Projesi 1\proje\veri\itch\2018-10-08"
+D = r"D:\Bitirme\proje\veri\itch\2018-10-08"
 
 
 def parse(path):

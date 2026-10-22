@@ -1,0 +1,204 @@
+
+== degisiklik: kategori x giris_degisti
+emir_kategorisi  giris_degisti  giris_eq_deg
+1                False          False           131496491
+4                False          True            253410890
+
+== normal emir degisiklikleri: bolum x fiyat x miktar
+fiyat_yon               ayni                      iyi                        kotu                 
+miktar_yon             artis    ayni  azalis    artis       ayni   azalis   artis     ayni  azalis
+seans                                                                                             
+P_ACILIS_EMIR_TPL       1343     279    3550      153      27982     1089     194    26544     249
+P_ACS_EMR_TP2_PY          81       4     144        4        535       16       6      280       9
+P_ACS_EMR_TP2_PY_EIY      50       4       0        3        386        0       0        0       0
+P_ACS_EMR_TP_EIY         912     202       0      129      17734        0       0        0       0
+P_BP_SUREKLI_ISLEM         4       0       0        0          2        0       0        1       0
+P_DK_TEKFIY_EMIR_TPL    5304    6319    4522      361      73545     2404     420    20380     221
+P_DK_TEKFIY_EMR_TPL2      84     269     195       14       4385      192      14      831      12
+P_GECICI_DUR_EBDK_KT       0       1      15        0          0        0       0      104       7
+P_KAPANIS_EMIR_TPL      6208    1907   16602     1522     135338    10034     180    25834    1181
+P_KAPANIS_EMIR_TPL2      102      68     799       99       6534      851       1      257      20
+P_KAPANIS_FIY_ISLEM       99     389    1976      312      34155     3034       0        1       0
+P_SUREKLI_ISLEM       389676  209707  879924  4046997  113896850  4030830  201806  6937332  344519
+P_TEKFIYAT_EMIR_TPL2    2616    2560    4081      427      48804     2571     175     6253     174
+P_TF_EMIR_TPL2_EBDK       31      27     122        3        981       84      10      386      34
+P_TF_EMIR_TPL_EBDK      2383     691    3126      188      21530     1148     249    10965     240
+
+== kullanici iptali (sebep 1) bolum bazinda
+seans
+P_ACILIS_EMIR_TPL          73715
+P_ACS_EMR_TP2_PY            1237
+P_BP_SUREKLI_ISLEM            30
+P_DK_TEKFIY_EMIR_TPL      113270
+P_DK_TEKFIY_EMR_TPL2        4427
+P_GECICI_DUR_EBDK_KT      103413
+P_GECICI_DUR_EBDK_SI           1
+P_KAPANIS_EMIR_TPL        164657
+P_KAPANIS_EMIR_TPL2         5359
+P_KAPANIS_FIY_ISLEM       106518
+P_SALTKOTASYON             31323
+P_SUREKLI_ISLEM         78969731
+P_TEKFIYAT_EMIR_TPL2       61691
+P_TF_EMIR_TPL2_EBDK         2148
+P_TF_EMIR_TPL_EBDK         60840
+
+== ilk satir sebebi
+grup    degisiklik_sebebi  emir_durumu
+pay     1                  2                      3
+        3                  2                    235
+        5                  1                3718063
+        6                  1              146823729
+                           2               72350520
+varant  5                  1              182951951
+        6                  1                5718832
+                           2                1678198
+
+== guncelleme_no atlama
+grup    atlama
+pay     False     444205114
+        True        4050440
+varant  False       9371251
+        True      257598495
+
+== islem satiri tutarliligi
+grup    kalan_tutarli  miktar_sabit  giris_sabit
+pay     False          False         True                  14
+                       True          True                 207
+        True           True          True           230234867
+varant  False          False         True              219934
+                       True          True               12897
+        True           False         True                  91
+                       True          True             3502153
+
+== KIE aktif satirlari
+grup  seans               
+pay   P_ACILIS_EMIR_TPL       128391
+      P_ACS_EMR_TP2_PY          5133
+      P_ACS_EMR_TP2_PY_EIY      1232
+      P_ACS_EMR_TP_EIY         32959
+      P_DK_TEKFIY_EMIR_TPL     24496
+      P_DK_TEKFIY_EMR_TPL2      1473
+      P_KAPANIS_EMIR_TPL      101153
+      P_KAPANIS_EMIR_TPL2       2715
+      P_SUREKLI_ISLEM            504
+      P_TEKFIYAT_EMIR_TPL2     20814
+      P_TF_EMIR_TPL2_EBDK       1006
+      P_TF_EMIR_TPL_EBDK       31572
+
+== emrin son satiri (pay)
+emir_durumu  degisiklik_sebebi  seans               
+1            3                  P_SUREKLI_ISLEM               119
+             5                  P_GECICI_DUR_EBDK_KT         1500
+                                P_SUREKLI_ISLEM           3711617
+             6                  P_SUREKLI_ISLEM              2737
+2            1                  P_ACILIS_EMIR_TPL           73715
+                                P_ACS_EMR_TP2_PY             1237
+                                P_BP_SUREKLI_ISLEM             30
+                                P_DK_TEKFIY_EMIR_TPL       113270
+                                P_DK_TEKFIY_EMR_TPL2         4427
+                                P_GECICI_DUR_EBDK_KT          343
+                                P_GECICI_DUR_EBDK_SI            1
+                                P_KAPANIS_EMIR_TPL         164656
+                                P_KAPANIS_EMIR_TPL2          5354
+                                P_KAPANIS_FIY_ISLEM        106518
+                                P_SUREKLI_ISLEM          70410561
+                                P_TEKFIYAT_EMIR_TPL2        61691
+                                P_TF_EMIR_TPL2_EBDK          2148
+                                P_TF_EMIR_TPL_EBDK          60840
+             3                  P_BP_SUREKLI_ISLEM             26
+                                P_ESLESTIRME              2100843
+                                P_ESLESTIRMETEKFIYAT       260609
+                                P_ESLESTIRME_EBDK          266139
+                                P_KAPANIS_FIY_ISLEM        182899
+                                P_SUREKLI_ISLEM         122851699
+             5                  P_SUREKLI_ISLEM                62
+             6                  P_KAPANIS_FIY_ISLEM           489
+                                P_SUREKLI_ISLEM          11105663
+             8                  P_SUREKLI_ISLEM              2269
+             9                  P_ESLESTIRME                20608
+                                P_ESLESTIRMETEKFIYAT         6407
+                                P_ESLESTIRME_EBDK             669
+                                P_SUREKLI_ISLEM                12
+             19                 P_GUNSONU                11311478
+             34                 P_ESLESTIRME                 6394
+                                P_ESLESTIRMETEKFIYAT         1458
+                                P_ESLESTIRME_EBDK             250
+                                P_SUREKLI_ISLEM                 1
+             116                P_ACILIS_EMIR_TPL               6
+                                P_ACS_EMR_TP_EIY                2
+                                P_DK_TEKFIY_EMIR_TPL            9
+                                P_ESLESTIRME                    1
+                                P_KAPANIS_EMIR_TPL             16
+                                P_SUREKLI_ISLEM             15717
+             117                P_GECICI_DURDUR_EBDK        38051
+                                P_SUREKLI_ISLEM                 9
+
+== aciliste yeni emir: pazar x fiyat turu
+emir_fiyat_turu       1      2     3    66
+pazar                                     
+N                2074231  29970  5041  190
+S                  54010      0     0   13
+T                 231964      0     0   11
+W                  53297      0     0   19
+Z                4524962  89956  9378  401
+
+== kapanis seansi +-%3
+ref        durum          gunluk_sinir_icinde  sebep
+son_islem  disinda        False                5             1
+                          True                 5           325
+                                               6            69
+           icinde         False                5           188
+                                               6           703
+                          True                 5        197263
+                                               6        690001
+yok        son_islem_yok  True                 5          4394
+                                               6         16858
+
+== kapanis fiyatindan islemler: emir fiyati = kapanis fiyati
+degisiklik_sebebi  esit 
+5                  False      1783
+                   True      38183
+6                  True     183942
+
+== sistem sebepleri
+degisiklik_sebebi  seans                 onceki_durum  emir_durumu  fiyat_degisti  kalan_degisti
+13                 P_SUREKLI_ISLEM       1.0           1            False          True             330039
+8                  P_SUREKLI_ISLEM       1.0           1            False          True              40196
+117                P_GECICI_DURDUR_EBDK  1.0           2            False          False             38051
+8                  P_SUREKLI_ISLEM       2.0           1            True           True              28414
+9                  P_ESLESTIRME          1.0           2            False          False             20286
+4                  P_SUREKLI_ISLEM       1.0           4            False          False             18542
+116                P_SUREKLI_ISLEM       1.0           2            False          False             15750
+9                  P_ESLESTIRMETEKFIYAT  1.0           2            False          False              6300
+34                 P_ESLESTIRME          1.0           2            False          False              6029
+                                         2.0           2            False          True               4603
+8                  P_SUREKLI_ISLEM       2.0           2            False          True               3232
+                                                                    True           True               2269
+117                P_SUREKLI_ISLEM       2.0           2            True           False              2003
+                                         1.0           2            True           False              1545
+13                 P_ESLESTIRME          1.0           1            False          True               1519
+34                 P_ESLESTIRMETEKFIYAT  1.0           2            False          False              1380
+9                  P_ESLESTIRME          2.0           2            False          True               1170
+34                 P_ESLESTIRME_EBDK     2.0           2            False          True               1048
+                   P_ESLESTIRMETEKFIYAT  2.0           2            False          True                808
+13                 P_KAPANIS_FIY_ISLEM   1.0           1            False          True                714
+9                  P_ESLESTIRME_EBDK     1.0           2            False          False               651
+                   P_ESLESTIRMETEKFIYAT  2.0           2            False          True                648
+8                  P_ESLESTIRME          1.0           1            True           False               527
+                                                                    False          True                512
+34                 P_ESLESTIRME          1.0           2            False          True                365
+13                 P_ESLESTIRMETEKFIYAT  1.0           1            False          True                353
+117                P_SUREKLI_ISLEM       1.0           2            True           True                344
+9                  P_ESLESTIRME          1.0           2            False          True                322
+8                  P_ESLESTIRMETEKFIYAT  1.0           1            True           False               268
+9                  P_ESLESTIRME_EBDK     2.0           2            False          True                241
+116                P_SUREKLI_ISLEM       2.0           2            True           False               234
+34                 P_ESLESTIRME_EBDK     1.0           2            False          False               232
+116                P_SUREKLI_ISLEM       1.0           2            True           False               222
+13                 P_ESLESTIRME_EBDK     1.0           1            False          True                216
+8                  P_ESLESTIRMETEKFIYAT  1.0           1            False          True                195
+116                P_SUREKLI_ISLEM       2.0           2            True           True                175
+                                         1.0           2            True           True                165
+117                P_SUREKLI_ISLEM       2.0           2            True           True                147
+9                  P_ESLESTIRMETEKFIYAT  1.0           2            False          True                107
+34                 P_ESLESTIRMETEKFIYAT  1.0           2            False          True                 78

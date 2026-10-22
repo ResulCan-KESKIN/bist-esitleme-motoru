@@ -4,7 +4,7 @@ Kaynak: Pay Piyasası Prosedürü (`pay-piyasasi-prosedur.pdf`), Ek-3, s. 113–
 Aktarım yöntemi: PDF'ten kelime konumlarıyla çıkarım; tablo hücreleri sayfadaki kenarlık ve dolgu çizgilerinden kurulmuştur, bu yüzden sütun kayması olmaz. Yorum eklenmemiştir. Hücre içi satır sonları ` ` ile gösterilir. Markdown tablolarında ilk satır, kaynakta başlık satırı olmasa da başlık satırı olarak yazılır; bir sayfanın başında devam eden tablonun ilk satırı da veri satırıdır (sayfa işaretleri `[Sayfa N]` ile verilmiştir).
 Otomatik doğrulama: sayfalardaki tüm kelimelerin dosyada bulunduğu kontrol edildi (eksik kelime: 0).
 Görsel doğrulama (Claude, sayfa görüntüsü ile karşılaştırma): s. 116, 124 ve 134 sayfa görüntüsüyle karşılaştırıldı; diğer tablo sayfaları (118, 120, 122, 123, 125–128) için görüntü incelenmedi.
-Elle düzeltilen/yamalanan sayfalar: yok
+Elle düzeltilen/yamalanan sayfalar: yok. Girintili düzyazı satırlarının baştaki boşlukları kaldırıldı (22.10.2026; GitHub'da kod bloğu olarak görünüyordu); metin değişmedi.
 Notlar: Kaynaktaki yazım hataları ve dipnot işaretleri (metin içinde sayı veya "65F" gibi kalıntılar) olduğu gibi bırakılmıştır. Üstü çizili, altı çizili, kalın ve renk gibi biçim bilgileri aktarılmamıştır. Varant kodu örneklerindeki 32 karakterlik şema tabloları, birleşik başlık hücreleri nedeniyle yeniden düzenlenmiştir: “Başlık hücresinin kapsadığı sütunlar” satırı, başlık hücrelerinin sayfadaki konumundan türetilmiştir.
 Kullanıcı doğrulaması: doğrulandı
 
@@ -13,68 +13,68 @@ Kullanıcı doğrulaması: doğrulandı
 
 3 – VARANTLARIN BORSADA İŞLEM GÖRMESİNE İLİŞKİN USUL VE ESASLAR
 1) Dayanak
-    Bu düzenleme;
-    • 10/09/2013 tarih ve 28761 sayılı Resmî Gazete’de yayımlanan VII-128.3 sayılı Varantlar ve Yatırım Kuruluşu Sertifikaları Tebliği’ne,
-    • Kotasyon Yönergesi’ne,
-    • Pay Piyasası Yönergesi’ne
-    dayanılarak yapılmıştır.
+Bu düzenleme;
+• 10/09/2013 tarih ve 28761 sayılı Resmî Gazete’de yayımlanan VII-128.3 sayılı Varantlar ve Yatırım Kuruluşu Sertifikaları Tebliği’ne,
+• Kotasyon Yönergesi’ne,
+• Pay Piyasası Yönergesi’ne
+dayanılarak yapılmıştır.
 
 2) Tanımlar
-    Yatırım Kuruluşu
-    Aracı kurumlar ile yatırım hizmeti ve faaliyetinde bulunmak üzere kuruluş ve faaliyet esasları Kurulca belirlenen diğer sermaye piyasası kurumlarını ve bankaları ifade eder.
-    
-    Yatırım Kuruluşu Varantı (Varant)
-    Elinde bulunduran kişiye, dayanak varlığı ya da göstergeyi önceden belirlenen bir fiyattan belirli bir tarihte veya belirli bir tarihe kadar alma veya satma hakkı veren ve bu hakkın kaydi teslimat ya da nakit uzlaşı ile kullanıldığı menkul kıymet niteliğindeki sermaye piyasası aracını ifade eder.
-    
-    Dayanak Varlık
-    BIST 30 endeksinde yer alan paylar ve/veya BIST 30 endeksi kapsamında yer alan birden fazla paydan oluşan sepeti ifade eder.
-    
-    Dayanak Gösterge
-    Borsa tarafından oluşturulmuş pay endekslerini ifade eder.
-    
-    Diğer Dayanaklar
-    Kurulca uygun görülmesi durumunda, yukarıda sayılan dayanak varlık ve göstergeler dışında kalan konvertibl döviz, kıymetli maden, emtia, geçerliliği uluslararası alanda genel kabul görmüş endeksler gibi diğer varlık ve göstergeler de varanta dayanak teşkil edebilirler.
-    
-    İtibari Değer
-    Her bir varantın 1 kuruştan az olmamak üzere ihraççı tarafından belirlenmiş olan itibari değerini ifade eder.
-    
-    İhraç Fiyatı ve Tarihi
-    İhraç fiyatı, varantın sirkülerde ilan edilen Borsada işleme başlama fiyatını; ihraç tarihi ise varantın Borsada işleme başlama tarihini ifade eder.
-    
-    Vade Tarihi
-    Varantın işleme konulabileceği son tarihi ifade eder.
+Yatırım Kuruluşu
+Aracı kurumlar ile yatırım hizmeti ve faaliyetinde bulunmak üzere kuruluş ve faaliyet esasları Kurulca belirlenen diğer sermaye piyasası kurumlarını ve bankaları ifade eder.
+
+Yatırım Kuruluşu Varantı (Varant)
+Elinde bulunduran kişiye, dayanak varlığı ya da göstergeyi önceden belirlenen bir fiyattan belirli bir tarihte veya belirli bir tarihe kadar alma veya satma hakkı veren ve bu hakkın kaydi teslimat ya da nakit uzlaşı ile kullanıldığı menkul kıymet niteliğindeki sermaye piyasası aracını ifade eder.
+
+Dayanak Varlık
+BIST 30 endeksinde yer alan paylar ve/veya BIST 30 endeksi kapsamında yer alan birden fazla paydan oluşan sepeti ifade eder.
+
+Dayanak Gösterge
+Borsa tarafından oluşturulmuş pay endekslerini ifade eder.
+
+Diğer Dayanaklar
+Kurulca uygun görülmesi durumunda, yukarıda sayılan dayanak varlık ve göstergeler dışında kalan konvertibl döviz, kıymetli maden, emtia, geçerliliği uluslararası alanda genel kabul görmüş endeksler gibi diğer varlık ve göstergeler de varanta dayanak teşkil edebilirler.
+
+İtibari Değer
+Her bir varantın 1 kuruştan az olmamak üzere ihraççı tarafından belirlenmiş olan itibari değerini ifade eder.
+
+İhraç Fiyatı ve Tarihi
+İhraç fiyatı, varantın sirkülerde ilan edilen Borsada işleme başlama fiyatını; ihraç tarihi ise varantın Borsada işleme başlama tarihini ifade eder.
+
+Vade Tarihi
+Varantın işleme konulabileceği son tarihi ifade eder.
 
 
-    İşleme Konulma Fiyatı
-    Varantın dayanak varlığının işleme koyma tarihindeki daha önceden belirlenmiş olan alım ya da satım fiyatını ifade eder.
-    
-    Dönüşüm Oranı
-    Bir adet varantın kaç adet dayanak varlığa denk geldiğini gösteren oranı ifade eder.
-    
-    Piyasa Yapıcı Üye (Piyasa Yapıcı)
-    Piyasa yapıcı üye, sorumlu olduğu varantlarda piyasanın dürüst, düzenli ve etkin çalışmasını sağlamak, likit ve sürekli bir piyasanın oluşmasına katkıda bulunmak amacıyla faaliyette bulunmak üzere kotasyon vermekle yükümlü olan ve Borsa Yönetim Kurulu tarafından yetkilendirilmiş bulunan Borsa üyesi yatırım kuruluşunu ifade eder.
-    Piyasa yapıcılık, yetkilendirilmiş üyeler tarafından sorumlu oldukları varantın piyasasının dürüst, düzenli ve etkin çalışmasını sağlamak ve likiditeye katkıda bulunmak amacıyla yürütülen özellikli bir alım satım faaliyetidir.
-    
-    Kotasyon (Piyasa Yapıcının Alım Satım Kotasyonu)
-    Piyasa yapıcının likiditeyi sağlamak için Sisteme girdiği, almaya ve satmaya razı olduğu fiyat ile bu fiyat seviyesinden ne kadar alacağını/satacağını gösteren miktar bilgisini içeren çift yönlü emir çeşididir.
-    
-    Varant Tipi (Avrupa-Amerikan)
-    Avrupa tipi varantlar sadece vade tarihinde işleme konulabilirken Amerikan tipi varantlar vade tarihinde ya da vadeye kadar istenilen herhangi bir tarihte işleme konulabilir.
-    
-    Sepet Varant
-    Dayanağı BIST 30 Endeksi kapsamında yer alan birden fazla paydan oluşan varanttır.
-    Varantların Pazardan Çıkartılması
-    Borsada işlem gören varantlar;
-        a) Varantın vadesinin dolması,
-        b) Sepet varantlar ve endekse dayalı varantlar hariç olmak üzere, varantın dayanak varlığının birleşme, devrolma veya diğer nedenlerle kottan çıkarılması
-    durumlarında Borsa kotundan ve pazardan sürekli olarak çıkarılır.
+İşleme Konulma Fiyatı
+Varantın dayanak varlığının işleme koyma tarihindeki daha önceden belirlenmiş olan alım ya da satım fiyatını ifade eder.
+
+Dönüşüm Oranı
+Bir adet varantın kaç adet dayanak varlığa denk geldiğini gösteren oranı ifade eder.
+
+Piyasa Yapıcı Üye (Piyasa Yapıcı)
+Piyasa yapıcı üye, sorumlu olduğu varantlarda piyasanın dürüst, düzenli ve etkin çalışmasını sağlamak, likit ve sürekli bir piyasanın oluşmasına katkıda bulunmak amacıyla faaliyette bulunmak üzere kotasyon vermekle yükümlü olan ve Borsa Yönetim Kurulu tarafından yetkilendirilmiş bulunan Borsa üyesi yatırım kuruluşunu ifade eder.
+Piyasa yapıcılık, yetkilendirilmiş üyeler tarafından sorumlu oldukları varantın piyasasının dürüst, düzenli ve etkin çalışmasını sağlamak ve likiditeye katkıda bulunmak amacıyla yürütülen özellikli bir alım satım faaliyetidir.
+
+Kotasyon (Piyasa Yapıcının Alım Satım Kotasyonu)
+Piyasa yapıcının likiditeyi sağlamak için Sisteme girdiği, almaya ve satmaya razı olduğu fiyat ile bu fiyat seviyesinden ne kadar alacağını/satacağını gösteren miktar bilgisini içeren çift yönlü emir çeşididir.
+
+Varant Tipi (Avrupa-Amerikan)
+Avrupa tipi varantlar sadece vade tarihinde işleme konulabilirken Amerikan tipi varantlar vade tarihinde ya da vadeye kadar istenilen herhangi bir tarihte işleme konulabilir.
+
+Sepet Varant
+Dayanağı BIST 30 Endeksi kapsamında yer alan birden fazla paydan oluşan varanttır.
+Varantların Pazardan Çıkartılması
+Borsada işlem gören varantlar;
+a) Varantın vadesinin dolması,
+b) Sepet varantlar ve endekse dayalı varantlar hariç olmak üzere, varantın dayanak varlığının birleşme, devrolma veya diğer nedenlerle kottan çıkarılması
+durumlarında Borsa kotundan ve pazardan sürekli olarak çıkarılır.
 
 3) Borsa Payı
 Varant alım satımlarında PP’de uygulanan Borsa payı tarifesi uygulanır. Piyasa yapıcılarının kotasyon emirleri vasıtasıyla gerçekleştirdikleri varant alım satımlarında, performans değerlendirme koşullarını sağlamaları durumunda, PP’de uygulanan indirimli Borsa payı tarifesi uygulanır.
 
 4) İşlem Görmeye Başlama
 İhraççı kuruluş/piyasa yapıcı, ihraç edilecek varantlara ilişkin bilgileri Borsa tarafından belirlenen format ve yönteme uygun olarak Borsaya iletir.
- “Varantın işleme konulması” ya da “Varant dönüşümü” ifadeleri ile varanttan kaynaklanan hakkın kullanılması ifade edilmektedir.
+“Varantın işleme konulması” ya da “Varant dönüşümü” ifadeleri ile varanttan kaynaklanan hakkın kullanılması ifade edilmektedir.
 Varant ihraçları için yatırım kuruluşu veya ihraççı tarafından imzalanmış olan ve formatı Borsaca belirlenen Ek-3 sonundaki “İhraç Başvuru Formu” elektronik ortamda Borsaya iletilir.
 İhraççı ve/veya piyasa yapıcı tarafından işlem görecek varantlara ilişkin gerekli duyurunun KAP’ta yapılması ve Borsanın onayı sonrasında bahse konu varantlar YÜFP’de veya GSP’de işlem görmeye başlar.
 
@@ -82,24 +82,24 @@ Varant ihraçları için yatırım kuruluşu veya ihraççı tarafından imzalan
 İlgili Tebliğde yer alan ve Kurul onayını gerektiren hususlar hariç olmak üzere bu düzenlemede belirlenmeyen bir hususun ortaya çıkması durumunda ilgili uygulamaya ilişkin esaslar Borsa Genel Müdürlüğü tarafından belirlenir ve yürütülür.
 
 6) İşlem Görecek Varantların Özellikleri
-    • Pazarda Avrupa ve Amerikan tipi varantlar işlem görebilir.
-    • Pazarda hem alım (call) hem de satım (put) hakkı veren varantlar işlem görür.
-    • Aynı özelliklerde farklı kurumlar tarafından varant ihracı: Aynı pay, aynı sepet ya da aynı BIST endeksi için birden fazla varant ihraççısı olabilir.
-    • İhraçcısı, dayanak varlığı, vadesi, işleme koyma fiyatı, türü (call/put) aynı olan varantlar aynı sırada işlem görür. Belirtilen hususların birindeki farklılık ayrı sıra açılmasını gerektirir (Her bir ISIN kodu ayrı bir sıra açılmasını gerektirir).
+• Pazarda Avrupa ve Amerikan tipi varantlar işlem görebilir.
+• Pazarda hem alım (call) hem de satım (put) hakkı veren varantlar işlem görür.
+• Aynı özelliklerde farklı kurumlar tarafından varant ihracı: Aynı pay, aynı sepet ya da aynı BIST endeksi için birden fazla varant ihraççısı olabilir.
+• İhraçcısı, dayanak varlığı, vadesi, işleme koyma fiyatı, türü (call/put) aynı olan varantlar aynı sırada işlem görür. Belirtilen hususların birindeki farklılık ayrı sıra açılmasını gerektirir (Her bir ISIN kodu ayrı bir sıra açılmasını gerektirir).
 
 7) Varant Piyasa Yapıcısının Belirlenmesi ve Piyasa Yapıcılık Taahhütnamesi
 Tebliğin 13. maddesi uyarınca varantların Kurul kaydına alınması için yapılan başvuru sırasında ihraççı tarafından bir yatırım kuruluşu piyasa yapıcı olarak belirlenerek Kurula bildirilir. Varantlarda piyasa yapıcı olabilecek yatırım kuruluşlarına ilişkin şartlar Kurul tarafından belirlenir. Piyasa yapıcı üyeler Borsa tarafından hazırlanan “Piyasa Yapıcılık Taahhütnamesi”ni imzalamak zorundadır, aksi takdirde piyasa yapıcılık faaliyetlerine başlayamazlar. “Piyasa Yapıcılık Taahhütnamesi”ne aykırı davranan üyelerin piyasa yapıcılık görevine Borsa Genel Müdürlüğünce son verilir.
 
 8) Varant İşlemleri
 İşlem Yöntemi
-    • Varant işlemleri, sürekli işlem yöntemiyle ve piyasa yapıcılı olarak gerçekleştirilir. Bu yöntemde her bir varantta görevli olan bir piyasa yapıcı üye sürekli olarak alış satış kotasyonu verir ve üyeler (piyasa yapıcı üye de dâhil olmak üzere) söz konusu varant için alış-satış emirlerini iletir.
-    • Verilen alış satış emirleri fiyat ve zaman önceliği kurallarına göre Sisteme kabul edilir ve karşı taraftaki uygun fiyatlı alış satış emirleriyle veya kotasyon emirleriyle eşleşerek işleme dönüşür.
-    Hareketli Fiyat Değişme Sınırları Uygulaması
-    • Varantlarda piyasa yapıcının alış kotasyonlarını referans alan, seans içinde geçerli hareketli fiyat değişme sınırları uygulanır.
+• Varant işlemleri, sürekli işlem yöntemiyle ve piyasa yapıcılı olarak gerçekleştirilir. Bu yöntemde her bir varantta görevli olan bir piyasa yapıcı üye sürekli olarak alış satış kotasyonu verir ve üyeler (piyasa yapıcı üye de dâhil olmak üzere) söz konusu varant için alış-satış emirlerini iletir.
+• Verilen alış satış emirleri fiyat ve zaman önceliği kurallarına göre Sisteme kabul edilir ve karşı taraftaki uygun fiyatlı alış satış emirleriyle veya kotasyon emirleriyle eşleşerek işleme dönüşür.
+Hareketli Fiyat Değişme Sınırları Uygulaması
+• Varantlarda piyasa yapıcının alış kotasyonlarını referans alan, seans içinde geçerli hareketli fiyat değişme sınırları uygulanır.
 
 
-    • Fiyat değişme sınırları, emir defterlerine iletilen alış kotasyonları arasındaki fiyat farkı belirli bir eşik seviyeye ulaşana kadar aynı kalır. Eşik seviyeye ulaşıldıktan sonra emirlerin iletilebileceği alt ve üst fiyat sınırları son alış kotasyonu referans alınarak yeniden oluşturulur.
-    • Fiyat marjları ile hareketli fiyat değişme sınırlarının yeniden oluşturulmasına referans teşkil edecek olan alış kotasyonu fiyatı sapma eşikleri aşağıdaki tabloda yer almaktadır. Hareketli fiyat değişme sınırları hesaplanırken yuvarlama, işlem yapılabilecek fiyat aralığını daraltıcı şekilde içeri doğru yapılır. Buna göre; üst fiyat limiti bulunurken aşağı adıma, alt fiyat limiti bulunurken yukarı adıma yuvarlama yapılır.
+• Fiyat değişme sınırları, emir defterlerine iletilen alış kotasyonları arasındaki fiyat farkı belirli bir eşik seviyeye ulaşana kadar aynı kalır. Eşik seviyeye ulaşıldıktan sonra emirlerin iletilebileceği alt ve üst fiyat sınırları son alış kotasyonu referans alınarak yeniden oluşturulur.
+• Fiyat marjları ile hareketli fiyat değişme sınırlarının yeniden oluşturulmasına referans teşkil edecek olan alış kotasyonu fiyatı sapma eşikleri aşağıdaki tabloda yer almaktadır. Hareketli fiyat değişme sınırları hesaplanırken yuvarlama, işlem yapılabilecek fiyat aralığını daraltıcı şekilde içeri doğru yapılır. Buna göre; üst fiyat limiti bulunurken aşağı adıma, alt fiyat limiti bulunurken yukarı adıma yuvarlama yapılır.
 
 | Alış Kotasyonu Fiyatı (TL) | Alt Fiyat Marjları | Üst Fiyat Marjları | Sapma Eşikleri |
 | -------------------------- | ------------------ | ------------------ | -------------- |
@@ -111,58 +111,58 @@ Tebliğin 13. maddesi uyarınca varantların Kurul kaydına alınması için yap
 | 0,60 – 0,99                | 0,06 (TL)          | 0,08 (TL)          | 0,04 (TL)      |
 | 1 ve üzeri                 | %10                | %10                | %5             |
 
-    • Sapma eşiğinin belirlenmesinde referans alınan fiyat seviyesi, fiyat limitlerinin hesaplanmasında referans alınan son fiyat seviyesidir.
-    • Varant emir defterlerine seans içerisinde ilk alış kotasyonunun iletilmesi ile fiyat değişme sınırları oluşuncaya kadar emir iletimi mümkün değildir.
-    • İletilen alış kotasyonunun fiyatı, kotasyon işleme dönüşüp bekleyen emirler arasında yer almasa veya işleme dönüşmeden iptal edilse dahi hareketli fiyat değişme sınırlarının hesaplanmasına referans teşkil etmeye devam eder.
-    • Seans içerisinde güncellenen fiyat değişme sınırlarının dışında kalan daha önce girilmiş emirler emir defterinde kalmaya devam eder.
-    • Piyasa yapıcı kotasyonları hareketli fiyat değişme sınırlarına tabi değildir.
-    • Pay Piyasası Direktörü piyasanın gerektirdiği durumlarda resen varant ve sertifikalarda geçerli fiyat marjlarını ve/veya sapma eşiklerini iki katına kadar çıkarabilir. Genel Müdür gereken durumlarda resen fiyat değişme sınırlarını ve/veya sapma eşiklerini kaldırabilir veya değiştirebilir.
-    Hareketli fiyat değişme sınırları ve sapma eşiklerine ilişkin örneklere aşağıda yer verilmektedir:
+• Sapma eşiğinin belirlenmesinde referans alınan fiyat seviyesi, fiyat limitlerinin hesaplanmasında referans alınan son fiyat seviyesidir.
+• Varant emir defterlerine seans içerisinde ilk alış kotasyonunun iletilmesi ile fiyat değişme sınırları oluşuncaya kadar emir iletimi mümkün değildir.
+• İletilen alış kotasyonunun fiyatı, kotasyon işleme dönüşüp bekleyen emirler arasında yer almasa veya işleme dönüşmeden iptal edilse dahi hareketli fiyat değişme sınırlarının hesaplanmasına referans teşkil etmeye devam eder.
+• Seans içerisinde güncellenen fiyat değişme sınırlarının dışında kalan daha önce girilmiş emirler emir defterinde kalmaya devam eder.
+• Piyasa yapıcı kotasyonları hareketli fiyat değişme sınırlarına tabi değildir.
+• Pay Piyasası Direktörü piyasanın gerektirdiği durumlarda resen varant ve sertifikalarda geçerli fiyat marjlarını ve/veya sapma eşiklerini iki katına kadar çıkarabilir. Genel Müdür gereken durumlarda resen fiyat değişme sınırlarını ve/veya sapma eşiklerini kaldırabilir veya değiştirebilir.
+Hareketli fiyat değişme sınırları ve sapma eşiklerine ilişkin örneklere aşağıda yer verilmektedir:
 
-    Örnek 1:
-    Emir defterine iletilen ilk alış kotasyonunun 0,57 TL olduğu bir varant sırasında uygulanacak alt fiyat marjı 0,04 TL, üst fiyat marjı 0,06 TL olacağından ilk olarak fiyat
-    değişme sınırları 0,53 TL ve 0,63 TL olarak belirlenir. Böylelikle 0,53 TL’den daha küçük ve 0,63 TL’den daha büyük fiyatlı emirler emir defterine kabul edilmez. Sonrasında
-    iletilen 0,55 TL, 0,56 TL, 0,57 TL, 0,58 TL ve 0,59 TL fiyatlı alış kotasyonları 0,57 TL fiyat seviyesi için 0,03 TL olarak belirlenmiş olan sapma eşiğine ulaşmadığından fiyat
-    değişme sınırlarını değiştirmeyecektir. 0,60 TL seviyesinden alış kotasyonu iletilmesi halinde sapma eşiğine ulaşılmış olacak ve 0,60 TL seviyesi üzerine uygulanacak
-    0,06 TL’lik alt ve 0,08 TL’lik üst fiyat marjlarıyla yeniden hesaplanan fiyat değişme sınırları 0,54 TL ve 0,68 TL olacaktır. Bu örnekte fiyat değişme sınırlarına referans
-    teşkil eden son alış kotasyonu 0,60 TL olmuştur ve 0,60 TL fiyat seviyesi için sapma eşiği 0,04 TL’dir. Bu sebeple, 0,57 TL’lik bir alış kotasyonu iletilmesi durumunda fiyat
-    değişme sınırları değişmeyecektir çünkü 0,60 TL fiyat seviyesi için belirlenmiş sapma eşiği 0,04 TL’dir. 0,57 TL’den daha düşük veya 0,63 TL’den daha yüksek bir alış kotasyonu
-    iletilmesi durumunda ise 0,04 TL’lik sapma eşiğine ulaşılacak ve fiyat değişme sınırları ilgili fiyat seviyesine göre yeniden hesaplanacaktır.
+Örnek 1:
+Emir defterine iletilen ilk alış kotasyonunun 0,57 TL olduğu bir varant sırasında uygulanacak alt fiyat marjı 0,04 TL, üst fiyat marjı 0,06 TL olacağından ilk olarak fiyat
+değişme sınırları 0,53 TL ve 0,63 TL olarak belirlenir. Böylelikle 0,53 TL’den daha küçük ve 0,63 TL’den daha büyük fiyatlı emirler emir defterine kabul edilmez. Sonrasında
+iletilen 0,55 TL, 0,56 TL, 0,57 TL, 0,58 TL ve 0,59 TL fiyatlı alış kotasyonları 0,57 TL fiyat seviyesi için 0,03 TL olarak belirlenmiş olan sapma eşiğine ulaşmadığından fiyat
+değişme sınırlarını değiştirmeyecektir. 0,60 TL seviyesinden alış kotasyonu iletilmesi halinde sapma eşiğine ulaşılmış olacak ve 0,60 TL seviyesi üzerine uygulanacak
+0,06 TL’lik alt ve 0,08 TL’lik üst fiyat marjlarıyla yeniden hesaplanan fiyat değişme sınırları 0,54 TL ve 0,68 TL olacaktır. Bu örnekte fiyat değişme sınırlarına referans
+teşkil eden son alış kotasyonu 0,60 TL olmuştur ve 0,60 TL fiyat seviyesi için sapma eşiği 0,04 TL’dir. Bu sebeple, 0,57 TL’lik bir alış kotasyonu iletilmesi durumunda fiyat
+değişme sınırları değişmeyecektir çünkü 0,60 TL fiyat seviyesi için belirlenmiş sapma eşiği 0,04 TL’dir. 0,57 TL’den daha düşük veya 0,63 TL’den daha yüksek bir alış kotasyonu
+iletilmesi durumunda ise 0,04 TL’lik sapma eşiğine ulaşılacak ve fiyat değişme sınırları ilgili fiyat seviyesine göre yeniden hesaplanacaktır.
 
-    Örnek 2:
-    Emir defterine iletilen ilk alış kotasyonunun 1 TL olduğu bir varant sırasında uygulanacak fiyat marjı %10 olacağından fiyat değişme sınırları 0,90 TL ve 1,10 TL olarak 
-    belirlenir. Böylelikle 0,90 TL’den daha küçük ve 1,10 TL’den daha büyük fiyatlı emirler emir defterine kabul edilmez. Sonrasında iletilen 0,96 TL, 0,97 TL, 0,98 TL, 0,99 TL,
-    1,00 TL, 1,01 TL, 1,02 TL, 1,03 TL, ve 1,04 TL fiyatlı alış kotasyonları 1 TL fiyat seviyesi için %5 olarak belirlenmiş olan sapma eşiğine ulaşmadığından fiyat değişme 
-    sınırlarını değiştirmeyecektir. Fakat 0,95 TL seviyesinden alış kotasyonu iletilmesi halinde sapma eşiğine ulaşılmış olacak ve 0,95 TL seviyesi üzerine uygulanacak 0,06 TL’lik
-    alt ve 0,08 TL’lik üst fiyat marjlarıyla yeniden hesaplanan fiyat değişme sınırları 0,89 TL ve 1,03 TL olacaktır. Bu örnekte fiyat değişme sınırlarına referans teşkil eden son
-    alış kotasyonu 0,95 TL olmuştur ve 0,95 TL fiyat seviyesi için sapma eşiği 0,04 TL’dir. Bu sebeple, 0,92 TL’lik bir alış kotasyonu iletilmesi durumunda fiyat değişme sınırları
-    değişmeyecektir çünkü 0,95 TL fiyat seviyesi için belirlenmiş sapma eşiği 0,04 TL’dir. 0,92 TL’den daha düşük veya 0,98 TL’den daha yüksek bir alış kotasyonu iletilmesi
-    durumunda ise 0,04 TL’lik sapma eşiğine ulaşılacak ve fiyat değişme sınırları ilgili fiyat seviyesine göre yeniden hesaplanacaktır.
+Örnek 2:
+Emir defterine iletilen ilk alış kotasyonunun 1 TL olduğu bir varant sırasında uygulanacak fiyat marjı %10 olacağından fiyat değişme sınırları 0,90 TL ve 1,10 TL olarak 
+belirlenir. Böylelikle 0,90 TL’den daha küçük ve 1,10 TL’den daha büyük fiyatlı emirler emir defterine kabul edilmez. Sonrasında iletilen 0,96 TL, 0,97 TL, 0,98 TL, 0,99 TL,
+1,00 TL, 1,01 TL, 1,02 TL, 1,03 TL, ve 1,04 TL fiyatlı alış kotasyonları 1 TL fiyat seviyesi için %5 olarak belirlenmiş olan sapma eşiğine ulaşmadığından fiyat değişme 
+sınırlarını değiştirmeyecektir. Fakat 0,95 TL seviyesinden alış kotasyonu iletilmesi halinde sapma eşiğine ulaşılmış olacak ve 0,95 TL seviyesi üzerine uygulanacak 0,06 TL’lik
+alt ve 0,08 TL’lik üst fiyat marjlarıyla yeniden hesaplanan fiyat değişme sınırları 0,89 TL ve 1,03 TL olacaktır. Bu örnekte fiyat değişme sınırlarına referans teşkil eden son
+alış kotasyonu 0,95 TL olmuştur ve 0,95 TL fiyat seviyesi için sapma eşiği 0,04 TL’dir. Bu sebeple, 0,92 TL’lik bir alış kotasyonu iletilmesi durumunda fiyat değişme sınırları
+değişmeyecektir çünkü 0,95 TL fiyat seviyesi için belirlenmiş sapma eşiği 0,04 TL’dir. 0,92 TL’den daha düşük veya 0,98 TL’den daha yüksek bir alış kotasyonu iletilmesi
+durumunda ise 0,04 TL’lik sapma eşiğine ulaşılacak ve fiyat değişme sınırları ilgili fiyat seviyesine göre yeniden hesaplanacaktır.
 
 Fiyat Adımı
-    • Varantlara emir ve kotasyon girişlerinde fiyat adımı her fiyat seviyesinde 1 kuruş olarak uygulanır. Varantların temerrüt, resmî müzayede ve toptan alış satış işlemleri için emir girişlerinde de 1 kuruşluk fiyat adımı uygulanır.
+• Varantlara emir ve kotasyon girişlerinde fiyat adımı her fiyat seviyesinde 1 kuruş olarak uygulanır. Varantların temerrüt, resmî müzayede ve toptan alış satış işlemleri için emir girişlerinde de 1 kuruşluk fiyat adımı uygulanır.
 
 Varant Piyasa Yapıcılığı Genel Kuralları
-    • Piyasa yapıcı, sorumlu olduğu varantlarda mevcut düzenlemeler çerçevesinde alış-satış şeklinde çift taraflı kotasyon vererek piyasa oluşmasına ve işlem gerçekleşmesine katkıda bulunmakla yükümlüdür. Varantlarda Sisteme girilen tüm alım satım emirleri öncelik kurallarına uygun olarak kendi aralarında ve/veya piyasa yapıcı kotasyonları ile eşleşerek kısmen veya tamamen işleme dönüşebilir.
-    • Her varantta en az bir piyasa yapıcı olması zorunludur ve bir piyasa yapıcı üye birden fazla varantta piyasa yapıcılık yapabilir.
-    • Bir üyenin girdiği normal bir emir, öncelik kurallarına uygun olarak, ya bir kotasyonla ya da kendisinin ya da diğer bir üyenin girdiği normal bir emirle eşleşerek işlem görür.
-    • Varantlar seansın açılış ve kapanış bölümlerinde işlem görmez.
-    • Piyasa yapıcı üyenin FixAPI ile OUCH kullanıcıları ve baş temsilcileri kotasyon girişi/değişikliği yapabilir. 
-    • Piyasa yapıcı üye, her bir ihraççı için ayrı ve sadece bu ihraççının ihraç ettiği varant ve bu varantlara bağlı tüm işlemlerinde kullanılmak üzere belirlenmiş olan hesap numarasını/numaralarını kullanarak kotasyon girer.
-      Kotasyon emri değişikliği, sistemsel işleyiş açısından değiştirilmek istenen kotasyon emrinin iptal edilerek yeni bir kotasyon emrinin girilmesini ifade eder.
-    • Varantlar için seans açılışında yalnızca piyasa yapıcı kotasyonlarının girilebileceği bir seans bölümü bulunur.
-    • Bir varant sırasına piyasa yapıcı tarafından alış kotasyonu iletilmeden emir kabulüne başlanamaz.
-    • Sisteme iletilen emirler, belirlenmiş kurallar çerçevesinde, Sistem tarafından fiyat ve zaman önceliği kuralları çerçevesinde kotasyonlarla ya da kotasyon harici emirlerle eşleşir.
-    • Piyasa yapıcılar, girmiş oldukları kotasyonlar üzerinde kotasyon değişiklik kuralları çerçevesinde değişiklik yapabilirler.
-    • PP’de geçerli olan emir ve işlem kuralları aksi belirtilmedikçe varant işlemleri için de geçerlidir.
+• Piyasa yapıcı, sorumlu olduğu varantlarda mevcut düzenlemeler çerçevesinde alış-satış şeklinde çift taraflı kotasyon vererek piyasa oluşmasına ve işlem gerçekleşmesine katkıda bulunmakla yükümlüdür. Varantlarda Sisteme girilen tüm alım satım emirleri öncelik kurallarına uygun olarak kendi aralarında ve/veya piyasa yapıcı kotasyonları ile eşleşerek kısmen veya tamamen işleme dönüşebilir.
+• Her varantta en az bir piyasa yapıcı olması zorunludur ve bir piyasa yapıcı üye birden fazla varantta piyasa yapıcılık yapabilir.
+• Bir üyenin girdiği normal bir emir, öncelik kurallarına uygun olarak, ya bir kotasyonla ya da kendisinin ya da diğer bir üyenin girdiği normal bir emirle eşleşerek işlem görür.
+• Varantlar seansın açılış ve kapanış bölümlerinde işlem görmez.
+• Piyasa yapıcı üyenin FixAPI ile OUCH kullanıcıları ve baş temsilcileri kotasyon girişi/değişikliği yapabilir. 
+• Piyasa yapıcı üye, her bir ihraççı için ayrı ve sadece bu ihraççının ihraç ettiği varant ve bu varantlara bağlı tüm işlemlerinde kullanılmak üzere belirlenmiş olan hesap numarasını/numaralarını kullanarak kotasyon girer.
+Kotasyon emri değişikliği, sistemsel işleyiş açısından değiştirilmek istenen kotasyon emrinin iptal edilerek yeni bir kotasyon emrinin girilmesini ifade eder.
+• Varantlar için seans açılışında yalnızca piyasa yapıcı kotasyonlarının girilebileceği bir seans bölümü bulunur.
+• Bir varant sırasına piyasa yapıcı tarafından alış kotasyonu iletilmeden emir kabulüne başlanamaz.
+• Sisteme iletilen emirler, belirlenmiş kurallar çerçevesinde, Sistem tarafından fiyat ve zaman önceliği kuralları çerçevesinde kotasyonlarla ya da kotasyon harici emirlerle eşleşir.
+• Piyasa yapıcılar, girmiş oldukları kotasyonlar üzerinde kotasyon değişiklik kuralları çerçevesinde değişiklik yapabilirler.
+• PP’de geçerli olan emir ve işlem kuralları aksi belirtilmedikçe varant işlemleri için de geçerlidir.
 
 Seans Saatleri ve Seans Aşamaları
-    Pazar
-        Varantlar, Yapılandırılmış Ürünler ve Fon Pazarı (YÜFP) altında, işlem görürler.
-    Seans Saatleri
-        Varant işlemleri, PP seansının sürekli işlem bölümü saatleri dâhilinde gerçekleştirilir.
-    Süreli İşlem Sıralarındaki İşlem Yöntemleri
-        Piyasa yapıcılı işlem gören sermaye piyasası araçları için açılan süreli işlem sıralarında uygulanacak işlem yöntemi aşağıdaki tabloda belirtilmiştir.
+Pazar
+Varantlar, Yapılandırılmış Ürünler ve Fon Pazarı (YÜFP) altında, işlem görürler.
+Seans Saatleri
+Varant işlemleri, PP seansının sürekli işlem bölümü saatleri dâhilinde gerçekleştirilir.
+Süreli İşlem Sıralarındaki İşlem Yöntemleri
+Piyasa yapıcılı işlem gören sermaye piyasası araçları için açılan süreli işlem sıralarında uygulanacak işlem yöntemi aşağıdaki tabloda belirtilmiştir.
 
 | SÜRELİ İŞLEM SIRALARI       | İŞLEM YÖNTEMİ                           |
 | --------------------------- | --------------------------------------- |
@@ -182,29 +182,29 @@ Borsa Yönetim Kurulunun 23/11/2017 tarihli, 2017/39 sayılı kararı ve Sermaye
 
 11)  Piyasa Yapıcının Alım Satım Kotasyonları ve Performans Değerlendirmesi
 Kotasyon Giriş Kuralları
-    • Piyasa yapıcı normal piyasa koşulları altında, kotasyon vererek piyasa yapıcılık faaliyetini yerine getirmek zorundadır. Kotasyon, sadece varantın piyasa yapıcısının baş temsilcileri ve FixAPI ile OUCH kullanıcıları tarafından girilebilir.
-    • Bir varantta seans içinde belirli bir anda birden fazla kotasyon bulunabilir.
-    • Kotasyonlar Sisteme lot olarak girilir. KİE, açığa satış emri veya özel işlem bildirimi şeklinde kotasyon verilemez.
-    • Kotasyon, normal emirlerle birlikte fiyat ve zaman önceliği kuralına uygun olarak emir defterinde yer alır.
-    • Kotasyon girişlerinde bir seferde girilebilecek en fazla kotasyon miktarı sınırına (maksimum kotasyon miktarı) uyulur.
-    • Kotasyon girişinde kotasyonun müşteri tipi piyasa yapıcı tarafından belirlenir. Piyasa yapıcı, piyasa yapıcılık işlemleri için ihraççı kuruluşa veya risk hesaplamada ve operasyonda etkinlik sağlama amaçları doğrultusunda ilişkili olduğu bir banka veya aracı kuruma ait olan ve işlemlerinde kullanacağı varantların bulunduğu hesap numarası veya hesap numaralarını önceden yazılı olarak Borsaya bildirir. Piyasa yapıcı üye, piyasa yapıcılık faaliyetleri kapsamında gerçekleştirdiği tüm işlemleri ilgili hesap numaraları ile takip eder. Bu hesapların kullanımı piyasa yapıcılıktan kaynaklanan yükümlülükleri ortadan kaldırmaz.
-    Piyasa yapıcı üye, kotasyon verilmesinde kaynak hesap olarak kullanılacak hesaba ilişkin olarak hesap sahibi kuruluş tarafından da imzalanmış ve
-        − ihraç edilen varantların bulunduğu hesabın numarası,
-        − kullanıma konu varantın işlem kodu,
-        − ihraç miktarından farklı ise kullanıma izin verilen miktar,
-        − söz konusu miktarın kullanım süresi
-    bilgilerinin yer aldığı yazıyı Borsaya gönderir.
-    • Kotasyon fiyatları, herhangi bir fiyat değişim sınırına tabi değildir (serbest marjlıdır).
-    • Alış ve satış fiyat kotasyonları birbirine eşit olamaz. Alış kotasyonu satış kotasyonundan yüksek olamaz.
-    • Kotasyonun alış tarafının fiyatı satış tarafının fiyatından en az 1 fiyat adımı (1 kuruş) düşük olmalıdır (minimum yayılma aralığı limiti).
+• Piyasa yapıcı normal piyasa koşulları altında, kotasyon vererek piyasa yapıcılık faaliyetini yerine getirmek zorundadır. Kotasyon, sadece varantın piyasa yapıcısının baş temsilcileri ve FixAPI ile OUCH kullanıcıları tarafından girilebilir.
+• Bir varantta seans içinde belirli bir anda birden fazla kotasyon bulunabilir.
+• Kotasyonlar Sisteme lot olarak girilir. KİE, açığa satış emri veya özel işlem bildirimi şeklinde kotasyon verilemez.
+• Kotasyon, normal emirlerle birlikte fiyat ve zaman önceliği kuralına uygun olarak emir defterinde yer alır.
+• Kotasyon girişlerinde bir seferde girilebilecek en fazla kotasyon miktarı sınırına (maksimum kotasyon miktarı) uyulur.
+• Kotasyon girişinde kotasyonun müşteri tipi piyasa yapıcı tarafından belirlenir. Piyasa yapıcı, piyasa yapıcılık işlemleri için ihraççı kuruluşa veya risk hesaplamada ve operasyonda etkinlik sağlama amaçları doğrultusunda ilişkili olduğu bir banka veya aracı kuruma ait olan ve işlemlerinde kullanacağı varantların bulunduğu hesap numarası veya hesap numaralarını önceden yazılı olarak Borsaya bildirir. Piyasa yapıcı üye, piyasa yapıcılık faaliyetleri kapsamında gerçekleştirdiği tüm işlemleri ilgili hesap numaraları ile takip eder. Bu hesapların kullanımı piyasa yapıcılıktan kaynaklanan yükümlülükleri ortadan kaldırmaz.
+Piyasa yapıcı üye, kotasyon verilmesinde kaynak hesap olarak kullanılacak hesaba ilişkin olarak hesap sahibi kuruluş tarafından da imzalanmış ve
+− ihraç edilen varantların bulunduğu hesabın numarası,
+− kullanıma konu varantın işlem kodu,
+− ihraç miktarından farklı ise kullanıma izin verilen miktar,
+− söz konusu miktarın kullanım süresi
+bilgilerinin yer aldığı yazıyı Borsaya gönderir.
+• Kotasyon fiyatları, herhangi bir fiyat değişim sınırına tabi değildir (serbest marjlıdır).
+• Alış ve satış fiyat kotasyonları birbirine eşit olamaz. Alış kotasyonu satış kotasyonundan yüksek olamaz.
+• Kotasyonun alış tarafının fiyatı satış tarafının fiyatından en az 1 fiyat adımı (1 kuruş) düşük olmalıdır (minimum yayılma aralığı limiti).
 
 Minimum ve Maksimum Kotasyon Miktarı
 
-    • Minimum Kotasyon Miktarı: Piyasa yapıcının her bir varantta alış veya satış miktarları için vermek zorunda olduğu en düşük kotasyon miktarıdır, 250 lot olarak uygulanır. Borsa Genel Müdürlüğünce varant bazında farklı olarak belirlenebilir.
-    • Maksimum Kotasyon Miktarı: Piyasa yapıcının her bir varantta alış veya satış kotasyon miktarları için verebileceği maksimum miktardır. Borsa Genel Müdürlüğünce varant bazında farklı olarak belirlenebilir.
+• Minimum Kotasyon Miktarı: Piyasa yapıcının her bir varantta alış veya satış miktarları için vermek zorunda olduğu en düşük kotasyon miktarıdır, 250 lot olarak uygulanır. Borsa Genel Müdürlüğünce varant bazında farklı olarak belirlenebilir.
+• Maksimum Kotasyon Miktarı: Piyasa yapıcının her bir varantta alış veya satış kotasyon miktarları için verebileceği maksimum miktardır. Borsa Genel Müdürlüğünce varant bazında farklı olarak belirlenebilir.
 
 Minimum ve Maksimum Yayılma Aralığı
-    Kotasyon yayılma aralığı, piyasa yapıcı üye tarafından verilen alış satış kotasyon fiyatları arasındaki farktır. Minimum yayılma aralığı 1 fiyat adımından oluşur. Piyasa yapıcı üyelerin performans değerlendirmesinde dikkate alınacak maksimum yayılma aralığı tabloda gösterilmiştir.
+Kotasyon yayılma aralığı, piyasa yapıcı üye tarafından verilen alış satış kotasyon fiyatları arasındaki farktır. Minimum yayılma aralığı 1 fiyat adımından oluşur. Piyasa yapıcı üyelerin performans değerlendirmesinde dikkate alınacak maksimum yayılma aralığı tabloda gösterilmiştir.
 
 | Fiyat Seviyesi (TL) | Maksimum Yayılma Aralığı Adım Sayısı / % Fiyat Aralığı |
 | ------------------- | ------------------------------------------------------ |
@@ -233,32 +233,32 @@ Kotasyon İptali
 Piyasa yapıcının girdiği kotasyonu iptal etmesine izin verilir. Bir menkul kıymetin işlemlerinin durdurulduğu süreçte piyasa yapıcı tarafından kotasyon iptali yapılmasına izin verilmez.
 
 Kotasyon Verme Zorunluluğunun Bulunmadığı Hâller
-    Yapılan düzenlemeler kapsamında piyasa yapıcının kotasyon vererek piyasa yapıcılık faaliyetini sürdürmesi zorunludur. Ancak aşağıdaki durumların varlığı hâlinde kotasyon verme zorunluluğu ortadan kalkmaktadır.
-    • Dayanak varlığın sırasının kapalı olması,
-    • Piyasa yapıcının kotasyon girişi için kullandığı FixAPI/OUCH’da ya da bağlantıda sorun olması,
-    • Dayanak varlıkta fiyat oluşmaması,
-    • İlgili Borsa düzenlemelerinde yer alan olağanüstü durumların ortaya çıkması nedeniyle seansın durdurulması ya da açılamaması,
-    • Dayanak varlığın o seans için marjının serbest olması durumunda fiyat oluşuncaya kadar.
-    • Borsa Genel Müdürlüğü tarafından kabul edilecek nitelikteki diğer durumlar.
+Yapılan düzenlemeler kapsamında piyasa yapıcının kotasyon vererek piyasa yapıcılık faaliyetini sürdürmesi zorunludur. Ancak aşağıdaki durumların varlığı hâlinde kotasyon verme zorunluluğu ortadan kalkmaktadır.
+• Dayanak varlığın sırasının kapalı olması,
+• Piyasa yapıcının kotasyon girişi için kullandığı FixAPI/OUCH’da ya da bağlantıda sorun olması,
+• Dayanak varlıkta fiyat oluşmaması,
+• İlgili Borsa düzenlemelerinde yer alan olağanüstü durumların ortaya çıkması nedeniyle seansın durdurulması ya da açılamaması,
+• Dayanak varlığın o seans için marjının serbest olması durumunda fiyat oluşuncaya kadar.
+• Borsa Genel Müdürlüğü tarafından kabul edilecek nitelikteki diğer durumlar.
 
 12)  Emirler
 Emir Girişi ve Emir Türleri
-    • Varantlar için seans açılışında yalnızca piyasa yapıcı kotasyonlarının girilebileceği bir seans bölümü bulunur. Bu seans bölümünün ardından varant sıralarına emir girişi başlar.
-    • Seansın açılış ve kapanış bölümlerinde varant sıralarına emir girilmez.
-    • Bir varant sırasına emir iletilebilmesi için daha önce piyasa yapıcı tarafından alış kotasyonu girilmiş olması gereklidir.
-    • Varant sıralarına piyasa ve piyasadan limite emir türleri iletilemez.
-    • Varantlara iletilecek emirlerin fiyatı 100 TL fiyat seviyesi ile sınırlandırılmıştır. Bu fiyat seviyesinin üstünde emir iletilemez.
-    • Varant sıralarında emir iletim anında geçerli olan fiyat limitleri dışında bir fiyattan emir iletilemez.
-    • Varantlarda özel işlem bildirimi yapılabilir. Özel işlem bildirimleri hareketli fiyat değişme sınırları dışında gerçekleştirilemez.
-    • Varantlarda açığa satış yapılamaz.
+• Varantlar için seans açılışında yalnızca piyasa yapıcı kotasyonlarının girilebileceği bir seans bölümü bulunur. Bu seans bölümünün ardından varant sıralarına emir girişi başlar.
+• Seansın açılış ve kapanış bölümlerinde varant sıralarına emir girilmez.
+• Bir varant sırasına emir iletilebilmesi için daha önce piyasa yapıcı tarafından alış kotasyonu girilmiş olması gereklidir.
+• Varant sıralarına piyasa ve piyasadan limite emir türleri iletilemez.
+• Varantlara iletilecek emirlerin fiyatı 100 TL fiyat seviyesi ile sınırlandırılmıştır. Bu fiyat seviyesinin üstünde emir iletilemez.
+• Varant sıralarında emir iletim anında geçerli olan fiyat limitleri dışında bir fiyattan emir iletilemez.
+• Varantlarda özel işlem bildirimi yapılabilir. Özel işlem bildirimleri hareketli fiyat değişme sınırları dışında gerçekleştirilemez.
+• Varantlarda açığa satış yapılamaz.
 
 13)  Maddi Hata Nedeniyle İşlem İptali
 BİAŞ Yönetmeliğinin 33/1-(b) maddesi uyarınca işlem yapma yetkisi verilenlerden en az biri tarafından alım satım sistemine iletilen hatalı emir veya emirler sonucunda varant sıralarında gerçekleşen işlemler için iletilen iptal talepleri aşağıda yer alan kurallar çerçevesinde PPD tarafından değerlendirilir.
-    a) İptali talep edilen işlemlerin iptale konu olabilmeleri için aşağıda belirtilen tüm kriterleri talep esnasında sağlamaları gerekir.
-        i. Hatalı İşlem İptal Başvuru Süresi: İptali talep edilen işlem veya işlemlerin gerçekleşme anından itibaren 30 dakika içerisinde hatalı işlem iptal başvurusu yapılabilir. Seansın bitimine kalan sürenin 30 dakikadan az olduğu durumlarda iptali talep edilen işlem veya işlemlerin gerçekleşme anından itibaren 10 dakika içerisinde hatalı işlem iptal başvurusu
-        yapılabilir. Seans tamamlandıktan sonra işlem iptali yapılmaması esastır. Seansın bitimine kalan sürenin 30 dakikadan az olduğu veya seans bitimine kalan sürenin iptal talebinin sağlıklı bir şekilde değerlendirilebilmesi için yeterli olmadığı durumlarda iptal talebi PPD tarafından reddedilebilir. Seans tamamlandıktan sonra işlem iptali başvurusu yapılamaz.
-        ii. Hatalı İşlem İptal Talebi Başvurusunda Gerekli Bilgiler: Hatalı işleme/işlemlere ilişkin olarak işlem sırası ve hesap numarası bilgilerinin başvuru süresi içerisinde bildirilmesi gereklidir. İptale konu emir numarası ve ilgili emre bağlı olarak gerçekleşen hatalı işlemlerin işlem numaraları ile fiyat ve miktar bilgilerinin ise başvuruyla birlikte veya başvuruyu takiben ivedilikle iletilmesi gerekir.
-        iii. Hatalı İşlem İptal Talebinin Kabul Edileceği Fiyat Seviyeleri: İşlem iptal talebinin değerlendirmeye alınması için işlem fiyatının referans fiyata göre minimum uzaklıkları aşağıdaki gibi belirlenmiştir. Tabloda belirtilen oranlarla referans fiyat üzerinden hesaplanacak fiyat aralıkları dışında kalan fiyatlardan gerçekleşmiş işlemler, hatalı işlem iptali talebine konu olabilir.
+a) İptali talep edilen işlemlerin iptale konu olabilmeleri için aşağıda belirtilen tüm kriterleri talep esnasında sağlamaları gerekir.
+i. Hatalı İşlem İptal Başvuru Süresi: İptali talep edilen işlem veya işlemlerin gerçekleşme anından itibaren 30 dakika içerisinde hatalı işlem iptal başvurusu yapılabilir. Seansın bitimine kalan sürenin 30 dakikadan az olduğu durumlarda iptali talep edilen işlem veya işlemlerin gerçekleşme anından itibaren 10 dakika içerisinde hatalı işlem iptal başvurusu
+yapılabilir. Seans tamamlandıktan sonra işlem iptali yapılmaması esastır. Seansın bitimine kalan sürenin 30 dakikadan az olduğu veya seans bitimine kalan sürenin iptal talebinin sağlıklı bir şekilde değerlendirilebilmesi için yeterli olmadığı durumlarda iptal talebi PPD tarafından reddedilebilir. Seans tamamlandıktan sonra işlem iptali başvurusu yapılamaz.
+ii. Hatalı İşlem İptal Talebi Başvurusunda Gerekli Bilgiler: Hatalı işleme/işlemlere ilişkin olarak işlem sırası ve hesap numarası bilgilerinin başvuru süresi içerisinde bildirilmesi gereklidir. İptale konu emir numarası ve ilgili emre bağlı olarak gerçekleşen hatalı işlemlerin işlem numaraları ile fiyat ve miktar bilgilerinin ise başvuruyla birlikte veya başvuruyu takiben ivedilikle iletilmesi gerekir.
+iii. Hatalı İşlem İptal Talebinin Kabul Edileceği Fiyat Seviyeleri: İşlem iptal talebinin değerlendirmeye alınması için işlem fiyatının referans fiyata göre minimum uzaklıkları aşağıdaki gibi belirlenmiştir. Tabloda belirtilen oranlarla referans fiyat üzerinden hesaplanacak fiyat aralıkları dışında kalan fiyatlardan gerçekleşmiş işlemler, hatalı işlem iptali talebine konu olabilir.
 
 | Referans Fiyat (TL) | Sapma  |
 | ------------------- | ------ |
@@ -269,25 +269,25 @@ BİAŞ Yönetmeliğinin 33/1-(b) maddesi uyarınca işlem yapma yetkisi verilenl
 | 5,00 – 9,99         | %10    |
 | 10 ve üzeri         | %5     |
 
-        iv. İşlem İptali Referans Fiyatı: İptali talep edilen işlemlerin fiyat kriterini sağlayıp sağlamadığının değerlendirilmesinde ve zarar tutarının hesaplanmasında işlem iptali referans fiyatı kullanılır.
-        Aşağıdaki fiyatlardan biri veya birden fazlası dikkate alınarak piyasayı adil bir şekilde yansıttığı değerlendirilen fiyat PPD tarafından işlem iptali referans fiyatı olarak belirlenir.
-        • İptali talep edilen işlemlerin gerçekleşme anında geçerli olan piyasa yapıcı kotasyonlarına ait fiyatlar veya bu fiyatların ortalaması,
-        • İptal talebinin kotasyon fiyatının yanlışlığından kaynaklandığı durumlarda son doğru kotasyon fiyatı,
-        • Hatalı işlemlerden önceki işlemlerin fiyatı,
-        • Hatalı işlemlerden sonra gerçekleşen işlemlerin fiyatı,
-        • Önceki işlem gününde oluşan kapanış fiyatı,
-        • Emir defterinde bekleyen en iyi alış - satış fiyatları,
-        • İçsel değer,
-        • İlgili dayanak varlığa bağlı diğer varantların fiyatları
-        Referans fiyat hesaplanırken bulunan değer virgülden sonra 2 haneye (kuruşa) yuvarlanarak dikkate alınır (referans fiyat 1 kuruş ve katları olabilir).
+iv. İşlem İptali Referans Fiyatı: İptali talep edilen işlemlerin fiyat kriterini sağlayıp sağlamadığının değerlendirilmesinde ve zarar tutarının hesaplanmasında işlem iptali referans fiyatı kullanılır.
+Aşağıdaki fiyatlardan biri veya birden fazlası dikkate alınarak piyasayı adil bir şekilde yansıttığı değerlendirilen fiyat PPD tarafından işlem iptali referans fiyatı olarak belirlenir.
+• İptali talep edilen işlemlerin gerçekleşme anında geçerli olan piyasa yapıcı kotasyonlarına ait fiyatlar veya bu fiyatların ortalaması,
+• İptal talebinin kotasyon fiyatının yanlışlığından kaynaklandığı durumlarda son doğru kotasyon fiyatı,
+• Hatalı işlemlerden önceki işlemlerin fiyatı,
+• Hatalı işlemlerden sonra gerçekleşen işlemlerin fiyatı,
+• Önceki işlem gününde oluşan kapanış fiyatı,
+• Emir defterinde bekleyen en iyi alış - satış fiyatları,
+• İçsel değer,
+• İlgili dayanak varlığa bağlı diğer varantların fiyatları
+Referans fiyat hesaplanırken bulunan değer virgülden sonra 2 haneye (kuruşa) yuvarlanarak dikkate alınır (referans fiyat 1 kuruş ve katları olabilir).
 
-        <!-- sayfa 123 -->
-        **[Sayfa 123]**
+<!-- sayfa 123 -->
+**[Sayfa 123]**
 
-        v. İşlem İptaline Konu Olan İşlem/İşlemler Dolayısıyla Karşılaşılan Minimum Zarar Tutarı: İşlem iptali başvurusunun değerlendirmeye alınabilmesi için referans fiyat ile işlem iptaline konu olan işlemin/işlemlerin fiyatları karşılaştırılarak hesaplanan zarar tutarının en az 50.000 TL olması gerekmektedir. Toplam zarar tutarı; aynı yatırım kuruluşu ve müşteri hesap numarasından aynı işlem sırasında gerçekleşmiş iptale konu olabilecek işlemlerin toplam değeri bulunarak hesaplanır.
-        vi. Hatalı İşlem İptal Talebi Başvuru Şekli ve Talebin Asgari Unsurları: Hatalı işleme / işlemlere ilişkin iptal talebi, işlemlerin tarafı olan üyelerden biri veya her ikisi aracılığıyla baş temsilci yetkili İşlem Terminalleri (TW, Omnet API) ve/veya yazılı, elektronik iletişim kanalları vb. araçlar yoluyla PPD’ye gönderilir. İşlem iptal taleplerinin işlem terminalleri üzerinden iletilmesi esastır. İptal talebi, iptali talep edilen işlemlere ait işlem zamanı, işlem sırası, sözleşme numarası, işlem fiyatı, işlem miktarı, işlemi gerçekleştiren yanlış emrin numarası, emri giren kullanıcı bilgisi ve müşteri hesap numarası unsurlarını içerecek şekilde pay@borsaistanbul.com adresine gönderilir.
-    b) Hatalı işlem/işlemlerin iptale konu olabilmesi için piyasa eğiliminin hatalı işlem iptali talebinde bulunulan fiyat/fiyatlar yönünde olup olmaması ayrıca dikkate alınabilir.
-    c) Hatalı işlem iptaline ilişkin olarak yukarıda belirtilen şartlar sağlanmış olsa dahi Borsanın işlem iptali talebinin tamamını ya da bir kısmını yerine getirme/getirmeme hakkı saklıdır. Yukarıda belirtilen şartların sağlanmadığı durumlarda BİAŞ Yönetmeliğinin 33 üncü maddesi uygulanır.
+v. İşlem İptaline Konu Olan İşlem/İşlemler Dolayısıyla Karşılaşılan Minimum Zarar Tutarı: İşlem iptali başvurusunun değerlendirmeye alınabilmesi için referans fiyat ile işlem iptaline konu olan işlemin/işlemlerin fiyatları karşılaştırılarak hesaplanan zarar tutarının en az 50.000 TL olması gerekmektedir. Toplam zarar tutarı; aynı yatırım kuruluşu ve müşteri hesap numarasından aynı işlem sırasında gerçekleşmiş iptale konu olabilecek işlemlerin toplam değeri bulunarak hesaplanır.
+vi. Hatalı İşlem İptal Talebi Başvuru Şekli ve Talebin Asgari Unsurları: Hatalı işleme / işlemlere ilişkin iptal talebi, işlemlerin tarafı olan üyelerden biri veya her ikisi aracılığıyla baş temsilci yetkili İşlem Terminalleri (TW, Omnet API) ve/veya yazılı, elektronik iletişim kanalları vb. araçlar yoluyla PPD’ye gönderilir. İşlem iptal taleplerinin işlem terminalleri üzerinden iletilmesi esastır. İptal talebi, iptali talep edilen işlemlere ait işlem zamanı, işlem sırası, sözleşme numarası, işlem fiyatı, işlem miktarı, işlemi gerçekleştiren yanlış emrin numarası, emri giren kullanıcı bilgisi ve müşteri hesap numarası unsurlarını içerecek şekilde pay@borsaistanbul.com adresine gönderilir.
+b) Hatalı işlem/işlemlerin iptale konu olabilmesi için piyasa eğiliminin hatalı işlem iptali talebinde bulunulan fiyat/fiyatlar yönünde olup olmaması ayrıca dikkate alınabilir.
+c) Hatalı işlem iptaline ilişkin olarak yukarıda belirtilen şartlar sağlanmış olsa dahi Borsanın işlem iptali talebinin tamamını ya da bir kısmını yerine getirme/getirmeme hakkı saklıdır. Yukarıda belirtilen şartların sağlanmadığı durumlarda BİAŞ Yönetmeliğinin 33 üncü maddesi uygulanır.
 
 14)  İşlem Kodu
 Varantlarda kısa ve uzun olmak üzere iki tür kod kullanılır. Söz konusu kodlar Borsa tarafından belirlenir ve duyurulur.

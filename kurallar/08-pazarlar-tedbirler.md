@@ -90,6 +90,13 @@ Tablo-3 ve Tablo-4 PDF'te çok sütunlu hücre düzeniyle verilmiştir; sütun a
 - [DOĞRULA] Madde 54, 55: Günlük Bülten ve emir/işlem defteri dosyalarının alanları Prosedürde değil, "Borsa İstanbul PP Veri Bildirim ve Kabul Formatları" belgesindedir (bu projede `../veri/datastore-dosya-formatlari.md`, 2015 sürümü 1.11 başlıklı belge). Belgenin güncel sürümü ile uyumu doğrulanmadı.
 - [DOĞRULA] Bu dosyada yer almayan, madde listesinde olmayan hükümler (Ek-3 varant kotasyon yayılma aralığı ve performans ölçütleri, piyasa yapıcının atanma/sona erme süreçleri, borsa payı indirimleri, 5.3.3 özel işlem bildirimi, 5.3.5 PTRM) kodlanmadı; atama ve başvuru süreçleri eşleştirme motoru için gerekli değildir.
 
+- [BİLGİ – gün içi veri Mart 2025; ayrıntı `../veri/gunici-veri-dogrulama.md` bölüm 2, 4, 6, 11, 13] Madde 11 (Tablo-4) ile karşılaştırma:
+  - **Pazar kodları:** Gün sonu dosyasında `market_segment` değerleri Z (Yıldız), N (Ana), T, W (YİP), S (PÖİP), K (KYÜP), Q (GSP/NYİP) ve E'dir (emtia). T, DataStore belgesindeki (2016) referans tablosunda yoktur; Alt Pazar olarak eşlendi.
+  - **İşlem yöntemi:** W sıraları TF (5 kez tek fiyat), S sıraları ağırlıkla TF (360 TF, 20 SI sıra-gün), Z ve N SI, T ağırlıkla SI (1.027 SI, 93 TF, 60 PY sıra-gün).
+  - **Açılış:** Açılışta piyasa ve piyasadan limite emir yalnız Z ve N'de görülür. Tek fiyat emir toplamada bilgi yayını kısıtlı bölümler (`TP2_PY`, `TPL2`) T, W ve S'de kullanılır. Açılışın son 5 dakikasında kısıt beş pazarda da vardır.
+  - **Uymayan satırlar:** Tablo-4'ün fiyat marjı (%20/%15/%10) ve devre kesici satırları (tetikleme %10/%7,5/%5; emir toplama 5/15/15 dk) Mart 2025 verisine uymaz. Veride marj tüm pazarlarda ±%10, devre kesici yalnız düşüşte %5, emir toplama 15 dk'dır.
+  - **Dayanak (kullanıcı kararı, 21.10.2026):** "Borsa İstanbul Pay Piyasası Prosedürü Tablo-4 dipnotundaki geçici duyuru/uygulama farkı" olarak kayda alınır; motor verideki fiili eşikleri kullanır (`../motor/tarih_parametreleri.csv`; bkz. `02-fiyat.md` ve `06-devre-kesici.md` Açık sorular).
+
 ## Test örnekleri
 Prosedür bu bölümlerde sayısal hesap örneği içermez. Aşağıdakiler kaynak tablolarındaki sınır değerlerinden doğrudan türetilmiş birim testi örnekleridir (kaynak örneği değildir):
 - Kotasyon fiyat kontrolü: alış kotasyonu = satış kotasyonu reddedilir; alış > satış reddedilir; fark en az 1 fiyat adımı olmalıdır (madde 29).

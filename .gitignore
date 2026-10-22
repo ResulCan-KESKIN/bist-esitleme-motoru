@@ -3,3 +3,19 @@ veri/itch/
 
 # Ham kaynak PDF'ler (telif/boyut; push edilmez)
 kaynaklar/
+
+# DataStore gun ici ve gun sonu dosyalari (csv/zip/parquet; cok buyuk)
+veri/gun-ici-emir/
+veri/gun-ici-islem/
+veri/gun-sonu-fiyat-hacim/
+PP_*
+
+# Dogrulama ara ciktilari (betiklerle yeniden uretilir; ozet csv/txt git'te kalir)
+veri/gunici-dogrulama/**/*.parquet
+
+# Python onbellegi
+__pycache__/
+
+# Kisisel bilgi iceren basvuru belgeleri (oneri formu, veri talep dilekcesi)
+Bitirme_Projesi_Oneri_Formu_*.docx
+Ba*vuru Dilek*e*.pdf

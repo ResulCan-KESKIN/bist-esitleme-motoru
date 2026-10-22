@@ -1,5 +1,5 @@
 import pdfplumber, re, pypdfium2 as pdfium
-P=r"E:\DERSLER\7. DÖNEM\Bitirme Projesi 1\proje\pay-piyasasi-prosedur.pdf"
+P=r"D:\Bitirme\proje\pay-piyasasi-prosedur.pdf"
 _pdf=pdfplumber.open(P)
 _doc=pdfium.PdfDocument(P)
 HDR=re.compile(r'^(Pay Piyasası Direktörlüğü|Prosedür|TANIMLAR ve KISALTMALAR LİSTESİ)')

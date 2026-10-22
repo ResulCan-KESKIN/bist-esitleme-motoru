@@ -1,6 +1,6 @@
 import re, sys, io, glob, collections, datetime
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
-D = r"E:\DERSLER\7. DÖNEM\Bitirme Projesi 1\proje"
+D = r"D:\Bitirme\proje"
 seq = collections.defaultdict(list)
 names = {}
 for f in sorted(glob.glob(D + r"\veri\itch\2018-10-08\txt\*.txt")):

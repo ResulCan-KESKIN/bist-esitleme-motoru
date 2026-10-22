@@ -1,0 +1,40 @@
+parametre,kapsam,baslangic,bitis,deger,birim,kaynak,not
+fiyat_marji,"pay: Z,N,T,W,S; BYF (K); GSF (Q)",2025-03-03,2025-03-28,0.10,oran,veri Mart 2025 (gunici-veri-dogrulama.md 4),Prosedur Tablo-4 dipnotundaki gecici duyuru/uygulama farki; tarih araligi gozlem araligidir
+fiyat_marji,emtia sertifikasi (E),2025-03-03,2025-03-28,0.05,oran,veri Mart 2025; Prosedur 5.1.11,
+fiyat_marji,pay Yildiz Pazar (Z),,,0.20,oran,Prosedur Tablo-4 (rev. 21/09/2026),yururlukteki metin; gecis tarihi bilinmiyor
+fiyat_marji,pay Ana Pazar (N),,,0.15,oran,Prosedur Tablo-4 (rev. 21/09/2026),yururlukteki metin; gecis tarihi bilinmiyor
+fiyat_marji,"pay Alt Pazar, YIP, PÖIP (T,W,S)",,,0.10,oran,Prosedur Tablo-4 (rev. 21/09/2026),yururlukteki metin
+fiyat_marji_yuvarlama,tum,,,ice,,02-fiyat.md madde 37; veri Mart 2025,alt sinir yukari adim; ust sinir asagi adim
+fiyat_adimi_tablosu,pay ve ruchan,2023-11-06,,Tablo-7,,Ek-21 (Duyuru 2023/19412); veri Mart 2025,
+fiyat_adimi_tablosu,"BYF, GMF, GSF",2023-11-06,,Tablo-8,,Ek-21; veri Mart 2025,
+fiyat_adimi_tablosu,pay (eski tablo),,2023-11-05,eski Tablo-7 (100 TL ve uzeri 0.10),,Ek-21 eski metin; ITCH 08.10.2018,
+dk_yon,"pay: Z,N,T",2025-03-03,2025-03-28,dusus,,veri Mart 2025 (gunici-veri-dogrulama.md 11),Prosedur Tablo-4 dipnotundaki gecici duyuru/uygulama farki; yukari yonlu DK calismaz
+dk_yon,pay,,,iki_yon,,Prosedur 5.3.4 (rev. 21/09/2026),yururlukteki metin
+dk_tetikleme_orani,"pay: Z,N,T",2025-03-03,2025-03-28,0.05,oran,veri Mart 2025,referans: son muzayede fiyati yoksa baz; Prosedur Tablo-4 dipnotundaki gecici duyuru/uygulama farki
+dk_tetikleme_orani,pay Yildiz (Z),,,0.10,oran,Prosedur Tablo-4,yururlukteki metin
+dk_tetikleme_orani,pay Ana (N),,,0.075,oran,Prosedur Tablo-4,yururlukteki metin
+dk_tetikleme_orani,pay Alt (T),,,0.05,oran,Prosedur Tablo-4,yururlukteki metin
+dk_emir_toplama_suresi,"pay: Z,N,T",2025-03-03,2025-03-28,900,sn,veri Mart 2025,
+dk_emir_toplama_suresi,pay,2018-10-08,2018-10-08,300 veya 900,sn,ITCH 08.10.2018 (06-devre-kesici.md),2018 pazar yapisi (ABCD gruplari)
+dk_emir_toplama_suresi,"pay: Yildiz, Ana, Alt, GSP",2025-09-01,,600,sn,Prosedur 5.3.4 (Duyuru 2025/38860),yururlukteki metin
+dk_eslestirme_bolumu_suresi,pay,,,120,sn,Prosedur 5.3.4 / Tablo-4; veri 2018 ve Mart 2025,eslestirme bolumu basindan surekli isleme donuse kadar
+dk_eslestirme_rastlantisal_pencere,"pay: Z,N,T",2025-03-03,2025-03-28,30,sn,veri Mart 2025; Prosedur 5.3.4,kullanici karari 21.10.2026: emir toplama suresi sabit + eslestirme bolumunun ilk 30 sn icinde rastlantisal an
+dk_eslestirme_rastlantisal_pencere,pay,2018-10-08,2018-10-08,0,sn,ITCH 08.10.2018 (sapma en cok 1 sn),kullanici karari 21.10.2026: tarihe bagli; 2018'de sabit saat
+dk_kapanisa_tasma_esigi,"pay: Z,N,T",2025-03-03,2025-03-28,17:40,saat,veri Mart 2025,bu saatten sonra tetiklenen DK kapanis emir toplamaya aktarilir
+dk_kapanisa_tasma_esigi,pay,2025-09-01,,17:45,saat,Prosedur 5.3.4,yururlukteki metin (sure 15 dk'ya uzar)
+ebdks_esikleri,BIST 100,,2025-08-31,0.05;0.07,oran,Ek-21 Rev. 51 eski metin; veri Mart 2025 (gunde iki EBDKS),esik hesabi veride sinanmadi
+ebdks_esikleri,BIST 100,2025-09-01,,0.06,oran,Prosedur 5.3.4,yururlukteki metin; ikinci kez calismaz
+ebdks_durdurma_suresi,".E, .F1, .F2, .G, .S1",,2025-08-31,1200,sn,Ek-21 Rev. 51 eski metin; veri Mart 2025,
+ebdks_durdurma_suresi,".V, .C, .F, .R",,2025-08-31,1800,sn,Ek-21 Rev. 51 eski metin; veri Mart 2025,
+ebdks_durdurma_suresi,".E, .F1, .F2, .G, .S1",2025-09-01,,600,sn,Prosedur 5.3.4,yururlukteki metin
+ebdks_durdurma_suresi,".V, .C, .F, .R",2025-09-01,,1200,sn,Prosedur 5.3.4,yururlukteki metin
+ebdks_tek_fiyat_emir_toplama,surekli islem siralari,,,300,sn,Prosedur 5.3.4; veri Mart 2025,
+ebdks_eslestirme_rastlantisal_pencere,surekli islem siralari,,,30,sn,Prosedur 5.3.4; veri Mart 2025 (8-24 sn),
+muzayede_eslestirme_rastlantisal_pencere,"acilis, kapanis, tek fiyat",,,30,sn,Prosedur 5.2.2.1; veri Mart 2025,an asama basina tum siralar icin ortaktir
+kapanis_seansi_fiyat_bandi,pay,,,0.03,oran,03-tek-fiyat.md madde 72; veri Mart 2025,son islem fiyati +-%3 ice yuvarlanir; muzayede adaylari da bu banda sinirlidir
+tek_fiyat_adim4_referansi,tum muzayedeler,2025-03-03,2025-03-28,baz,,veri Mart 2025 (146 vakanin 144'u),onceki kapanis
+tek_fiyat_karisik_yon_kurali,tum muzayedeler,,,referansa en yakin; esitlikte orta nokta,,kullanici karari 21.10.2026,uymayan vakalar yon_karisik_istisna=1
+aciga_satis_kapsami,pay,2025-03-03,2025-03-21,BIST 50,,veri Mart 2025; DURUM.md notu (SPK),
+aciga_satis_kapsami,pay,2025-03-24,2025-08-29,yok,,veri Mart 2025 (24-28.03); DURUM.md notu (SPK),bitis tarihi notta 'uzatmali'
+varant_saltkotasyon_baslangici,".V, .C",,2025-03-06,10:00:00,saat,veri Mart 2025,
+varant_saltkotasyon_baslangici,".V, .C",2025-03-07,,10:00:10,saat,Ek-21 (Duyuru 2025/33431); veri Mart 2025,

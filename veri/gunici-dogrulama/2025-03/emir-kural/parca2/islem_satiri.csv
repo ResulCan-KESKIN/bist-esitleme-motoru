@@ -1,0 +1,13 @@
+grup,seans,kalan_tutarli,miktar_sabit,giris_sabit,adet
+pay,P_ESLESTIRME,True,True,True,2220315
+pay,P_ESLESTIRMETEKFIYAT,True,True,True,272275
+pay,P_KAPANIS_FIY_ISLEM,True,True,True,174612
+pay,P_SUREKLI_ISLEM,True,True,True,124670926
+pay,P_SUREKLI_ISLEM,False,True,True,166
+pay,P_SUREKLI_ISLEM,False,False,True,6
+varant,P_SUREKLI_ISLEM,False,False,True,97645
+varant,P_SUREKLI_ISLEM,False,True,True,4664
+varant,P_SUREKLI_ISLEM,True,False,True,30
+varant,P_SUREKLI_ISLEM,True,True,True,1704631
+pay,P_BP_SUREKLI_ISLEM,True,True,True,44
+pay,P_ESLESTIRME_EBDK,True,True,True,529639

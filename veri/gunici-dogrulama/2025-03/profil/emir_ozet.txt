@@ -1,0 +1,3 @@
+toplam satir: 1128466831
+kategorik birlesim: 9134
+sira-seans: 569095

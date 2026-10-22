@@ -1,6 +1,6 @@
 import re, sys, io
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
-D = r"E:\DERSLER\7. DÖNEM\Bitirme Projesi 1\proje"
+D = r"D:\Bitirme\proje"
 # ek10 tablolari: baslik satiri (P_XXX | SAAT) ardindan 1..n satirlari
 L = open(D + r"\ekler\ek10.md", encoding='utf-8').read().split('\n')
 tabs = []

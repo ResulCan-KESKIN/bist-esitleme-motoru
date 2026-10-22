@@ -1,6 +1,6 @@
 import struct, sys, io, collections, datetime
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
-D = r"E:\DERSLER\7. DÖNEM\Bitirme Projesi 1\proje\veri\itch\2018-10-08\vrd\rewinder-files"
+D = r"D:\Bitirme\proje\veri\itch\2018-10-08\vrd\rewinder-files"
 u = struct.unpack
 rows=[]; allmax=[]
 for part in ("TM-1","TM-2"):
