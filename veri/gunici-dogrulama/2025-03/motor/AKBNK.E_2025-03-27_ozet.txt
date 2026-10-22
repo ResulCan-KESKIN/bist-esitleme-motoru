@@ -1,0 +1,19 @@
+kod: AKBNK.E
+gun: 2025-03-27
+surekli_bas: 2025-03-27 10:00:00.055822
+kesinti: yok
+baslangic_defteri_emir: 2849
+eylem: 212415
+ayni_us_eylem: 0
+kismi_gorunme_emir: 46
+islem_gercek: 93759
+islem_motor: 93789
+islem_ortak: 93214
+islem_ortak_oran: 0.994187
+adet_gercek: 131025331
+adet_motor: 131029990
+emir_gerceklesen_ayni: 96115/96159
+aktif_taraf_ayni: 93214/93214
+ilk_sapma_sirasi: 9645
+sayac: {'iptal_bulunamadi': 2}
+sure_sn: 9.5

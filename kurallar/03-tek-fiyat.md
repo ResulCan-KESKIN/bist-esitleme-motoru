@@ -173,6 +173,10 @@ Bu algoritma kapanış seansı dâhil tüm tek fiyat yöntemi uygulamalarında g
   - Kapanış fiyatına çekilirken miktarın da artırıldığı 312 değişiklik vardır. Madde 91 farklı fiyattaki emirde artışa izin vermez; fiyat aynı değişiklikle kapanış fiyatına eşitlendiğinde hangisinin uygulanacağı kaynakta yazılı değildir.
   - Açılış `_EIY` bölümlerinde 19.420 değişikliğin hiçbiri kötüleştirme ya da azaltma değildir ve iptal yoktur (madde 22).
 
+- [BİLGİ 22.10.2026 – gün içi veri Mart 2025, motor tekrar oynatması (`../TASARIM.md` 4.5)] Madde 48–51: Müzayede işlemlerinin alış-satış eşleşmesi kaynakta yazılı değildir. Veride şu kuralla birebir üretilir: alış ve satış tarafı ayrı ayrı öncelik sırasına dizilir (önce piyasa ve fiyatsız piyasadan limite emirler zaman sırasıyla, sonra denge fiyatına eşit ya da daha iyi limit emirler fiyat ve zaman sırasıyla). İki liste baştan yürünür; her adımda iki emrin kalanlarının küçüğü kadar işlem yazılır. 6 sıra-günde açılış, kapanış ve kapanış fiyatından işlemlerin hepsi aynı emir çiftleri ve sırayla üretildi; müzayede sonrası defter veriden kurulanla emir emir aynıdır.
+
+- [BİLGİ 22.10.2026 – gün içi veri Mart 2025] Kısmi görünme koşullu emirler müzayedede görünen kısım kadar sırayla dağıtılır: görünen kısım bitince yenilenen kısım aynı fiyat seviyesinin sonuna geçer (THYAO.E 19.03 EBDKS tek fiyatında 27.816 lotluk dört emir, 5.564'er lotluk dilimlerle sırayla). Bu emirler müzayedede tamamen gerçekleşip sürekli işleme girmediğinde veride sebep 13 satırı olmaz; tepe büyüklüğü bilinemez. Bu durumda motorda fiyat ve emir bazında gerçekleşen miktar aynıdır, yalnız işlem çiftleri farklıdır.
+
 ## Test örnekleri
 Ek-16 emir defteri tabloları ve Ek-18 dengeleyici emir örneği bu dosyada tekrarlanmaz; birim testi verisi olarak `../ekler/ek16.md` (s. 197–200) ve `../ekler/ek18.md` (s. 211) kullanılır. Tablolarda kümülatif toplam, işlem = min(alış, satış) ve kalan = |alış − satış| aritmetiği otomatik kontrol edilmiştir. Beklenen sonuçlar:
 

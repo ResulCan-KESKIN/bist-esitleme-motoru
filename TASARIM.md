@@ -173,6 +173,63 @@ Her emrin satır dizisinden yalnız kullanıcı eylemleri alınır: yeni emir (s
 
 Günde yaklaşık 50–80 milyon emir olayı vardır (payların payı yaklaşık %58). Sıralar birbirinden bağımsızdır; EBDKS dışarıdan verildiği için motor sıra bazında paralel çalışır. Önerilen yol: önce Python başvuru uygulaması (doğruluk), sonra çekirdek döngünün derlenmiş bir uygulaması (numba, Rust veya C++). Karar ölçüm sonrasına bırakılmıştır.
 
+### 4.5 İlk sürüm (22.10.2026)
+
+Kod `motor/`, testler `motor/testler/` (23 test).
+
+| Dosya | İçerik |
+|---|---|
+| `emir.py` | Emir, işlem ve girdi olayları (yeni emir, değişiklik, iptal); fiyat milli-TL; bölümler arası ortak öncelik sayacı |
+| `defter.py` | Fiyat seviyeleri ve seviye içi zaman önceliği |
+| `surekli_islem.py` | Limit, piyasa, piyasadan limite, KİE; öncelik kaybı/korunması; kısmi görünme; pay bazında devre kesici eşiği; sabit fiyat modu (kapanış fiyatından işlemler) |
+| `tek_fiyat.py` | Emir toplama defteri, denge fiyatı (`tek_fiyat_algoritma.denge`), işlem dağıtımı, dengeleyici emirler, kalanların bir sonraki bölüme aktarımı |
+| `gun.py` | Bir sıra-günün bölüm akışı: emir toplama (EBDKS durdurması dahil), eşleştirme, sürekli işlem, kapanış fiyatından işlemler; enjeksiyon |
+| `dogrulama.py` | Sentetik emir doğrulama: Ek-19 izinleri, fiyat adımı, marj, kapanış ±%3, kapanış fiyatından işlemlerde kapanış fiyatı, açığa satış, emir bilgisi değişikliği reddi |
+| `parametreler.py` | `tarih_parametreleri.csv` okuyucu (tarih ve pazara göre en özel satır) |
+| `veri.py` | Günlük emir dosyasından girdi olayları, başlangıç defteri, kısmi görünme tepe tahmini; gerçek işlemler; gün sonu bilgisi |
+| `senaryolar.py` | Sentetik manipülasyon senaryoları (5. bölüm): kapanışı etkileme, yanıltıcı emir, fiyat yükseltme, karşılıklı işlem |
+| `tekrar_oynat.py` | Doğrulama modu: bir sıra-gün, bölüm bölüm ve bütün gün karşılaştırma |
+| `toplu_oynat.py` | Bir günün bütün pay sıraları (`.E`) |
+| `enjeksiyon.py` | Enjeksiyon modu: taban çizgisi ve enjeksiyonlu oynatma, fark raporu |
+
+Akış (tekrar oynatma, `gun.py`):
+1. Bölüm geçişleri ve müzayede eşleşme anları veriden alınır.
+2. Emir toplama bölümlerinde (açılış, kapanış, devre kesici, EBDKS tek fiyat, gün içi tek fiyat) ve EBDKS durdurmasında emirler toplanır, eşleştirme yapılmaz.
+3. Eşleştirmede denge fiyatı baz fiyat, ±marj (tarih parametresi), kapanışta ayrıca son işlem ±%3 ve Adım 4 referansıyla hesaplanır; işlemler dağıtılır, kalanlar öncelik sırasıyla sonraki bölüme geçer.
+4. Sürekli işlemde pay bazında devre kesici eşiği uygulanır (son müzayede fiyatı, yoksa baz; oran ve yön tarih parametresi). Eşiğin ötesinde eşleşecek gelen emrin kalanı iptal edilir ve devre kesici tetiklenir; sonraki olaylar emir toplama olarak işlenir.
+5. Kapanış fiyatından işlemler sabit fiyatla oynatılır.
+6. Girdi olayları: yeni emir, değişiklik, iptal ve dışsal sistem iptalleri (116, 117).
+
+Enjeksiyon: sentetik olaylar zamanlarına göre bölüme yerleşir, o anki bölüm ve defter durumuyla doğrulanır; reddedilenler sebebiyle kaydedilir. Gerçek akış dışsal kabul edilir.
+
+Kapsam dışı: kotasyonlar, özel işlem bildirimi, orta nokta emirleri.
+
+Sonuç (Mart 2025; `veri/gunici-dogrulama/2025-03/motor/`). Ölçüt: alış emri, satış emri, fiyat ve adedi birebir aynı işlem oranı; bütün gün oynatıldı.
+
+| Sıra-gün | Müzayedeler | Sürekli işlem | Kapanış fiyatından | Bütün gün |
+|---|---|---|---|---|
+| THYAO.E 03.03 | 2.588 / %100 | 74.046 / %99,81 | 178 / %100 | %99,82 |
+| KRGYO.E 03.03 (devre kesici) | 286 / %100 | 21.217 / %99,92 | 22 / %100 | %99,92 |
+| KRGYO.E 27.03 | 47 / %100 | 7.620 / %100 | 8 / %100 | %100 |
+| THYAO.E 19.03 (2 EBDKS, devre kesici) | 6.807 / %100; EBDKS 3.227 / %71,4 | 176.028 / %99,82 | 276 / %100 | %99,34 |
+
+Hücreler: gerçek işlem sayısı / birebir aynı oran. Eşleşen sürekli işlemlerin hepsinde aktif taraf da aynıdır. 19.03 EBDKS müzayedelerinde fiyat, toplam miktar ve emir bazında gerçekleşen miktar aynıdır (3.213/3.213); farklı olan, tepe büyüklüğü bilinmeyen kısmi görünme emirlerinin karşı emir çiftleridir.
+
+Bütün paylar (`toplu_oynat.py`; özsermaye günleri hariç): 03.03.2025'te 586 sıra, 4.915.057 işlemin %99,85'i; 19.03.2025'te (iki EBDKS, çok sayıda devre kesici) 580 sıra, 6.825.508 işlemin %99,91'i birebir. Özsermaye günlerinde gün sonu dosyasındaki baz fiyat düzeltilmemiş olduğundan motor işlem üretemez (8. bölüm).
+
+Veriden öğrenilen ve motora işlenen davranışlar:
+- **Müzayede dağıtımı:** alış ve satış tarafı ayrı ayrı öncelik sırasına dizilir (piyasa ve fiyatsız piyasadan limite emirler zaman sırasıyla, sonra limit emirler fiyat ve zaman sırasıyla); iki liste baştan yürünür (`03-tek-fiyat.md` Açık sorular).
+- **Kısmi görünme:** gelen emir yenilenen kısımdan aynı eşleşmede tekrar alırsa tek işlem yazılır. Tepe büyüklüğü sebep 13 satırlarından tahmin edilir (`veri.tepe_tahmini`); sebep 13 görünen kısmı bitiren işlemde yazılır, yenilemeden (ve müzayededen sürekli işleme geçişten) sonraki ilk işlem 3 ya da 13 olabilir.
+- **AFK:** AFK alanı dolu emirde fiyatı ve kalanı değişmeyen değişiklik önceliği kaybettirir (`Degistir.gorunmeyen`; `04-surekli-islem.md` Açık sorular).
+- **Devre kesici:** eşik ve tetikleme davranışı (`06-devre-kesici.md` Açık sorular).
+
+Bilinen sapmalar:
+- Tek yenilemesi olan ya da yalnız müzayedede işlem gören kısmi görünme emirlerinde tepe büyüklüğü belirsizdir.
+- Aynı fiyatta miktar azaltmada öncelik nadiren kaybolur (THYAO.E 03.03: 551'de 2); nedeni veriden ayırt edilemez.
+- Bir sapmadan sonra defter birkaç işlem boyunca farklı kalır; oran bu zincirleme etkiyi de içerir.
+
+Performans: Python sürümü büyük bir pay-günü 7–30 sn'de, bir günün bütün payları yaklaşık 17 dk'da oynatır.
+
 ## 5. Sentetik manipülasyon enjeksiyonu
 
 Senaryolar VI-104.1 Tebliği bentlerine bağlanır (`veri/etiketler/kaynak-vi-104-1-piyasa-bozucu-eylemler-tebligi.md`):
@@ -239,12 +296,48 @@ Emir verisi alınacak aylar:
 
 ### 6.5 Görselleştirme ve emir enjeksiyon arayüzü (zorunlu)
 
+İlk sürüm (22.10.2026): `arayuz/uygulama.py` (Streamlit; çalıştırma `streamlit run arayuz/uygulama.py`), veri hazırlığı `arayuz/hazirla.py`. Fiyat ve dakikalık hacim iki ayrı grafikte (tek eksen); taban çizgisi ve enjeksiyonlu fiyat, sentetik aktörün işlemleri, Z-skor uyarıları ve bölüm bantları gösterilir; tablolar: sentetik işlemler, reddedilen sentetik olaylar, dakikalık seri. Kural ve model uyarıları tespit modülü tamamlandıkça eklenecektir.
+
 Kullanıcı kararı (22.10.2026): görselleştirme zorunludur. Öneri formundan basit ve yararlı olanlar eklenir. Arayüzün içeriği:
 - Pay ve gün seçimi; gerçek emir akışının motorda tekrar oynatılması.
 - Fiyat ve hacim grafiği; isteğe bağlı emir defteri derinliği.
 - Sentetik emir enjeksiyonu: senaryo (5. bölüm), zaman, miktar ve fiyat parametreleri. Enjekte edilen emirler grafikte işaretlenir.
 - Manipülasyon uyarıları grafikte zaman ekseni üzerinde gösterilir: kural, model ve Z-skor uyarıları ayrı işaretle; SPK etiket dönemleri arka plan bandı olarak.
 - Gerçek ve enjeksiyonlu akışın fiyat/işlem farkı.
+
+### 6.6 İlk sürüm (22.10.2026)
+
+Kod `tespit/`:
+- `ozellikler.py`: pay-gün özellikleri (6.2'deki emir akışı, işlem ve referans grupları; defter özellikleri henüz yok). Mart 2025: 20 gün × 590 sıra, gün başına ≈ 50 sn. Çıktı `veri/gunici-dogrulama/2025-03/tespit/ozellikler.parquet` (git dışı).
+- `yontemler.py`:
+  - Z-skor (payın önceki günlerine göre);
+  - iktisadi kurallar (VI-104.1 md 5/1 a, b, d, f; eşikler tasarım parametresidir);
+  - Isolation Forest (Z-skorlar üzerinde);
+  - kesitsel karşılaştırma (aynı gün aynı pazardaki paylar içinde yüzdelik sıra; 5 günlük birikimli getiri ve hacim artışı dahil) ve onun üzerinde Isolation Forest;
+  - SPK etiketlerinin pay-güne çevrilmesi (A dönem; B tedbirden önceki 20 işlem günü).
+- `degerlendir.py`: pay-gün sıralama ölçütleri. Etiketsiz gün negatif sayılmadığından ölçütler alt sınırdır.
+
+Sonuç (Mart 2025; `veri/gunici-dogrulama/2025-03/tespit/degerlendirme.csv`). Pozitifler: A ALKLC (12 pay-gün); B HEDEF, SEGMN, ENSRI, BAKAB, SMRTG, VKFYO (56 pay-gün).
+
+| Puan | ROC-AUC (A) | ROC-AUC (B) | ROC-AUC (A+B) |
+|---|---|---|---|
+| Z-skor (kendi geçmişi) | 0,64 | 0,50 | 0,52 |
+| İktisadi kurallar | 0,47 | 0,57 | 0,55 |
+| Isolation Forest (Z-skor) | 0,50 | 0,54 | 0,54 |
+| Kesitsel uç sıra | 0,82 | 0,52 | 0,58 |
+| Kesitsel Isolation Forest | 0,85 | 0,55 | 0,61 |
+
+Yorum:
+- Payın kendi geçmişine dayanan yöntemler, haftalarca süren manipülasyonda zayıftır: geçmiş de manipülasyon içerir (ALKLC dönemi 04.02'de başlar).
+- Kesitsel karşılaştırma bu kirlenmeye duyarlı değildir; ALKLC pay-günleri gün içinde ortalama 87. yüzdeliktedir.
+- B seviyesinde pencere bir varsayımdır (N = 20). Mart'a düşen B günlerinin bir kısmı pencere kenarındadır (SMRTG 3, VKFYO 2 gün); düşük sonuç beklenir.
+- Pozitif sayısı azdır; sonuçlar 12 aylık veriyle ve sentetik enjeksiyon etiketleriyle yeniden ölçülmelidir.
+
+Sonraki adımlar:
+- defter özellikleri (motorla yeniden kurulan derinlik, makas, dengesizlik);
+- 5 dakikalık pencere;
+- sentetik enjeksiyonla etiketli değerlendirme (kesinlik, duyarlılık, F1);
+- denetimli model (etiket sayısı arttığında).
 
 ## 7. Klasör yapısı (öneri)
 

@@ -1,0 +1,19 @@
+kod: KRGYO.E
+gun: 2025-03-27
+surekli_bas: 2025-03-27 10:00:00.320421
+kesinti: yok
+baslangic_defteri_emir: 139
+eylem: 33986
+ayni_us_eylem: 0
+kismi_gorunme_emir: 5
+islem_gercek: 7620
+islem_motor: 7620
+islem_ortak: 7620
+islem_ortak_oran: 1.0
+adet_gercek: 6162897
+adet_motor: 6162897
+emir_gerceklesen_ayni: 9420/9420
+aktif_taraf_ayni: 7620/7620
+ilk_sapma_sirasi: None
+sayac: {}
+sure_sn: 4.2

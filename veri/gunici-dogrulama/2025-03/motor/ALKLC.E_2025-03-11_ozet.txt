@@ -1,0 +1,19 @@
+kod: ALKLC.E
+gun: 2025-03-11
+surekli_bas: 2025-03-11 10:00:00.107380
+kesinti: yok
+baslangic_defteri_emir: 254
+eylem: 102955
+ayni_us_eylem: 0
+kismi_gorunme_emir: 10
+islem_gercek: 22648
+islem_motor: 22648
+islem_ortak: 22648
+islem_ortak_oran: 1.0
+adet_gercek: 26897124
+adet_motor: 26897124
+emir_gerceklesen_ayni: 25818/25818
+aktif_taraf_ayni: 22648/22648
+ilk_sapma_sirasi: None
+sayac: {}
+sure_sn: 5.2

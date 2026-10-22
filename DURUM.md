@@ -47,6 +47,16 @@ Açık soru sayısı (21.10.2026; `- [DOĞRULA` ile başlayan satırlar): 01: 13
   - Aralıkta eksik: emir, işlem ve gün sonu 2024-06…2025-02 (9 ay). Aralık dışı indirilenler: emir 2025-06, 07 (parquet + zip), 08 (zip); işlem 2025-06…09; gün sonu 2025-06…08. 2025-04/05 emir doğrulanmadı ve günlük bölümlenmedi.
   - Disk: tüm kapsam aylık parquet + günlük bölümleme olarak D:'ye sığmaz (ay başına emir ≈ 17–21 GB parquet + ≈ 14 GB günlük). Saklamayı kullanıcı yönetir.
 
+## Eşleştirme motoru, arayüz ve tespit (22.10.2026)
+- Motor `motor/` (`TASARIM.md` 4.5): sürekli işlem, açılış/kapanış/devre kesici/EBDKS müzayedeleri, kapanış fiyatından işlemler, pay bazında devre kesici eşiği; sentetik emir doğrulama (Ek-19, fiyat adımı, marj, kapanış kuralları) ve enjeksiyon (`senaryolar.py`, `enjeksiyon.py`). Testler `motor/testler/` (23 test, hepsi geçer). 22.10.2026'da commit edildi.
+- Tek sıra-gün: `python -I motor/tekrar_oynat.py veri/gun-ici-emir/gunluk veri/gun-ici-islem/PP_GUNICIISLEM.M.202503.parquet GUN KOD --gunsonu veri/gun-sonu-fiyat-hacim/PP_GUNSONUFIYATHACIM.M.202503.parquet [--cikti KLASOR]`.
+- Bütün gün (tüm `.E`): `python -I motor/toplu_oynat.py GUNLUK ISLEM GUNSONU GUN CIKTI.csv` (yaklaşık 17 dk). 03.03.2025: 588 sıra, 4.915.057 işlemin %99,85'i birebir. Sonuçlar `veri/gunici-dogrulama/2025-03/motor/`.
+- Enjeksiyon: `python -I motor/enjeksiyon.py GUNLUK GUNSONU GUN KOD SENARYO SAAT [ad=deger ...]`.
+- Arayüz: `streamlit run arayuz/uygulama.py` (`TASARIM.md` 6.5).
+- Tespit ilk sürüm `tespit/` (`TASARIM.md` 6.6): pay-gün özellikleri, Z-skor, VI-104.1 bent kuralları, Isolation Forest, kesitsel karşılaştırma; Mart 2025'te A (ALKLC) için kesitsel ROC-AUC 0,85, B için 0,55.
+- Kapsam dışı: kotasyon, orta nokta, özel işlem bildirimi; defter özellikleri ve 5 dk pencere (tespit).
+- Karar (22.10.2026): madde 24 sentetik emirlerde geçerli (MPF-AFK-Hesap No değişikliği reddedilir); tekrar oynatmada AFK dolu emirdeki öncelik kaybı uygulanır.
+
 ## Öneri formu ve veri talebi (proje klasörü, 22.10.2026'da eklendi)
 - **Öneri formu** (`Bitirme_Projesi_Oneri_Formu_Resul_Can_KESKIN.docx`, danışman Doç. Dr. Ersin Kaya): başlık "Ajan Tabanlı Yapay Borsa Simülasyonu ile Borsa İstanbul Pay Piyasasında Kural Dışı Fiyat Hareketlerinin (Anomalilerin) Tespiti". `CLAUDE.md` başlığından farklıdır.
 - Formda olup `TASARIM.md`'de olmayanlar:

@@ -1,0 +1,19 @@
+kod: GARAN.E
+gun: 2025-03-03
+surekli_bas: 2025-03-03 10:00:00.085815
+kesinti: yok
+baslangic_defteri_emir: 1318
+eylem: 194972
+ayni_us_eylem: 0
+kismi_gorunme_emir: 50
+islem_gercek: 54468
+islem_motor: 54470
+islem_ortak: 54410
+islem_ortak_oran: 0.998935
+adet_gercek: 58406436
+adet_motor: 58406436
+emir_gerceklesen_ayni: 59400/59402
+aktif_taraf_ayni: 54351/54351
+ilk_sapma_sirasi: 19673
+sayac: {'iptal_bulunamadi': 1}
+sure_sn: 7.5

@@ -1,0 +1,19 @@
+kod: THYAO.E
+gun: 2025-03-03
+surekli_bas: 2025-03-03 10:00:00.077282
+kesinti: yok
+baslangic_defteri_emir: 4879
+eylem: 188430
+ayni_us_eylem: 0
+kismi_gorunme_emir: 119
+islem_gercek: 74046
+islem_motor: 74046
+islem_ortak: 73906
+islem_ortak_oran: 0.998109
+adet_gercek: 47452378
+adet_motor: 47452120
+emir_gerceklesen_ayni: 75462/75464
+aktif_taraf_ayni: 73905/73905
+ilk_sapma_sirasi: 29606
+sayac: {}
+sure_sn: 9.5
