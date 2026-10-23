@@ -632,30 +632,56 @@ Yorum:
 - **Fiyat yükseltme:** net agresif adım göstergesine rağmen her ölçekte zayıftır (kurallar 0,58–0,63, denetimli ilk 3 en çok %30). 10 agresif alışın bıraktığı iz, likit paylarda olağan fiyat hareketi içinde kalır. Bu senaryo için daha uzun pencere (15–30 dk) ya da payın likiditesine göre ölçeklenmiş gösterge gerekir.
 - Denetimli modelin kapanış satırı yoktur: model yalnız sürekli işlem pencerelerinde çalışır; kapanış penceresi geçmiş kapanışlarla puanlanır.
 
+*Pencere uzunluğu (fiyat yükseltme):* 15 dakikalık pencereyle (`PENCERE_DK=15`; `pencere_15dk/`) fiyat yükseltme iyileşmedi: kurallar ROC-AUC 0,55, denetimli 0,56 (ilk 3 %35, kontrol %15). 15 dakikalık pencerede günde ≈ 33 pencere olduğundan ilk 3 hem pozitifte hem kontrolde daha kolay tutar. Sonuç: bu büyüklükteki fiyat yükseltme (200 sn'de 10 agresif alış, toplam ≈ günlük hacmin %5'i) likit paylarda olağan fiyat yolundan ayrışan bir iz bırakmaz. Bu, göstergenin değil senaryonun özelliğidir; senaryo daha büyük ve uzun yükseltmelerle sınanmalıdır.
 
-### 4.4 Testler ve dosyalar
 
-- 28 birim testi, hepsi geçer (`python -m pytest motor/testler tespit/testler`). Yeni: net agresif adım (müzayede işlemleri sayılmaz), kapanış toplama dengesizliği ve son dakika payı.
-- Yeni dosya: `tespit/kapanis_ozellikleri.py` (var olan özellik tablosuna sütun ekleyebilir: `python -I tespit/kapanis_ozellikleri.py GUNLUK ISLEM OZELLIKLER.parquet`).
-- Değişen: `tespit/pencere.py` (net agresif adım; kural bayrakları `kural_ab`, `kural_f`, `kural_d` sütunlarında), `ozellikler.py`, `motor_ozellikleri.py`, `yontemler.py`, `arayuz/hazirla.py` (bentler kural bayraklarından), `TASARIM.md` 6.6, `DURUM.md`.
+### 4.4 SPK etiketli günlerde pencere düzeyi
 
-### 4.5 Kaldığımız yer ve yapılacaklar
+- **Yöntem (`tespit/spk_pencere.py`):** Mart 2025'te SPK etiketli 76 pay-gün (A 12, B 64; belirsiz günler hariç), aynı payların 100 etiketsiz günü ve rastgele 300 pay-gün motorla oynatıldı. 5 dakikalık pencereler puanlandı (kapanış penceresi geçmiş kapanışlara göre). Gün puanı olarak uyarı penceresi sayısı, bent bazında uyarı sayıları ve en yüksek pencere puanı kullanıldı. Sonuçlar: `veri/gunici-dogrulama/2025-03/tespit/spk_pencere/`.
+- **Sonuç:**
+
+| Grup | Uyarı penceresi (ortalama) | a/b | f | d |
+|---|---|---|---|---|
+| A (ALKLC) | 11,9 | 3,4 | 8,6 | 0,00 |
+| B | 19,5 | 12,4 | 8,4 | 0,02 |
+| Aynı payların etiketsiz günleri | 13,7 | 5,8 | 8,4 | 0,07 |
+| Rastgele pay-günler | 16,3 | 10,7 | 7,0 | 0,03 |
+
+  ROC-AUC (etiketsiz bütün günler negatif): A için uyarı sayısı 0,43; B için 0,61 (a/b uyarıları 0,57).
+- **Yorum:**
+  - Pencere puanı aynı günün diğer pencerelerine göre hesaplanır. Manipülasyon bütün güne ve haftalara yayıldığında (ALKLC) gün içinde öne çıkan pencere olmaz; bu vakalarda doğru araç gün düzeyinde kesitsel karşılaştırmadır (ROC-AUC 0,90).
+  - B günlerinde a/b (iptal, yanıltıcı emir) uyarıları daha sıktır; zayıf bir sinyaldir ve gün içi iptal / yanıltıcı emir epizotlarına işaret edebilir.
+  - İki düzey birbirini tamamlar: gün düzeyi (kesitsel) uzun süreli manipülasyonu, pencere düzeyi kısa epizotları yakalar.
+
+### 4.5 Defter göstergeleri
+
+- **Yöntem:** motor sürekli işlem sırasında defteri 10 saniyede bir örnekler (`motor/gun.py`, `defter_ornekleri`): en iyi 5 seviyedeki görünen alış ve satış miktarı ile en iyi fiyatlar. Pencere göstergeleri (`tespit/pencere.py`): derinlik dengesizliği, (A − S)/(A + S) ortalaması, ve toplam derinlik. Ek süre ihmal edilebilir (KRGYO.E 27.03'te 2.879 örnek).
+- **Sonuç (pencere, ×1, 80 enjeksiyon):** kurallarda değişiklik yok (yanıltıcı emir 0,88 / %79; kapanış 0,79 / %20). Denetimli modelde yanıltıcı emir 0,88 / %74 / kontrol %0, karşılıklı işlem 0,84 / %75 / %15, fiyat yükseltme 0,62 → 0,69 / %35 ama kontrol %5 → %15. Modelin özellik önemlerinde derinlik göstergeleri sıfıra yakındır.
+- **Yorum:** bu aşamada katkı yoktur. Olası nedenler: en iyi 5 seviye, 4–6 adım uzaktaki yanıltıcı katmanları ancak kısmen kapsar; 10 saniyelik örnekleme 30 saniyelik bir epizodu birkaç örnekle görür. Göstergeler korunur; daha derin seviyeler ve olay anında örnekleme ile yeniden denenebilir.
+
+### 4.6 Testler ve dosyalar
+
+- 29 birim testi, hepsi geçer (`python -m pytest motor/testler tespit/testler`). Yeni: net agresif adım (müzayede işlemleri sayılmaz), kapanış toplama dengesizliği ve son dakika payı, defter derinliğinin pencereye toplanması.
+- Yeni dosyalar: `tespit/spk_pencere.py` (SPK etiketli günlerde pencere düzeyi), `tespit/kapanis_ozellikleri.py` (var olan özellik tablosuna sütun ekleyebilir: `python -I tespit/kapanis_ozellikleri.py GUNLUK ISLEM OZELLIKLER.parquet`).
+- Değişen: `motor/gun.py` (defter örneklemesi), `tespit/pencere.py` (net agresif adım, defter göstergeleri, `PENCERE_DK` ile pencere uzunluğu; kural bayrakları `kural_ab`, `kural_f`, `kural_d` sütunlarında), `ozellikler.py`, `motor_ozellikleri.py`, `yontemler.py`, `arayuz/hazirla.py` (bentler kural bayraklarından), `TASARIM.md` 6.6, `DURUM.md`.
+
+### 4.7 Kaldığımız yer ve yapılacaklar
 
 **Kaldığımız yer (23.10.2026).**
-- 22.10.2026 sonundaki listenin ilk iki maddesi yapıldı: fiyat yükseltme göstergesi (net agresif adım) ve kapanış etkilemesi göstergeleri (kapanış müzayedesi sapması, toplama dengesizliği, son dakika payı).
-- Kapanış etkilemesi artık ölçülebilir (×1'de ROC-AUC 0,80); fiyat yükseltme hâlâ zayıf.
-- Motor, arayüz ve tespit kodları, testler (28) ve belgeler güncel; bu bölümle birlikte commit edildi.
+- 22.10.2026 sonundaki listeden yapılanlar:
+  - fiyat yükseltme göstergesi (net agresif adım) ve 15 dakikalık pencere denemesi: senaryo bu büyüklükte ayırt edilemiyor (4.1, 4.3);
+  - kapanış etkilemesi göstergeleri: ×1'de ROC-AUC 0,80, ×3'te 0,87 (4.2);
+  - SPK etiketli günlerde pencere düzeyi: A'da sinyal yok, B'de zayıf (4.4);
+  - defter göstergeleri: şimdilik katkı yok (4.5).
+- Motor, arayüz ve tespit kodları, 29 test ve belgeler güncel; bu bölümle birlikte commit edildi.
 
 **Yapılacaklar (öncelik sırasıyla).**
-1. **Fiyat yükseltme:** daha uzun pencere (15–30 dk) ya da çok ölçekli pencere; net agresif adımın payın olağan adım oynaklığına (gün içi işlem sayısına) göre ölçeklenmesi.
-2. **Veri indirme:** 2024-06…2025-02 (DataStore gün içi emir, gün içi işlem, gün sonu; ITCH yalnız 2025-01 ve 2025-02). Her ay için parquet dönüşümü, günlük bölümleme, kayıpsızlık kontrolü (`rapor.md` 2.10). Aralık dışı dosyaların (2025-06…09) silinmesi kullanıcıdadır.
-3. **Yeni aylar için tarih parametreleri:** marj, devre kesici yönü/oranı/süreleri, açığa satış kapsamı veriden yeniden ölçülür; Mart doğrulama betikleri yeni aylarda çalıştırılır.
-4. **12 ay ölçeğinde çalıştırma:** toplu oynatma ve özellik hesabı; uzun işler parça parça (bellek baskısında arka plan işleri durdurulabiliyor).
-5. **SPK etiketleriyle pencere düzeyi;** denetimli modelin SPK etiketleriyle sınanması.
-6. **Defter göstergeleri:** motorla yeniden kurulan defterden derinlik ve alış/satış dengesizliği.
-7. **Vize raporu:** literatür bölümü; öneri formu farklar tablosunda `[kullanıcı]` gerekçeleri; bölüm 3 ve 4'ün vize metnine dönüştürülmesi.
-8. **Kural dosyalarının kullanıcı onayı** (veriyle birlikte).
-9. **Özsermaye günleri:** düzeltilmiş baz fiyat kaynağı.
+1. **Veri indirme (kullanıcı):** 2024-06…2025-02 (DataStore gün içi emir, gün içi işlem, gün sonu; ITCH yalnız 2025-01 ve 2025-02). Ardından her ay için parquet dönüşümü, günlük bölümleme, kayıpsızlık kontrolü (`rapor.md` 2.10). Aralık dışı dosyaların (2025-06…09) silinmesi kullanıcıdadır.
+2. **Yeni aylar için tarih parametreleri:** marj, devre kesici yönü/oranı/süreleri, açığa satış kapsamı veriden yeniden ölçülür; Mart doğrulama betikleri yeni aylarda çalıştırılır.
+3. **12 ay ölçeğinde çalıştırma:** toplu oynatma ve özellik hesabı; SPK değerlendirmesinin (gün ve pencere düzeyi) 12 ayla tekrarı; denetimli modelin SPK etiketleriyle sınanması. Uzun işler parça parça çalıştırılmalı.
+4. **Vize raporu:** literatür bölümü; öneri formu farklar tablosunda `[kullanıcı]` gerekçeleri; bölüm 3 ve 4'ün vize metnine dönüştürülmesi.
+5. **Kural dosyalarının kullanıcı onayı** (veriyle birlikte).
+6. **Tespit iyileştirmeleri (isteğe bağlı):** fiyat yükseltme senaryosunun daha büyük ve uzun hâliyle sınanması; defter göstergelerinin daha derin seviyelerle ve olay anında örneklenmesi.
+7. **Özsermaye günleri:** düzeltilmiş baz fiyat kaynağı.
 
 Çalıştırma notları `DURUM.md` başındadır.
-

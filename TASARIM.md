@@ -388,8 +388,15 @@ Yorum:
 - **Fiyat yükseltme:** net agresif adım göstergesine rağmen her ölçekte zayıftır (kurallar 0,58–0,63, denetimli ilk 3 en çok %30). 10 agresif alışın bıraktığı iz, likit paylarda olağan fiyat hareketi içinde kalır. Bu senaryo için daha uzun pencere (15–30 dk) ya da payın likiditesine göre ölçeklenmiş gösterge gerekir.
 - Denetimli modelin kapanış satırı yoktur: model yalnız sürekli işlem pencerelerinde çalışır; kapanış penceresi geçmiş kapanışlarla puanlanır.
 
+*Pencere uzunluğu (fiyat yükseltme):* 15 dakikalık pencereyle (`PENCERE_DK=15`; `pencere_15dk/`) fiyat yükseltme iyileşmedi: kurallar ROC-AUC 0,55, denetimli 0,56 (ilk 3 %35, kontrol %15). 15 dakikalık pencerede günde ≈ 33 pencere olduğundan ilk 3 hem pozitifte hem kontrolde daha kolay tutar. Sonuç: bu büyüklükteki fiyat yükseltme (200 sn'de 10 agresif alış, toplam ≈ günlük hacmin %5'i) likit paylarda olağan fiyat yolundan ayrışan bir iz bırakmaz. Bu, göstergenin değil senaryonun özelliğidir; senaryo daha büyük ve uzun yükseltmelerle sınanmalıdır.
+
+*SPK etiketli günlerde pencere düzeyi* (`tespit/spk_pencere.py`; 76 etiketli, 400 etiketsiz pay-gün): gün başına uyarı penceresi sayısı A'yı ayırt etmez (ROC-AUC 0,43), B'de zayıf sinyal verir (0,61; a/b uyarıları 0,57). Pencere puanı aynı günün diğer pencerelerine göre olduğundan bütün güne yayılan manipülasyon gün içinde öne çıkmaz; bu vakalarda gün düzeyi kesitsel karşılaştırma (0,90) doğru araçtır. İki düzey birbirini tamamlar.
+
+*Defter göstergeleri:* motor sürekli işlemde defteri 10 sn'de bir örnekler (en iyi 5 seviyedeki görünen alış/satış miktarı); pencerede derinlik dengesizliği ve toplam derinlik. Bu aşamada katkı yoktur (denetimli modelde önem ≈ 0); en iyi 5 seviye 4–6 adım uzaktaki katmanları ancak kısmen kapsar.
+
 Sonraki adımlar:
-- fiyat yükseltme için daha uzun ya da çok ölçekli pencere ve likiditeye göre ölçeklenmiş net agresif adım;
+- fiyat yükseltme senaryosunun daha büyük ve uzun hâliyle sınanması (15 dk pencere ve net agresif adım bu büyüklükte yetmedi);
+- defter göstergelerinin daha derin seviyelerle ve olay anında örneklenmesi;
 - defter derinliği ve dengesizliği (motorla yeniden kurulan defterden);
 - 12 aylık veriyle ve daha çok enjeksiyonla yeniden ölçüm; SPK etiketli pay-günlerde pencere düzeyi.
 

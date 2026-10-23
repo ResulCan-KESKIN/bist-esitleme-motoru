@@ -87,6 +87,20 @@ def test_kapanis_toplama():
     assert abs(x["kapanis_son_dakika_payi"] - 0.25) < 1e-12
 
 
+def test_derinlik_penceresi():
+    """Defter ornekleri pencereye ortalama olarak duser: dengesizlik (A - S)/(A + S), toplam derinlik."""
+    import pencere as pn
+    from motor.emir import Islem
+    t0 = int(pd.Timestamp("2025-03-03 11:00:00").value // 1000)
+    isl = [("P_SUREKLI_ISLEM", Islem(0, t0, "A0", "", "A0", "S0", 100000, 10))]
+    g = type("G", (), {"islemler": isl, "defter_ornekleri": [(t0, 300, 100, 99000, 101000), (t0 + 10_000_000, 100, 100, 99000, 101000)]})()
+    E = pd.DataFrame({"zaman": [t0], "sebep": [6], "limit": [True], "fiyat": [100000], "miktar": [10],
+                      "surekli_limit": [False], "uzak_kisa": [False]})
+    W = pn.pencere_ozellikleri(g, E)
+    assert abs(W["derinlik_dengesizlik"].iloc[0] - 0.25) < 1e-12   # (0,5 + 0) / 2
+    assert W["derinlik"].iloc[0] == 300                             # (400 + 200) / 2
+
+
 if __name__ == "__main__":
     for ad, f in list(globals().items()):
         if ad.startswith("test_") and callable(f):

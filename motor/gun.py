@@ -34,6 +34,7 @@ TOPLAMA = veri.ACILIS_TOPLAMA + veri.KAPANIS_TOPLAMA + DURDURMA + (
     "P_DK_TEKFIY_EMIR_TPL", "P_DK_TEKFIY_EMR_TPL2", "P_TF_EMIR_TPL_EBDK", "P_TF_EMIR_TPL2_EBDK",
     "P_TEKFIYAT_EMIR_TPL", "P_TEKFIYAT_EMIR_TPL2")
 DISSAL_IPTAL = (116, 117)
+DEFTER_ORNEK_US = 10 * 1_000_000   # surekli islemde defter ornekleme araligi (derinlik gostergeleri; tespit/pencere.py)
 
 
 def kategori(seans):
@@ -88,6 +89,8 @@ class Gun:
         self.reddedilen = []         # (sentetik olay, bolum, sebep)
         self.kabul = []              # (sentetik olay, bolum)
         self.sentetik_en_iyi = {}    # sentetik yeni emir -> (en iyi alis, en iyi satis) giris aninda (surekli islem)
+        self.defter_ornek_us = DEFTER_ORNEK_US
+        self.defter_ornekleri = []   # surekli islemde (zaman, ilk 5 seviye alis miktari, satis miktari, en iyi alis, satis)
         self.sentetik_nolar = set()
         self.muzayedeler = []        # (eslestirme ani, bolum, denge sonucu)
         self.anlik = []              # (eslestirme ani, {emir_no: (alis, fiyat, kalan, fiyat_turu)}) tani icin
@@ -196,7 +199,17 @@ class Gun:
                 else:
                     surekli = SurekliIslem(defter, sabit_fiyat=kapanis_fiyati if kapanis_fiyati is not None else son_fiyat)
                 n = len(surekli.islemler)
+                ornek_t = None
                 for _, s_, o in birlestir(self._olaylar(bas, bit, (seans,)), sent):
+                    if kat == "surekli" and self.defter_ornek_us and tf is None:
+                        if ornek_t is None:
+                            ornek_t = o.zaman // self.defter_ornek_us * self.defter_ornek_us
+                        while o.zaman >= ornek_t + self.defter_ornek_us:
+                            ornek_t += self.defter_ornek_us
+                            d_ = surekli.defter
+                            self.defter_ornekleri.append((ornek_t, sum(q for _, q, _ in d_.derinlik(True, 5)),
+                                                          sum(q for _, q, _ in d_.derinlik(False, 5)),
+                                                          d_.en_iyi(True), d_.en_iyi(False)))
                     if tf is not None:
                         if gecerli(o, s_, "P_DK_TEKFIY_EMIR_TPL", tf.emirler):
                             tf.isle(o)  # devre kesici tetiklendi: veride bolum adi henuz degismemis olabilir

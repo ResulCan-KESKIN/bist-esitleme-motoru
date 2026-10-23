@@ -5,27 +5,28 @@ Son güncelleme: 23.10.2026. Bu dosya sohbet geçmişi olmadan çalışmaya deva
 ## Kaldığımız yer ve yapılacaklar (23.10.2026)
 
 **Kaldığımız yer (23.10.2026).**
-- 22.10.2026 sonundaki listenin ilk iki maddesi yapıldı: fiyat yükseltme göstergesi (net agresif adım) ve kapanış etkilemesi göstergeleri (kapanış müzayedesi sapması, toplama dengesizliği, son dakika payı).
-- Kapanış etkilemesi artık ölçülebilir (×1'de ROC-AUC 0,80); fiyat yükseltme hâlâ zayıf.
-- Motor, arayüz ve tespit kodları, testler (28) ve belgeler güncel; bu bölümle birlikte commit edildi.
+- 22.10.2026 sonundaki listeden yapılanlar:
+  - fiyat yükseltme göstergesi (net agresif adım) ve 15 dakikalık pencere denemesi: senaryo bu büyüklükte ayırt edilemiyor (4.1, 4.3);
+  - kapanış etkilemesi göstergeleri: ×1'de ROC-AUC 0,80, ×3'te 0,87 (4.2);
+  - SPK etiketli günlerde pencere düzeyi: A'da sinyal yok, B'de zayıf (4.4);
+  - defter göstergeleri: şimdilik katkı yok (4.5).
+- Motor, arayüz ve tespit kodları, 29 test ve belgeler güncel; bu bölümle birlikte commit edildi.
 
 **Yapılacaklar (öncelik sırasıyla).**
-1. **Fiyat yükseltme:** daha uzun pencere (15–30 dk) ya da çok ölçekli pencere; net agresif adımın payın olağan adım oynaklığına (gün içi işlem sayısına) göre ölçeklenmesi.
-2. **Veri indirme:** 2024-06…2025-02 (DataStore gün içi emir, gün içi işlem, gün sonu; ITCH yalnız 2025-01 ve 2025-02). Her ay için parquet dönüşümü, günlük bölümleme, kayıpsızlık kontrolü (`rapor.md` 2.10). Aralık dışı dosyaların (2025-06…09) silinmesi kullanıcıdadır.
-3. **Yeni aylar için tarih parametreleri:** marj, devre kesici yönü/oranı/süreleri, açığa satış kapsamı veriden yeniden ölçülür; Mart doğrulama betikleri yeni aylarda çalıştırılır.
-4. **12 ay ölçeğinde çalıştırma:** toplu oynatma ve özellik hesabı; uzun işler parça parça (bellek baskısında arka plan işleri durdurulabiliyor).
-5. **SPK etiketleriyle pencere düzeyi;** denetimli modelin SPK etiketleriyle sınanması.
-6. **Defter göstergeleri:** motorla yeniden kurulan defterden derinlik ve alış/satış dengesizliği.
-7. **Vize raporu:** literatür bölümü; öneri formu farklar tablosunda `[kullanıcı]` gerekçeleri; bölüm 3 ve 4'ün vize metnine dönüştürülmesi.
-8. **Kural dosyalarının kullanıcı onayı** (veriyle birlikte).
-9. **Özsermaye günleri:** düzeltilmiş baz fiyat kaynağı.
+1. **Veri indirme (kullanıcı):** 2024-06…2025-02 (DataStore gün içi emir, gün içi işlem, gün sonu; ITCH yalnız 2025-01 ve 2025-02). Ardından her ay için parquet dönüşümü, günlük bölümleme, kayıpsızlık kontrolü (`rapor.md` 2.10). Aralık dışı dosyaların (2025-06…09) silinmesi kullanıcıdadır.
+2. **Yeni aylar için tarih parametreleri:** marj, devre kesici yönü/oranı/süreleri, açığa satış kapsamı veriden yeniden ölçülür; Mart doğrulama betikleri yeni aylarda çalıştırılır.
+3. **12 ay ölçeğinde çalıştırma:** toplu oynatma ve özellik hesabı; SPK değerlendirmesinin (gün ve pencere düzeyi) 12 ayla tekrarı; denetimli modelin SPK etiketleriyle sınanması. Uzun işler parça parça çalıştırılmalı.
+4. **Vize raporu:** literatür bölümü; öneri formu farklar tablosunda `[kullanıcı]` gerekçeleri; bölüm 3 ve 4'ün vize metnine dönüştürülmesi.
+5. **Kural dosyalarının kullanıcı onayı** (veriyle birlikte).
+6. **Tespit iyileştirmeleri (isteğe bağlı):** fiyat yükseltme senaryosunun daha büyük ve uzun hâliyle sınanması; defter göstergelerinin daha derin seviyelerle ve olay anında örneklenmesi.
+7. **Özsermaye günleri:** düzeltilmiş baz fiyat kaynağı.
 
 
 **Çalıştırma notları.**
 - Tek sıra-gün: `python -I motor/tekrar_oynat.py veri/gun-ici-emir/gunluk veri/gun-ici-islem/PP_GUNICIISLEM.M.202503.parquet GUN KOD --gunsonu veri/gun-sonu-fiyat-hacim/PP_GUNSONUFIYATHACIM.M.202503.parquet`.
 - Bütün gün: `python -I motor/toplu_oynat.py GUNLUK ISLEM GUNSONU GUN CIKTI.csv`.
 - Özellikler: `python -I tespit/ozellikler.py GUNLUK ISLEM GUNSONU CIKTI.parquet [GUN ...]` (parça parça çalıştırılabilir); yalnız kapanış göstergelerini eklemek için `python -I tespit/kapanis_ozellikleri.py GUNLUK ISLEM OZELLIKLER.parquet`.
-- Değerlendirme: `tespit/degerlendir.py`, `tespit/pencere_degerlendir.py` (`OLCEK` ortam değişkeniyle büyüklük), `tespit/denetimli.py`.
+- Değerlendirme: `tespit/degerlendir.py`, `tespit/pencere_degerlendir.py` (`OLCEK` ortam değişkeniyle büyüklük, `PENCERE_DK` ile pencere uzunluğu), `tespit/denetimli.py`, `tespit/spk_pencere.py` (kaldığı yerden devam eder; `--degerlendir`).
 - Arayüz: `streamlit run arayuz/uygulama.py`.
 - Testler: `python -m pytest motor/testler tespit/testler`.
 

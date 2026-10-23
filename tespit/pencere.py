@@ -6,7 +6,9 @@ hesaplanir; enjeksiyonlu ve enjeksiyonsuz kosu ayni yolla olculur. Muzayede isle
 - Ozellikler: islem sayisi, hacim (lot), getiri (pencere son fiyati / onceki pencere son fiyati), aktif taraf
   dengesizligi, yeni emir, iptal, iptal orani, kisa omurlu uzak emir miktari payi (ozellikler.py tanimi), yeni limit
   emirlerde farkli fiyat kademesi sayisi, net agresif adim (surekli islemde ardisik islemlerde fiyati yukari iten
-  agresif alis sayisi eksi asagi iten agresif satis sayisi; adim adim fiyat yukseltme / dusurme gostergesi).
+  agresif alis sayisi eksi asagi iten agresif satis sayisi; adim adim fiyat yukseltme / dusurme gostergesi), defter
+  derinlik dengesizligi ve toplam derinlik (motor defterinden 10 sn'de bir: en iyi 5 seviyedeki gorunen alis ve satis
+  miktari; dengesizlik (A - S)/(A + S) ortalamasi).
 - Puanlar: ayni pay-gunun diger pencerelerine gore saglam Z (ortanca, 1,4826 x MAD); pencere puani en buyuk |z|.
   Kurallar (VI-104.1 md 5/1): a/b z(iptal_orani) ya da z(uzak_kisa_pay) >= ESIK; f |z(getiri)| >= ESIK ve
   |z(aktif_dengesizlik)| >= ESIK_2 ayni yonde, ya da |z(net_adim)| >= ESIK; d kapanis muzayedesi penceresinde
@@ -16,16 +18,18 @@ hesaplanir; enjeksiyonlu ve enjeksiyonsuz kosu ayni yolla olculur. Muzayede isle
   hacim payi, kapanis oncesi getiri, kapanis muzayedesi sapmasi, kapanis emir toplama dengesizligi, son dakika payi;
   z, payin onceki en az 5 gunune gore). Kural d yontemler.kurallar ile aynidir.
 """
+import os
+
 import numpy as np
 import pandas as pd
 
 from ozellikler import UZAK_ADIM, KISA_SN, fiyat_adimi
 
-PENCERE_US = 5 * 60 * 1_000_000
+PENCERE_US = int(os.environ.get("PENCERE_DK", "5")) * 60 * 1_000_000   # pencere uzunlugu (varsayilan 5 dk)
 ESIK, ESIK_2 = 3.0, 2.0
 OZ = ["islem_sayisi", "hacim", "getiri", "aktif_dengesizlik", "yeni", "iptal", "iptal_orani", "uzak_kisa_pay",
-      "fiyat_kademesi", "net_adim"]
-LOG = {"islem_sayisi", "hacim", "yeni", "iptal", "fiyat_kademesi"}
+      "fiyat_kademesi", "net_adim", "derinlik_dengesizlik", "derinlik"]
+LOG = {"islem_sayisi", "hacim", "yeni", "iptal", "fiyat_kademesi", "derinlik"}
 
 
 def emir_olaylari(df, g=None):
@@ -99,6 +103,14 @@ def pencere_ozellikleri(g, E):
                              "sl_miktar": E[E["surekli_limit"]].groupby("p")["miktar"].sum(),
                              "uk_miktar": E[E["uzak_kisa"]].groupby("p")["miktar"].sum(),
                              "fiyat_kademesi": E[(E["sebep"] == 6) & E["limit"]].groupby("p")["fiyat"].nunique()}), how="outer")
+    O = pd.DataFrame(getattr(g, "defter_ornekleri", []) or [], columns=["zaman", "alis", "satis", "en_iyi_alis", "en_iyi_satis"])
+    if len(O):
+        O["p"] = O["zaman"] // PENCERE_US * PENCERE_US
+        O["deng"] = (O["alis"] - O["satis"]) / (O["alis"] + O["satis"]).where(O["alis"] + O["satis"] > 0)
+        O["toplam"] = O["alis"] + O["satis"]
+        W = W.join(O.groupby("p").agg(derinlik_dengesizlik=("deng", "mean"), derinlik=("toplam", "mean")), how="outer")
+    else:
+        W["derinlik_dengesizlik"], W["derinlik"] = np.nan, np.nan
     W = W.sort_index()
     W["son"] = W["son"].ffill()
     W["getiri"] = np.log(W["son"] / W["son"].shift()).fillna(0)
