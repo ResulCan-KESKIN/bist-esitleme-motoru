@@ -126,4 +126,6 @@ def satir(g, df, gs_satir):
         emir_islem_orani=c["yeni"] / max(len(I), 1),
     )
     out["kisa_omurlu_uzak_pay"], out["makas"] = _uzak_kisa(g, df)
+    from kapanis_ozellikleri import motor_kapanis
+    out.update(motor_kapanis(g, df))
     return out

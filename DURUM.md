@@ -1,37 +1,30 @@
 # Proje durumu ve devam notu (yeni oturum için)
 
-Son güncelleme: 22.10.2026 akşamı. Bu dosya sohbet geçmişi olmadan çalışmaya devam etmek içindir. Görev tanımı: `gorev-kural-yazimi.md` (kurallar: kaynakta olmayanı ekleme, madde no sona, belirsizlik → "Açık sorular" [DOĞRULA], örnekler → "Test örnekleri", dosya adlarında Türkçe karakter yok, her oturumda tek kural dosyası, bitince [DOĞRULA] listesini göster).
+Son güncelleme: 23.10.2026. Bu dosya sohbet geçmişi olmadan çalışmaya devam etmek içindir. Görev tanımı: `gorev-kural-yazimi.md` (kurallar: kaynakta olmayanı ekleme, madde no sona, belirsizlik → "Açık sorular" [DOĞRULA], örnekler → "Test örnekleri", dosya adlarında Türkçe karakter yok, her oturumda tek kural dosyası, bitince [DOĞRULA] listesini göster).
 
-## Kaldığımız yer ve yapılacaklar (22.10.2026 akşamı)
+## Kaldığımız yer ve yapılacaklar (23.10.2026)
 
-**Kaldığımız yer (22.10.2026 akşamı).**
-- **Motor (`motor/`):** bir sıra-günü baştan sona (açılış, sürekli işlem, devre kesici ve EBDKS müzayedeleri, kapanış, kapanış fiyatından işlemler) tekrar oynatır. Bütün paylarla ölçüldü: 03.03.2025'te %99,85, 19.03.2025'te %99,91 işlem birebir (özsermaye günleri hariç). Sentetik emir doğrulama ve enjeksiyon çalışır. 26 test geçer.
-- **Arayüz (`arayuz/`):** Streamlit; oynatma, enjeksiyon, fiyat ve hacim grafikleri, 5 dk pencere kural uyarıları.
-- **Tespit (`tespit/`):**
-  - pay-gün özellikleri (Mart 2025, yeni göstergelerle);
-  - SPK etiketleriyle değerlendirme: A (ALKLC) kesitsel ROC-AUC 0,90, B ≈ 0,53;
-  - 5 dk pencere ve denetimli model; sentetik enjeksiyonla değerlendirme ve büyüklük duyarlılığı.
-  - Yanıltıcı emir iyi yakalanır; karşılıklı işlem hacimle ve büyüklüğe bağlı olarak; fiyat yükseltme ve kapanış etkilemesi zayıftır.
-- **Veri:** yalnız Mart 2025 günlük bölümlenmiş ve doğrulanmış; 2025-04 ve 05 parquet var ama doğrulanmadı.
-- **Kararlar:** 22.10.2026'da verilen bütün kararlar belgelere işlendi (veri aralığı, sistem kapsamı, N = 20, B penceresi bitişi, madde 24 / AFK).
-- **Git:** bütün çalışma commit edildi (son commit: "Günün sonu: büyüklük duyarlılığı, kaldığımız yer ve yapılacaklar").
+**Kaldığımız yer (23.10.2026).**
+- 22.10.2026 sonundaki listenin ilk iki maddesi yapıldı: fiyat yükseltme göstergesi (net agresif adım) ve kapanış etkilemesi göstergeleri (kapanış müzayedesi sapması, toplama dengesizliği, son dakika payı).
+- Kapanış etkilemesi artık ölçülebilir (×1'de ROC-AUC 0,80); fiyat yükseltme hâlâ zayıf.
+- Motor, arayüz ve tespit kodları, testler (28) ve belgeler güncel; bu bölümle birlikte commit edildi.
 
 **Yapılacaklar (öncelik sırasıyla).**
-1. **Fiyat yükseltme göstergesi:** pencerede net agresif adım (agresif alışların fiyatı yukarı ittiği adım sayısı eksi agresif satışların aşağı ittiği adım sayısı). `tespit/pencere.py`'ye eklenir, bent f kuralına bağlanır; `pencere_degerlendir.py` ve `denetimli.py` yeniden çalıştırılır.
-2. **Kapanış etkilemesi göstergeleri:** kapanış denge fiyatının son sürekli işlem fiyatından sapması, kapanış emir toplamadaki alış/satış dengesizliği, son dakikalardaki değişiklik ve iptaller. Pay-gün özelliklerine ve kapanış penceresi puanına eklenir.
-3. **Veri indirme:** 2024-06…2025-02 (DataStore gün içi emir, gün içi işlem, gün sonu; ITCH yalnız 2025-01 ve 2025-02). Her ay için parquet dönüşümü, günlük bölümleme, kayıpsızlık kontrolü (`rapor.md` 2.10). Aralık dışı dosyaların (2025-06…09) silinmesi kullanıcıdadır.
-4. **Yeni aylar için tarih parametreleri:** marj, devre kesici yönü/oranı/süreleri, açığa satış kapsamı veriden yeniden ölçülür (`motor/tarih_parametreleri.csv`); ardından Mart doğrulama betikleri yeni aylarda çalıştırılır.
-5. **12 ay ölçeğinde çalıştırma:** toplu oynatma ve özellik hesabı. Bir gün ≈ 17–30 dk (oynatma) ve ≈ 3 dk (özellik); paralel çalıştırma (en çok 2 iş, 16 GB RAM) ya da hızlandırma gerekir. Arka planda uzun işler bellek baskısında sistemce durdurulabiliyor; uzun işleri parçalara bölmek (özellik hesabı kaldığı yerden devam eder) gerekir.
-6. **SPK etiketleriyle pencere düzeyi:** etiketli pay-günlerde pencere puanları; denetimli modelin SPK etiketleriyle sınanması (12 ay veriyle).
-7. **Defter göstergeleri:** motorla yeniden kurulan defterden derinlik ve alış/satış dengesizliği.
-8. **Vize raporu:** literatür bölümü; öneri formu farklar tablosunda `[kullanıcı]` gerekçeleri (Monte Carlo bandı, piyasa geneli/paya özgü ayrımı, sanal-reel paralel çalışma); bu rapordaki bölüm 3'ün vize metnine dönüştürülmesi.
-9. **Kural dosyalarının kullanıcı onayı** (veriyle birlikte; 05, 06, 08 ve açık [DOĞRULA] maddeleri).
-10. **Özsermaye günleri:** düzeltilmiş baz fiyat kaynağı (motor bu günlerde işlem üretemez).
+1. **Fiyat yükseltme:** daha uzun pencere (15–30 dk) ya da çok ölçekli pencere; net agresif adımın payın olağan adım oynaklığına (gün içi işlem sayısına) göre ölçeklenmesi.
+2. **Veri indirme:** 2024-06…2025-02 (DataStore gün içi emir, gün içi işlem, gün sonu; ITCH yalnız 2025-01 ve 2025-02). Her ay için parquet dönüşümü, günlük bölümleme, kayıpsızlık kontrolü (`rapor.md` 2.10). Aralık dışı dosyaların (2025-06…09) silinmesi kullanıcıdadır.
+3. **Yeni aylar için tarih parametreleri:** marj, devre kesici yönü/oranı/süreleri, açığa satış kapsamı veriden yeniden ölçülür; Mart doğrulama betikleri yeni aylarda çalıştırılır.
+4. **12 ay ölçeğinde çalıştırma:** toplu oynatma ve özellik hesabı; uzun işler parça parça (bellek baskısında arka plan işleri durdurulabiliyor).
+5. **SPK etiketleriyle pencere düzeyi;** denetimli modelin SPK etiketleriyle sınanması.
+6. **Defter göstergeleri:** motorla yeniden kurulan defterden derinlik ve alış/satış dengesizliği.
+7. **Vize raporu:** literatür bölümü; öneri formu farklar tablosunda `[kullanıcı]` gerekçeleri; bölüm 3 ve 4'ün vize metnine dönüştürülmesi.
+8. **Kural dosyalarının kullanıcı onayı** (veriyle birlikte).
+9. **Özsermaye günleri:** düzeltilmiş baz fiyat kaynağı.
+
 
 **Çalıştırma notları.**
 - Tek sıra-gün: `python -I motor/tekrar_oynat.py veri/gun-ici-emir/gunluk veri/gun-ici-islem/PP_GUNICIISLEM.M.202503.parquet GUN KOD --gunsonu veri/gun-sonu-fiyat-hacim/PP_GUNSONUFIYATHACIM.M.202503.parquet`.
 - Bütün gün: `python -I motor/toplu_oynat.py GUNLUK ISLEM GUNSONU GUN CIKTI.csv`.
-- Özellikler: `python -I tespit/ozellikler.py GUNLUK ISLEM GUNSONU CIKTI.parquet [GUN ...]` (parça parça çalıştırılabilir).
+- Özellikler: `python -I tespit/ozellikler.py GUNLUK ISLEM GUNSONU CIKTI.parquet [GUN ...]` (parça parça çalıştırılabilir); yalnız kapanış göstergelerini eklemek için `python -I tespit/kapanis_ozellikleri.py GUNLUK ISLEM OZELLIKLER.parquet`.
 - Değerlendirme: `tespit/degerlendir.py`, `tespit/pencere_degerlendir.py` (`OLCEK` ortam değişkeniyle büyüklük), `tespit/denetimli.py`.
 - Arayüz: `streamlit run arayuz/uygulama.py`.
 - Testler: `python -m pytest motor/testler tespit/testler`.

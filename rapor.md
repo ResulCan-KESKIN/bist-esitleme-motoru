@@ -1,6 +1,6 @@
 # Çalışma raporu
 
-Bu dosya, bitirme projesi vize raporunun yazılacağı kaynak kayıttır. Önce 21.10.2026'ya kadar yapılanlar özetlenir, sonra oturumlar tarih başlığı altında ayrıntılı kaydedilir (bölüm 2: 21.10.2026, bölüm 3: 22.10.2026). Ayrıntılı teknik sonuçlar ilgili dosyalardadır; bu raporda yalnız özetleri ve sayıları vardır.
+Bu dosya, bitirme projesi vize raporunun yazılacağı kaynak kayıttır. Önce 21.10.2026'ya kadar yapılanlar özetlenir, sonra oturumlar tarih başlığı altında ayrıntılı kaydedilir (bölüm 2: 21.10.2026, bölüm 3: 22.10.2026, bölüm 4: 23.10.2026). Ayrıntılı teknik sonuçlar ilgili dosyalardadır; bu raporda yalnız özetleri ve sayıları vardır.
 
 **Proje:** "Borsa İstanbul Pay Piyasası Kurallarına Uygun Eşleştirme Motoru ve Makine Öğrenmesi Destekli Piyasa Manipülasyonu Tespit Sistemi" (bilgisayar mühendisliği bitirme projesi, tek kişilik).
 
@@ -580,3 +580,82 @@ Commit'ler (22.10.2026): `c9a3f7e` (veri doğrulamaları, tasarım, kararlar), `
 - Değerlendirme: `tespit/degerlendir.py`, `tespit/pencere_degerlendir.py` (`OLCEK` ortam değişkeniyle büyüklük), `tespit/denetimli.py`.
 - Arayüz: `streamlit run arayuz/uygulama.py`.
 - Testler: `python -m pytest motor/testler tespit/testler`.
+
+## 4. 23.10.2026 — Fiyat yükseltme ve kapanış etkilemesi göstergeleri
+
+Bu oturumda, 22.10.2026 sonunda zayıf kalan iki senaryo için yeni göstergeler eklendi ve tespit yeniden ölçüldü. Ölçütler bölüm 3.9'dakiyle aynıdır: ROC-AUC (0,5 rastgele), "ilk 3" (enjekte edilen pencerelerden birinin günün en yüksek puanlı 3 penceresinde olma oranı) ve "kontrol" (aynı pencerelerin enjeksiyonsuz koşuda ilk 3'e girme oranı, yani yanlış alarm tabanı).
+
+### 4.1 Fiyat yükseltme: net agresif adım
+
+- **Tanım (`tespit/pencere.py`):** sürekli işlemde, ardışık iki işlem arasında fiyat yükselmiş ve işlemin aktif tarafı alıcıysa +1, fiyat düşmüş ve aktif taraf satıcıysa −1. Pencere toplamı "net agresif adım"dır. Adım adım fiyat yükseltmenin (ramping) doğrudan izidir: her agresif alış satış tarafındaki en iyi seviyeyi tüketip fiyatı bir adım yukarı iter. Müzayede işlemleri sayılmaz.
+- **Kural:** bent f (fiyat yükseltici/düşürücü işlemler) kuralına eklendi: |z(net agresif adım)| ≥ 3.
+- **Örnek (KRGYO.E 27.03, 10 agresif alış × 20.000 lot):** enjekte edilen pencerede net agresif adım −1'den +4'e çıktı (z = 1,35); aynı gün olağan pencerelerde −11 ile +29 arasında değişir. Oynak ve likit bir payda 10 küçük agresif alış öne çıkmaz.
+- **Sonuç (pencere, ×1):** kurallarda ROC-AUC 0,56 → 0,61, ilk 3'te isabet %0 → %10 (kontrol %5). Denetimli modelde değişiklik yok (0,62 / %25).
+- **Yorum:** gösterge doğru yönde ama bu büyüklükteki fiyat yükseltme, payın olağan fiyat hareketinden ayrışmaz. Ölçek büyüdükçe etkisi 4.3'te.
+
+### 4.2 Kapanış etkilemesi: üç yeni gösterge
+
+- **Tanımlar (`tespit/kapanis_ozellikleri.py`; pay-gün):**
+  - *kapanış müzayedesi sapması:* kapanış müzayedesi fiyatı / günün son sürekli işlem fiyatı − 1. Kapanışı itmenin doğrudan sonucudur;
+  - *kapanış emir toplama dengesizliği:* kapanış emir toplamada girilen yeni emirlerin alış−satış miktar dengesizliği, (A − S)/(A + S);
+  - *son dakika payı:* kapanış emir toplamadaki yeni emir, değişiklik ve iptallerin son 60 saniyeye düşen payı.
+- **Hesap:** veriden (yalnız kapanış bölümü satırları okunduğu için 20 gün 3 dakikada) ve motor çıktısından aynı tanımlarla; KRGYO.E 27.03'te iki hesap birebir aynıdır. Mart 2025'te kapanış müzayedesi sapmasının standart sapması %0,5, uç değerleri ±%4.
+- **Kurallar:** bent d kuralına eklendi: |z(kapanış müzayedesi sapması)| ≥ 3 ve |z(toplama dengesizliği)| ≥ 2 aynı yönde. Pay-gün kuralında (`yontemler.py`) ve kapanış penceresinin geçmiş kapanışlarla puanlanmasında (`pencere.kapanis_gecmisi`) aynı kural kullanılır.
+- **Örnek (KRGYO.E 27.03, günlük hacmin %3'ü kadar kapanış alışı):** kapanış müzayedesi sapması %0,9 → %3,0; toplama dengesizliği 0,34 → 0,71.
+- **Sonuç (pencere, ×1):** kurallarda ROC-AUC 0,60 → 0,80, ilk 3'te isabet %0 → %20 (kontrol %5); Z-skorda 0,83 / %15 (kontrol %0).
+- **Yorum:** kapanış etkilemesi artık iz bırakıyor; önceki göstergeler (AOF sapması, kapanış seansı payı) kapanış emrinin etkisini gün geneline yayıyordu. Yeni göstergeler doğrudan kapanış müzayedesine bakar.
+- SPK etiketleriyle sonuç değişmedi (ALKLC kesitsel ROC-AUC 0,90): ALKLC ve B vakaları kapanış etkilemesi değil, gün içi işlem bazlı şüphelerdir.
+
+### 4.3 Güncel pencere sonuçları ve büyüklük duyarlılığı
+
+Bütün yeni göstergelerle, 80'er enjeksiyon; büyüklükler ×0,3, ×1, ×3 (`veri/gunici-dogrulama/2025-03/tespit/olcek_duyarlilik.csv`, `pencere/`, `pencere_olcek_0.3/`, `pencere_olcek_3/`). Hücreler: ROC-AUC / ilk 3 / kontrol ilk 3.
+
+| Senaryo | Ölçek | Kurallar | Denetimli |
+|---|---|---|---|
+| Yanıltıcı emir | ×0,3 | 0,89 / %79 / %5 | 0,81 / %58 / %0 |
+| Karşılıklı işlem | ×0,3 | 0,45 / %5 / %5 | 0,78 / %40 / %15 |
+| Fiyat yükseltme | ×0,3 | 0,58 / %5 / %5 | 0,63 / %15 / %10 |
+| Kapanış | ×0,3 | 0,66 / %5 / %5 | — |
+| Yanıltıcı emir | ×1 | 0,89 / %79 / %5 | 0,88 / %63 / %0 |
+| Karşılıklı işlem | ×1 | 0,49 / %5 / %5 | 0,90 / %75 / %20 |
+| Fiyat yükseltme | ×1 | 0,61 / %10 / %5 | 0,62 / %25 / %5 |
+| Kapanış | ×1 | 0,80 / %20 / %5 | — |
+| Yanıltıcı emir | ×3 | 0,89 / %79 / %5 | 0,90 / %79 / %0 |
+| Karşılıklı işlem | ×3 | 0,56 / %0 / %5 | 0,96 / %100 / %15 |
+| Fiyat yükseltme | ×3 | 0,63 / %10 / %5 | 0,63 / %30 / %0 |
+| Kapanış | ×3 | 0,87 / %45 / %5 | — |
+
+Yorum:
+- **Yanıltıcı emir:** kurallar ölçekten bağımsızdır (0,89 / %79 / %5). Kısa ömürlü uzak emir payı bir oran olduğundan küçük katmanlar da iz bırakır; kural büyüklüğe değil davranış biçimine duyarlıdır. Bent f'nin genişlemesiyle bazı pencereler yarıştığından isabet %84'ten %79'a indi.
+- **Kapanış etkilemesi:** yeni göstergelerle büyüklükle ölçeklenir: ×0,3'te zayıf (0,66), ×1'de 0,80, ×3'te 0,87 ve ilk 3'te %45; yanlış alarm her ölçekte %5. Önceki sürümde (geçmiş kapanışlarla puanlama, yeni göstergeler yok) ×1'de 0,60 ve isabet %0'dı.
+- **Karşılıklı işlem:** yalnız denetimli modelle ve hacim artışıyla yakalanır; büyüklüğe güçlü bağlıdır (×0,3'te %40, ×3'te %100). Aktör kimliği olmadan "aynı kişinin iki tarafı" ayırt edilemez; yanlış alarm %15–20'dir.
+- **Fiyat yükseltme:** net agresif adım göstergesine rağmen her ölçekte zayıftır (kurallar 0,58–0,63, denetimli ilk 3 en çok %30). 10 agresif alışın bıraktığı iz, likit paylarda olağan fiyat hareketi içinde kalır. Bu senaryo için daha uzun pencere (15–30 dk) ya da payın likiditesine göre ölçeklenmiş gösterge gerekir.
+- Denetimli modelin kapanış satırı yoktur: model yalnız sürekli işlem pencerelerinde çalışır; kapanış penceresi geçmiş kapanışlarla puanlanır.
+
+
+### 4.4 Testler ve dosyalar
+
+- 28 birim testi, hepsi geçer (`python -m pytest motor/testler tespit/testler`). Yeni: net agresif adım (müzayede işlemleri sayılmaz), kapanış toplama dengesizliği ve son dakika payı.
+- Yeni dosya: `tespit/kapanis_ozellikleri.py` (var olan özellik tablosuna sütun ekleyebilir: `python -I tespit/kapanis_ozellikleri.py GUNLUK ISLEM OZELLIKLER.parquet`).
+- Değişen: `tespit/pencere.py` (net agresif adım; kural bayrakları `kural_ab`, `kural_f`, `kural_d` sütunlarında), `ozellikler.py`, `motor_ozellikleri.py`, `yontemler.py`, `arayuz/hazirla.py` (bentler kural bayraklarından), `TASARIM.md` 6.6, `DURUM.md`.
+
+### 4.5 Kaldığımız yer ve yapılacaklar
+
+**Kaldığımız yer (23.10.2026).**
+- 22.10.2026 sonundaki listenin ilk iki maddesi yapıldı: fiyat yükseltme göstergesi (net agresif adım) ve kapanış etkilemesi göstergeleri (kapanış müzayedesi sapması, toplama dengesizliği, son dakika payı).
+- Kapanış etkilemesi artık ölçülebilir (×1'de ROC-AUC 0,80); fiyat yükseltme hâlâ zayıf.
+- Motor, arayüz ve tespit kodları, testler (28) ve belgeler güncel; bu bölümle birlikte commit edildi.
+
+**Yapılacaklar (öncelik sırasıyla).**
+1. **Fiyat yükseltme:** daha uzun pencere (15–30 dk) ya da çok ölçekli pencere; net agresif adımın payın olağan adım oynaklığına (gün içi işlem sayısına) göre ölçeklenmesi.
+2. **Veri indirme:** 2024-06…2025-02 (DataStore gün içi emir, gün içi işlem, gün sonu; ITCH yalnız 2025-01 ve 2025-02). Her ay için parquet dönüşümü, günlük bölümleme, kayıpsızlık kontrolü (`rapor.md` 2.10). Aralık dışı dosyaların (2025-06…09) silinmesi kullanıcıdadır.
+3. **Yeni aylar için tarih parametreleri:** marj, devre kesici yönü/oranı/süreleri, açığa satış kapsamı veriden yeniden ölçülür; Mart doğrulama betikleri yeni aylarda çalıştırılır.
+4. **12 ay ölçeğinde çalıştırma:** toplu oynatma ve özellik hesabı; uzun işler parça parça (bellek baskısında arka plan işleri durdurulabiliyor).
+5. **SPK etiketleriyle pencere düzeyi;** denetimli modelin SPK etiketleriyle sınanması.
+6. **Defter göstergeleri:** motorla yeniden kurulan defterden derinlik ve alış/satış dengesizliği.
+7. **Vize raporu:** literatür bölümü; öneri formu farklar tablosunda `[kullanıcı]` gerekçeleri; bölüm 3 ve 4'ün vize metnine dönüştürülmesi.
+8. **Kural dosyalarının kullanıcı onayı** (veriyle birlikte).
+9. **Özsermaye günleri:** düzeltilmiş baz fiyat kaynağı.
+
+Çalıştırma notları `DURUM.md` başındadır.
+

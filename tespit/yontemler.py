@@ -6,6 +6,7 @@
   a) emir iptali / degisikligi: z(iptal_orani) veya z(emir_islem_orani) >= ESIK;
   b) farkli fiyat kademelerine emir: z(fiyat_kademesi) >= ESIK;
   d) acilis / kapanis fiyatini etkileme: |z(kapanis_aof_sapma)| >= ESIK ve z(kapanis_seansi_payi) >= ESIK_2;
+     ya da |z(kapanis_muzayede_sapma)| >= ESIK ve |z(kapanis_toplama_dengesizlik)| >= ESIK_2 ayni yonde;
      ya da z(acilis_iptal_orani) >= ESIK ve |z(acilis_sapma)| >= ESIK_2;
   f) fiyat yukseltici / dusurucu: |z(getiri)| >= ESIK ve |z(aktif_dengesizlik)| >= ESIK_2 ayni yonde;
      ya da z(kucuk_islem_payi) >= ESIK ve |z(getiri)| >= ESIK_2.
@@ -27,7 +28,8 @@ TATILLER = ["2025-01-01", "2025-03-31", "2025-04-01", "2025-04-23", "2025-05-01"
 OZELLIKLER = ["getiri", "aralik", "hacim_tl", "kapanis_aof_sapma", "acilis_sapma", "kapanis_seansi_payi", "kfi_payi",
               "iptal_orani", "degisiklik_orani", "piyasa_payi", "kie_payi", "afk_payi", "fiyat_kademesi",
               "acilis_iptal_orani", "kapanis_degisiklik_yogunlugu", "aktif_dengesizlik", "kucuk_islem_payi",
-              "kapanis_oncesi_getiri", "emir_islem_orani", "kisa_omurlu_uzak_pay", "makas"]
+              "kapanis_oncesi_getiri", "emir_islem_orani", "kisa_omurlu_uzak_pay", "makas",
+              "kapanis_muzayede_sapma", "kapanis_toplama_dengesizlik", "kapanis_son_dakika_payi"]
 LOG = {"hacim_tl", "fiyat_kademesi", "emir_islem_orani"}
 
 
@@ -51,6 +53,8 @@ def kurallar(d):
     a = (z("iptal_orani") >= ESIK) | (z("emir_islem_orani") >= ESIK)
     b = (z("fiyat_kademesi") >= ESIK) | (z("kisa_omurlu_uzak_pay") >= ESIK)
     dd = ((z("kapanis_aof_sapma").abs() >= ESIK) & (z("kapanis_seansi_payi") >= ESIK_2)) | \
+         ((z("kapanis_muzayede_sapma").abs() >= ESIK) & (z("kapanis_toplama_dengesizlik").abs() >= ESIK_2) &
+          (np.sign(z("kapanis_muzayede_sapma")) == np.sign(z("kapanis_toplama_dengesizlik")))) | \
          ((z("acilis_iptal_orani") >= ESIK) & (z("acilis_sapma").abs() >= ESIK_2))
     f = ((z("getiri").abs() >= ESIK) & (z("aktif_dengesizlik").abs() >= ESIK_2) & (np.sign(z("getiri")) == np.sign(z("aktif_dengesizlik")))) | \
         ((z("kucuk_islem_payi") >= ESIK) & (z("getiri").abs() >= ESIK_2))

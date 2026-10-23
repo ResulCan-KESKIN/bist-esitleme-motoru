@@ -364,33 +364,32 @@ Yorum:
 - Pay-gün düzeyi kısa epizotları kaçırır; pencere düzeyi gereklidir.
 - Senaryo büyüklükleri bir varsayımdır; sonuçlar bu büyüklüklere bağlıdır (aşağıdaki duyarlılık analizi).
 
-*Senaryo büyüklüğüne duyarlılık* (pencere düzeyi; büyüklükler ×0,3, ×1, ×3; her biri 80 enjeksiyon; `veri/gunici-dogrulama/2025-03/tespit/olcek_duyarlilik.csv`, `pencere_olcek_0.3/`, `pencere_olcek_3/`). Hücreler: ROC-AUC / ilk 3 / kontrol ilk 3.
+*Senaryo büyüklüğüne duyarlılık ve 23.10.2026 göstergeleri.* Fiyat yükseltme için pencerede net agresif adım (`pencere.py`; ardışık işlemlerde fiyatı yukarı iten agresif alış sayısı eksi aşağı iten agresif satış sayısı; bent f) ve kapanış etkilemesi için üç pay-gün göstergesi (`kapanis_ozellikleri.py`: kapanış müzayedesi fiyatının son sürekli işlem fiyatından sapması, kapanış emir toplama alış−satış dengesizliği, son 60 sn payı; bent d) eklendi. Bütün yeni göstergelerle, 80'er enjeksiyon; büyüklükler ×0,3, ×1, ×3 (`veri/gunici-dogrulama/2025-03/tespit/olcek_duyarlilik.csv`, `pencere/`, `pencere_olcek_0.3/`, `pencere_olcek_3/`). Hücreler: ROC-AUC / ilk 3 / kontrol ilk 3.
 
 | Senaryo | Ölçek | Kurallar | Denetimli |
 |---|---|---|---|
-| Yanıltıcı emir | ×0,3 | 0,90 / %84 / %5 | 0,86 / %58 / %0 |
-| Yanıltıcı emir | ×1 | 0,90 / %84 / %5 | 0,89 / %74 / %0 |
-| Yanıltıcı emir | ×3 | 0,90 / %84 / %5 | 0,91 / %79 / %0 |
-| Karşılıklı işlem | ×0,3 | 0,44 / %0 / %0 | 0,79 / %45 / %25 |
-| Karşılıklı işlem | ×1 | 0,49 / %0 / %0 | 0,89 / %80 / %20 |
-| Karşılıklı işlem | ×3 | 0,57 / %0 / %0 | 0,96 / %100 / %5 |
-| Fiyat yükseltme | ×0,3 | 0,54 / %0 / %0 | 0,65 / %20 / %10 |
-| Fiyat yükseltme | ×1 | 0,56 / %0 / %0 | 0,64 / %30 / %5 |
-| Fiyat yükseltme | ×3 | 0,57 / %0 / %0 | 0,62 / %35 / %0 |
-| Kapanış | ×0,3 | 0,41 / %0 / %0 | — |
-| Kapanış | ×1 | 0,60 / %0 / %0 | — |
-| Kapanış | ×3 | 0,70 / %15 / %0 | — |
+| Yanıltıcı emir | ×0,3 | 0,89 / %79 / %5 | 0,81 / %58 / %0 |
+| Karşılıklı işlem | ×0,3 | 0,45 / %5 / %5 | 0,78 / %40 / %15 |
+| Fiyat yükseltme | ×0,3 | 0,58 / %5 / %5 | 0,63 / %15 / %10 |
+| Kapanış | ×0,3 | 0,66 / %5 / %5 | — |
+| Yanıltıcı emir | ×1 | 0,89 / %79 / %5 | 0,88 / %63 / %0 |
+| Karşılıklı işlem | ×1 | 0,49 / %5 / %5 | 0,90 / %75 / %20 |
+| Fiyat yükseltme | ×1 | 0,61 / %10 / %5 | 0,62 / %25 / %5 |
+| Kapanış | ×1 | 0,80 / %20 / %5 | — |
+| Yanıltıcı emir | ×3 | 0,89 / %79 / %5 | 0,90 / %79 / %0 |
+| Karşılıklı işlem | ×3 | 0,56 / %0 / %5 | 0,96 / %100 / %15 |
+| Fiyat yükseltme | ×3 | 0,63 / %10 / %5 | 0,63 / %30 / %0 |
+| Kapanış | ×3 | 0,87 / %45 / %5 | — |
 
 Yorum:
-- Yanıltıcı emir kuralı ölçekten bağımsızdır: kısa ömürlü uzak emir payı bir orandır; katmanlar küçük olsa da pencerede bu tür emirlerin payını belirgin artırır. Bu, kuralın büyüklüğe değil davranış biçimine duyarlı olduğunu gösterir.
-- Karşılıklı işlem tespiti büyüklüğe güçlü biçimde bağlıdır: model bunu hacim artışından yakalar; küçük karşılıklı işlemler olağan hacim dalgalanmasında kaybolur.
-- Fiyat yükseltme her ölçekte zayıftır; mevcut özellikler bu senaryonun izini taşımaz. Yeni gösterge gerekir (sonraki adımlar).
-- Kapanış etkilemesi ancak büyük emirlerde (günlük hacmin ≈ %9'u) belirmeye başlar.
-- Denetimli modelin kapanış satırı yoktur: model yalnız sürekli işlem pencerelerinde çalışır, kapanış penceresi geçmiş kapanışlarla puanlanır.
+- **Yanıltıcı emir:** kurallar ölçekten bağımsızdır (0,89 / %79 / %5). Kısa ömürlü uzak emir payı bir oran olduğundan küçük katmanlar da iz bırakır; kural büyüklüğe değil davranış biçimine duyarlıdır. Bent f'nin genişlemesiyle bazı pencereler yarıştığından isabet %84'ten %79'a indi.
+- **Kapanış etkilemesi:** yeni göstergelerle büyüklükle ölçeklenir: ×0,3'te zayıf (0,66), ×1'de 0,80, ×3'te 0,87 ve ilk 3'te %45; yanlış alarm her ölçekte %5. Önceki sürümde (geçmiş kapanışlarla puanlama, yeni göstergeler yok) ×1'de 0,60 ve isabet %0'dı.
+- **Karşılıklı işlem:** yalnız denetimli modelle ve hacim artışıyla yakalanır; büyüklüğe güçlü bağlıdır (×0,3'te %40, ×3'te %100). Aktör kimliği olmadan "aynı kişinin iki tarafı" ayırt edilemez; yanlış alarm %15–20'dir.
+- **Fiyat yükseltme:** net agresif adım göstergesine rağmen her ölçekte zayıftır (kurallar 0,58–0,63, denetimli ilk 3 en çok %30). 10 agresif alışın bıraktığı iz, likit paylarda olağan fiyat hareketi içinde kalır. Bu senaryo için daha uzun pencere (15–30 dk) ya da payın likiditesine göre ölçeklenmiş gösterge gerekir.
+- Denetimli modelin kapanış satırı yoktur: model yalnız sürekli işlem pencerelerinde çalışır; kapanış penceresi geçmiş kapanışlarla puanlanır.
 
 Sonraki adımlar:
-- fiyat yükseltme göstergesi: pencerede net agresif adım (agresif alışların fiyatı yukarı ittiği adım sayısı eksi agresif satışların aşağı ittiği adım sayısı), bent f kuralına bağlanır;
-- kapanış etkilemesi için daha güçlü göstergeler (kapanış denge fiyatının son sürekli işlem fiyatından sapması, kapanış emir toplamadaki alış/satış dengesizliği ve son dakikalardaki değişiklikler);
+- fiyat yükseltme için daha uzun ya da çok ölçekli pencere ve likiditeye göre ölçeklenmiş net agresif adım;
 - defter derinliği ve dengesizliği (motorla yeniden kurulan defterden);
 - 12 aylık veriyle ve daha çok enjeksiyonla yeniden ölçüm; SPK etiketli pay-günlerde pencere düzeyi.
 

@@ -98,15 +98,13 @@ def pencere_uyarilari(g, df, islemler, gun=None, kod=None):
         W = pn.kapanis_gecmisi(W, mo.satir(g, df, gs), gecmis)
     W = W.reset_index(names="p")
     W["bas"] = pd.to_datetime(W["p"], unit="us")
-    a_b = (W["z_iptal_orani"] >= pn.ESIK) | (W["z_uzak_kisa_pay"].fillna(0) >= pn.ESIK)
-    f = (W["z_getiri"].abs() >= pn.ESIK) & (W["z_aktif_dengesizlik"].abs() >= pn.ESIK_2) &         (np.sign(W["z_getiri"]) == np.sign(W["z_aktif_dengesizlik"]))
-    d = W["kapanis_muzayedesi"] & (W["kural_sayisi"] >= 1)
-    W["bentler"] = ["".join(x) for x in zip(np.where(a_b, "a/b ", ""), np.where(d, "d ", ""), np.where(f, "f", ""))]
+    W["bentler"] = ["".join(x) for x in zip(np.where(W["kural_ab"], "a/b ", ""), np.where(W["kural_d"], "d ", ""),
+                                            np.where(W["kural_f"], "f", ""))]
     W = W[W["kural_sayisi"] >= 1]
     son = islemler.set_index("zaman")["fiyat"]
     W["fiyat"] = [son[:b + pd.Timedelta(minutes=5)].iloc[-1] if len(son[:b + pd.Timedelta(minutes=5)]) else np.nan for b in W["bas"]]
     return W[["bas", "fiyat", "bentler", "kural_sayisi", "puan_zskor", "z_uzak_kisa_pay", "z_iptal_orani", "z_getiri",
-              "z_aktif_dengesizlik", "hacim", "islem_sayisi"]].reset_index(drop=True)
+              "z_aktif_dengesizlik", "z_net_adim", "hacim", "islem_sayisi"]].reset_index(drop=True)
 
 
 def oynat(gun, kod, senaryo=None, saat=None, **param):

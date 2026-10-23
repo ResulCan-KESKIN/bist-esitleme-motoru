@@ -5,14 +5,16 @@ hesaplanir; enjeksiyonlu ve enjeksiyonsuz kosu ayni yolla olculur. Muzayede isle
 (kapanis muzayedesi 18:05 penceresi).
 - Ozellikler: islem sayisi, hacim (lot), getiri (pencere son fiyati / onceki pencere son fiyati), aktif taraf
   dengesizligi, yeni emir, iptal, iptal orani, kisa omurlu uzak emir miktari payi (ozellikler.py tanimi), yeni limit
-  emirlerde farkli fiyat kademesi sayisi.
+  emirlerde farkli fiyat kademesi sayisi, net agresif adim (surekli islemde ardisik islemlerde fiyati yukari iten
+  agresif alis sayisi eksi asagi iten agresif satis sayisi; adim adim fiyat yukseltme / dusurme gostergesi).
 - Puanlar: ayni pay-gunun diger pencerelerine gore saglam Z (ortanca, 1,4826 x MAD); pencere puani en buyuk |z|.
   Kurallar (VI-104.1 md 5/1): a/b z(iptal_orani) ya da z(uzak_kisa_pay) >= ESIK; f |z(getiri)| >= ESIK ve
-  |z(aktif_dengesizlik)| >= ESIK_2 ayni yonde; d kapanis muzayedesi penceresinde |z(getiri)| >= ESIK.
+  |z(aktif_dengesizlik)| >= ESIK_2 ayni yonde, ya da |z(net_adim)| >= ESIK; d kapanis muzayedesi penceresinde
+  |z(getiri)| >= ESIK. Bayraklar kural_ab, kural_f, kural_d sutunlarinda.
 - Kapanis penceresi (kapanis_gecmisi): kapanis muzayedesi her gun ayni gunun diger pencerelerine gore uc degerdir;
   bu pencere payin onceki gunlerdeki kapanislarina gore puanlanir (kapanis fiyatinin AOF'den sapmasi, kapanis seansi
-  hacim payi, kapanis oncesi getiri; z, payin onceki en az 5 gunune gore). Kural d: |z(kapanis_aof_sapma)| >= ESIK ve
-  z(kapanis_seansi_payi) >= ESIK_2 (yontemler.kurallar ile ayni).
+  hacim payi, kapanis oncesi getiri, kapanis muzayedesi sapmasi, kapanis emir toplama dengesizligi, son dakika payi;
+  z, payin onceki en az 5 gunune gore). Kural d yontemler.kurallar ile aynidir.
 """
 import numpy as np
 import pandas as pd
@@ -22,7 +24,7 @@ from ozellikler import UZAK_ADIM, KISA_SN, fiyat_adimi
 PENCERE_US = 5 * 60 * 1_000_000
 ESIK, ESIK_2 = 3.0, 2.0
 OZ = ["islem_sayisi", "hacim", "getiri", "aktif_dengesizlik", "yeni", "iptal", "iptal_orani", "uzak_kisa_pay",
-      "fiyat_kademesi"]
+      "fiyat_kademesi", "net_adim"]
 LOG = {"islem_sayisi", "hacim", "yeni", "iptal", "fiyat_kademesi"}
 
 
@@ -82,11 +84,15 @@ def pencere_ozellikleri(g, E):
                       for b, i in g.islemler], columns=["zaman", "fiyat", "adet", "bolum", "aktif"])
     I = I.sort_values("zaman", kind="stable")
     I["p"] = I["zaman"] // PENCERE_US * PENCERE_US
+    sur = I["bolum"] == "P_SUREKLI_ISLEM"
+    dp = I["fiyat"].where(sur).diff()
+    I["adim"] = np.where(sur & (dp > 0) & (I["aktif"] == 1), 1, np.where(sur & (dp < 0) & (I["aktif"] == -1), -1, 0))
     E = E.assign(p=E["zaman"] // PENCERE_US * PENCERE_US)
     gI = I.groupby("p")
     W = pd.DataFrame({"islem_sayisi": gI.size(), "hacim": gI["adet"].sum(), "son": gI["fiyat"].last(),
                       "aktif_alis": I[I["aktif"] == 1].groupby("p")["adet"].sum(),
                       "aktif_satis": I[I["aktif"] == -1].groupby("p")["adet"].sum(),
+                      "net_adim": gI["adim"].sum(),
                       "kapanis_muzayedesi": gI["bolum"].agg(lambda b: (b == "P_ESLESTIRME").any())})
     gE = E.groupby("p")
     W = W.join(pd.DataFrame({"yeni": gE["sebep"].agg(lambda s: (s == 6).sum()), "iptal": gE["sebep"].agg(lambda s: (s == 1).sum()),
@@ -100,13 +106,14 @@ def pencere_ozellikleri(g, E):
     W["aktif_dengesizlik"] = (aa - asat) / (aa + asat).clip(lower=1)
     W["iptal_orani"] = W["iptal"].fillna(0) / W["yeni"].fillna(0).clip(lower=1)
     W["uzak_kisa_pay"] = W["uk_miktar"].fillna(0) / W["sl_miktar"].where(W["sl_miktar"] > 0)
-    for c in ("islem_sayisi", "hacim", "yeni", "iptal", "fiyat_kademesi"):
+    for c in ("islem_sayisi", "hacim", "yeni", "iptal", "fiyat_kademesi", "net_adim"):
         W[c] = W[c].fillna(0)
     W["kapanis_muzayedesi"] = W["kapanis_muzayedesi"].astype("boolean").fillna(False).astype(bool)
     return W[OZ + ["kapanis_muzayedesi"]]
 
 
-KAPANIS_OZ = ["kapanis_aof_sapma", "kapanis_seansi_payi", "kapanis_oncesi_getiri"]
+KAPANIS_OZ = ["kapanis_aof_sapma", "kapanis_seansi_payi", "kapanis_oncesi_getiri", "kapanis_muzayede_sapma",
+              "kapanis_toplama_dengesizlik", "kapanis_son_dakika_payi"]
 
 
 def kapanis_gecmisi(W, gun_ozellik, gecmis, en_az=5):
@@ -124,8 +131,12 @@ def kapanis_gecmisi(W, gun_ozellik, gecmis, en_az=5):
         z[c] = (gun_ozellik.get(c, np.nan) - x.mean()) / ss if len(x) >= en_az and ss and ss > 0 else 0.0
         z[c] = 0.0 if not np.isfinite(z[c]) else z[c]
     puan = max(abs(v) for v in z.values())
-    d = abs(z["kapanis_aof_sapma"]) >= ESIK and z["kapanis_seansi_payi"] >= ESIK_2
+    d = (abs(z["kapanis_aof_sapma"]) >= ESIK and z["kapanis_seansi_payi"] >= ESIK_2) or \
+        (abs(z["kapanis_muzayede_sapma"]) >= ESIK and abs(z["kapanis_toplama_dengesizlik"]) >= ESIK_2 and
+         np.sign(z["kapanis_muzayede_sapma"]) == np.sign(z["kapanis_toplama_dengesizlik"]))
     W.loc[k, "puan_zskor"] = puan
+    W.loc[k, ["kural_ab", "kural_f"]] = False
+    W.loc[k, "kural_d"] = d
     W.loc[k, "kural_sayisi"] = int(d)
     W.loc[k, "puan_kural"] = int(d) + puan / 1000
     for c in KAPANIS_OZ:
@@ -146,9 +157,10 @@ def puanla(W):
     zc = ["z_" + c for c in OZ]
     W["puan_zskor"] = W[zc].abs().max(axis=1).fillna(0)
     a_b = (W["z_iptal_orani"] >= ESIK) | (W["z_uzak_kisa_pay"].fillna(0) >= ESIK)
-    f = (W["z_getiri"].abs() >= ESIK) & (W["z_aktif_dengesizlik"].abs() >= ESIK_2) & \
-        (np.sign(W["z_getiri"]) == np.sign(W["z_aktif_dengesizlik"]))
+    f = ((W["z_getiri"].abs() >= ESIK) & (W["z_aktif_dengesizlik"].abs() >= ESIK_2) &
+         (np.sign(W["z_getiri"]) == np.sign(W["z_aktif_dengesizlik"]))) | (W["z_net_adim"].abs() >= ESIK)
     d = W["kapanis_muzayedesi"] & (W["z_getiri"].abs() >= ESIK)
+    W["kural_ab"], W["kural_f"], W["kural_d"] = a_b, f, d
     W["kural_sayisi"] = a_b.astype(int) + f.astype(int) + d.astype(int)
     W["puan_kural"] = W["kural_sayisi"] + W["puan_zskor"] / 1000
     return W

@@ -7,6 +7,8 @@ Birim: pay-gun (.E siralari, pay pazarlari). Gruplar ve VI-104.1 md 5/1 bentleri
   taraftaki en iyi fiyattan en az UZAK_ADIM adim uzakta girilip KISA_SN icinde islem gormeden iptal edilen emirlerin
   miktar payi; yaniltici emir gostergesi).
 - Defter (veride olay anindaki en iyi alis / satis fiyatindan): surekli islemde goreli makasin ortancasi.
+- Kapanis (bent d; kapanis_ozellikleri.py): kapanis muzayedesi fiyatinin son surekli islem fiyatindan sapmasi, kapanis
+  emir toplamadaki alis-satis miktar dengesizligi, kapanis emir toplama olaylarinin son 60 sn payi.
 - Islem (bent d, f): getiri, gun ici aralik, aktif taraf dengesizligi, kucuk islem payi (1.000 TL alti), kapanis
   seansi ve kapanis fiyatindan islemlerin hacim payi, kapanis fiyatinin AOF'den sapmasi, acilis seansi fiyatinin
   baz fiyattan sapmasi, kapanis oncesi (17:45 sonrasi surekli islem) getiri.
@@ -167,8 +169,10 @@ def gunsonu_ozellikleri(gunsonu, gun):
 
 
 def gun_ozellikleri(gunluk, islem_parquet, gunsonu, gun):
+    from kapanis_ozellikleri import veri_kapanis
     gs = gunsonu_ozellikleri(gunsonu, gun)
     x = gs.join(emir_ozellikleri(gunluk, gun), how="left").join(islem_ozellikleri(islem_parquet, gun), how="left")
+    x = x.join(veri_kapanis(gunluk, islem_parquet, gun), how="left")
     x["emir_islem_orani"] = x["emir_yeni"] / x["islem_sayisi"].fillna(0).clip(lower=1)
     x.insert(0, "tarih", pd.Timestamp(gun))
     return x.reset_index()
