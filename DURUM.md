@@ -1,6 +1,6 @@
 # Proje durumu ve devam notu (yeni oturum için)
 
-Son güncelleme: 23.10.2026. Bu dosya sohbet geçmişi olmadan çalışmaya devam etmek içindir. Görev tanımı: `gorev-kural-yazimi.md` (kurallar: kaynakta olmayanı ekleme, madde no sona, belirsizlik → "Açık sorular" [DOĞRULA], örnekler → "Test örnekleri", dosya adlarında Türkçe karakter yok, her oturumda tek kural dosyası, bitince [DOĞRULA] listesini göster).
+Son güncelleme: 24.10.2026. Bu dosya sohbet geçmişi olmadan çalışmaya devam etmek içindir. Görev tanımı: `gorev-kural-yazimi.md` (kurallar: kaynakta olmayanı ekleme, madde no sona, belirsizlik → "Açık sorular" [DOĞRULA], örnekler → "Test örnekleri", dosya adlarında Türkçe karakter yok, her oturumda tek kural dosyası, bitince [DOĞRULA] listesini göster).
 
 ## Kaldığımız yer ve yapılacaklar (23.10.2026)
 
@@ -10,10 +10,11 @@ Son güncelleme: 23.10.2026. Bu dosya sohbet geçmişi olmadan çalışmaya deva
   - kapanış etkilemesi göstergeleri: ×1'de ROC-AUC 0,80, ×3'te 0,87 (4.2);
   - SPK etiketli günlerde pencere düzeyi: A'da sinyal yok, B'de zayıf (4.4);
   - defter göstergeleri: şimdilik katkı yok (4.5).
-- Motor, arayüz ve tespit kodları, 29 test ve belgeler güncel; bu bölümle birlikte commit edildi.
+- 24.10.2026 inceleme düzeltmeleri (`rapor.md` 5): veri döneminde ölçümü olmayan parametrede motor `OlcumEksik` ile durur; yanıltıcı emir katmanları en iyi fiyata göre, karşı emir agresif, katmanı dolan vakalar değerlendirme dışı (yanıltıcı emir pencere ROC-AUC 0,95).
+- Motor, arayüz ve tespit kodları, 32 test ve belgeler güncel; commit edildi.
 
 **Yapılacaklar (öncelik sırasıyla).**
-1. **Veri indirme (kullanıcı):** 2024-06…2025-02 (DataStore gün içi emir, gün içi işlem, gün sonu; ITCH yalnız 2025-01 ve 2025-02). Ardından her ay için parquet dönüşümü, günlük bölümleme, kayıpsızlık kontrolü (`rapor.md` 2.10). Aralık dışı dosyaların (2025-06…09) silinmesi kullanıcıdadır.
+1. **Veri indirme (kullanıcı):** yeni ayların parametreleri ölçülmeden motor çalışmaz (`OlcumEksik`). 2024-06…2025-02 (DataStore gün içi emir, gün içi işlem, gün sonu; ITCH yalnız 2025-01 ve 2025-02). Ardından her ay için parquet dönüşümü, günlük bölümleme, kayıpsızlık kontrolü (`rapor.md` 2.10). Aralık dışı dosyaların (2025-06…09) silinmesi kullanıcıdadır.
 2. **Yeni aylar için tarih parametreleri:** marj, devre kesici yönü/oranı/süreleri, açığa satış kapsamı veriden yeniden ölçülür; Mart doğrulama betikleri yeni aylarda çalıştırılır.
 3. **12 ay ölçeğinde çalıştırma:** toplu oynatma ve özellik hesabı; SPK değerlendirmesinin (gün ve pencere düzeyi) 12 ayla tekrarı; denetimli modelin SPK etiketleriyle sınanması. Uzun işler parça parça çalıştırılmalı.
 4. **Vize raporu:** literatür bölümü; öneri formu farklar tablosunda `[kullanıcı]` gerekçeleri; bölüm 3 ve 4'ün vize metnine dönüştürülmesi.

@@ -131,7 +131,8 @@ def oynat(gun, kod, senaryo=None, saat=None, **param):
             ref = senaryolar.son_fiyat(sirali, t)
             uret = {"yaniltici": senaryolar.yaniltici_emir, "yukseltme": senaryolar.fiyat_yukseltme,
                     "karsilikli": senaryolar.karsilikli_islem}[senaryo]
-            olaylar = uret(t, tb.tablo, ref, **param)
+            ek = dict(en_iyi=senaryolar.en_iyi_fiyatlar(tb.defter_ornekleri, t)) if senaryo == "yaniltici" else {}
+            olaylar = uret(t, tb.tablo, ref, **param, **ek)
         ej = Gun(df, gun, kod, gunsonu, tepe)
         ej.calistir(olaylar)
         enj = _islem_tablosu(ej)

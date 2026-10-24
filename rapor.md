@@ -1,6 +1,6 @@
 # Çalışma raporu
 
-Bu dosya, bitirme projesi vize raporunun yazılacağı kaynak kayıttır. Önce 21.10.2026'ya kadar yapılanlar özetlenir, sonra oturumlar tarih başlığı altında ayrıntılı kaydedilir (bölüm 2: 21.10.2026, bölüm 3: 22.10.2026, bölüm 4: 23.10.2026). Ayrıntılı teknik sonuçlar ilgili dosyalardadır; bu raporda yalnız özetleri ve sayıları vardır.
+Bu dosya, bitirme projesi vize raporunun yazılacağı kaynak kayıttır. Önce 21.10.2026'ya kadar yapılanlar özetlenir, sonra oturumlar tarih başlığı altında ayrıntılı kaydedilir (bölüm 2: 21.10.2026, bölüm 3: 22.10.2026, bölüm 4: 23.10.2026, bölüm 5: 24.10.2026). Ayrıntılı teknik sonuçlar ilgili dosyalardadır; bu raporda yalnız özetleri ve sayıları vardır.
 
 **Proje:** "Borsa İstanbul Pay Piyasası Kurallarına Uygun Eşleştirme Motoru ve Makine Öğrenmesi Destekli Piyasa Manipülasyonu Tespit Sistemi" (bilgisayar mühendisliği bitirme projesi, tek kişilik).
 
@@ -685,3 +685,56 @@ Yorum:
 7. **Özsermaye günleri:** düzeltilmiş baz fiyat kaynağı.
 
 Çalıştırma notları `DURUM.md` başındadır.
+
+## 5. 24.10.2026 — İnceleme düzeltmeleri: parametre kontrolü ve yanıltıcı emir senaryosu
+
+Kodun dışarıdan incelenmesinde iki sorun bildirildi. İkisi de veriyle sınandı ve düzeltildi.
+
+### 5.1 Tarih parametrelerinde sessiz geri düşme
+
+- **Sorun:** `motor/parametreler.py` bir gün için tarihli satır bulamazsa tarihsiz satıra, yani yürürlükteki Prosedür metnine düşüyordu. Mart 2025 dışındaki bir gün oynatıldığında marj ±%20 ve iki yönlü devre kesici uyarısız uygulanırdı; eşleşme oranı nedeni görünmeden düşerdi. Yeni aylar eklenirken bir parametrenin ölçümü unutulursa da aynı şey olurdu.
+- **Düzeltme:** veriden ölçülen parametreler (en az bir tarihli satırının kaynağı "veri" olanlar: fiyat marjı, devre kesici yönü / oranı / süreleri / rastlantısal pencere / kapanışa taşma eşiği, Adım 4 referansı, açığa satış kapsamı) için veri dönemindeki (01.06.2024–31.05.2025) bir güne ölçüm satırı yoksa motor `OlcumEksik` hatasıyla durur. Hata mesajı eksik parametreyi ve günü söyler. Veri döneminin dışında (ör. 2018 ITCH günü, yürürlükteki kural) metin değeri kullanılmaya devam eder.
+- **Sonuç:** yeni bir ay için ölçüm yapılmadan motor çalışmaz; unutulan parametre ilk çalıştırmada ortaya çıkar.
+
+### 5.2 Yanıltıcı emir senaryosu
+
+- **Sorun a — karşı emir:** açıklamada "küçük agresif emir" yazıyordu; kod ise karşı emri son işlem fiyatının bir adım berisinden limit emir olarak veriyordu. Makas genişse emir pasif kalıp deftere yazılıyordu. Ölçüm (pencere değerlendirmesinin 20 vakası): karşı emir 10'unda agresifti.
+- **Sorun b — katmanların yeri:** katmanlar son işlem fiyatına göre yerleşiyordu; açıklamada "en iyi fiyattan" yazıyordu. Makası geniş paylarda katman, aynı tarafın en iyi fiyatının önüne geçebiliyordu (20 vakanın 2'sinde).
+- **İddia edilen ama doğrulanmayan:** "katmanlar işlem görüyor ve yanıltıcı emir sonucu hacim artışını yakalıyor olabilir." Ölçüm: pencere değerlendirmesinin 20 vakasında katmanlardan işlem gören miktar 0; diğer örnek kümede 20 vakanın 2'sinde (katmanların %1,8'i ve 1 lot). Eski pay-gün kaydında RTALB'deki 43.960 lot tam olarak karşı emrin miktarıydı; TKFEN'de katmanların %3,4'ü dolmuştu. Yani yanıltıcı emir tespiti iptal örüntüsünü yakalıyordu, hacmi değil.
+- **Düzeltme (`motor/senaryolar.py`):**
+  - katmanlar aynı tarafın en iyi fiyatının `adim_uzak` adım gerisine yerleşir; en iyi fiyat taban (enjeksiyonsuz) oynatmanın defter örneğinden alınır (`en_iyi_fiyatlar`);
+  - karşı emir varsayılan olarak agresiftir: piyasadan limite ve KİE, karşı taraftaki en iyi seviyeden hemen işlem görür, kalanı iptal edilir. Bu, yanıltıcı baskının oluşturduğu fiyattan yararlanmadır. Pasif seçenek (`karsi_agresif=False`: karşı tarafın en iyi fiyatından limit emir, fiyatın gelmesini bekler) parametre olarak durur; arayüzde seçilebilir;
+  - temiz vaka ölçütü: katmanlardan işlem gören miktar (`katman_dolan`) katman toplamının %1'ini aşarsa vaka temiz yanıltıcı emir sayılmaz ve değerlendirmeye alınmaz. Pencere değerlendirmesinde 20 vakanın 1'i (AVHOL.E 12.03, 3.687 lot) bu yüzden çıkarıldı.
+- **Yeniden ölçüm:** katmanlar 20 vakanın 19'unda en iyi fiyatın tam 4 adım gerisinde (birinde defter örnekle giriş arasında kaydığından 2 adım).
+
+### 5.3 Güncel sonuçlar
+
+Pencere değerlendirmesi ve büyüklük duyarlılığı düzeltilmiş senaryoyla yeniden (80 enjeksiyon; hücreler ROC-AUC / ilk 3 / kontrol ilk 3):
+
+| Senaryo | Ölçek | Kurallar | Denetimli |
+|---|---|---|---|
+| Yanıltıcı emir | ×0,3 | 0,95 / %89 / %5 | 0,94 / %89 / %0 |
+| Karşılıklı işlem | ×0,3 | 0,44 / %5 / %5 | 0,73 / %25 / %20 |
+| Fiyat yükseltme | ×0,3 | 0,57 / %5 / %5 | 0,70 / %25 / %5 |
+| Kapanış | ×0,3 | 0,64 / %5 / %5 | — |
+| Yanıltıcı emir | ×1 | 0,95 / %89 / %5 | 0,95 / %95 / %0 |
+| Karşılıklı işlem | ×1 | 0,48 / %5 / %5 | 0,87 / %80 / %10 |
+| Fiyat yükseltme | ×1 | 0,60 / %10 / %5 | 0,71 / %25 / %10 |
+| Kapanış | ×1 | 0,79 / %20 / %5 | — |
+| Yanıltıcı emir | ×3 | 0,95 / %89 / %5 | 0,94 / %95 / %0 |
+| Karşılıklı işlem | ×3 | 0,54 / %0 / %5 | 0,95 / %100 / %0 |
+| Fiyat yükseltme | ×3 | 0,62 / %10 / %5 | 0,75 / %40 / %0 |
+| Kapanış | ×3 | 0,87 / %45 / %5 | — |
+
+- **Yanıltıcı emir iyileşti:** kurallarda 0,89 / %79'dan 0,95 / %89'a, denetimli modelde 0,88 / %74'ten 0,95 / %95'e (kontrol %0). Neden: katmanlar artık her vakada en iyi fiyatın en az 3 adım gerisinde, yani "kısa ömürlü uzak emir" tanımına giriyor. Önce bazı katmanlar en iyi fiyata yakın ya da önündeydi ve göstergeye girmiyordu.
+- Diğer senaryolarda değişiklik rastlantısal dalgalanma düzeyinde (aynı pay-günler; denetimli model yeniden eğitildi).
+- Pay-gün sentetik değerlendirmesi (`tespit/sentetik/`): yanıltıcı emir 0,68 → 0,75 (kontrol 0,66); gün düzeyinde zayıf kalır, yanıltıcı emir pencere düzeyinde tespit edilir. Kapanış etkilemesi 23.10 göstergeleriyle 0,66 → 0,85.
+
+### 5.4 Testler ve dosyalar
+
+- 32 birim testi, hepsi geçer. Yeni `motor/testler/test_senaryolar.py`: ölçüm kontrolü (Mart satırı bulunur, Nisan 2025 ve Haziran 2024 hata verir, veri dönemi dışında metin değeri), katmanların en iyi fiyata göre yerleşimi, karşı emrin tipi.
+- Değişen: `motor/parametreler.py`, `motor/senaryolar.py`, `motor/enjeksiyon.py`, `arayuz/hazirla.py`, `arayuz/uygulama.py`, `tespit/sentetik_degerlendir.py`, `tespit/pencere_degerlendir.py`; `TASARIM.md` 3.6, 5, 6.6.
+
+### 5.5 Kaldığımız yer
+
+Yapılacaklar listesi 4.7'deki gibidir. İlk madde (veri indirme) için not: yeni aylar oynatılmadan önce o ayların parametreleri ölçülüp `motor/tarih_parametreleri.csv`'ye eklenmelidir; eklenmezse motor artık `OlcumEksik` hatasıyla durur.

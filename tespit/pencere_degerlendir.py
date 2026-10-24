@@ -17,7 +17,7 @@ import sentetik_degerlendir as sd
 import pencere as pn
 import yontemler as y
 import motor_ozellikleri as mo
-from motor import veri
+from motor import veri, senaryolar
 from motor.gun import Gun
 from ozellikler import gunsonu_ozellikleri
 
@@ -52,6 +52,10 @@ if __name__ == "__main__":
             g1 = Gun(df, gun, kod, sd.gunsonu(gun), tepe)
             g1.calistir(olaylar)
             if not g1.kabul:
+                continue
+            kd = senaryolar.katman_dolan(g1, sd.YANILTICI_KATMAN) if senaryo == "yaniltici" else 0
+            if sd.temiz_degil(senaryo, olaylar, kd):
+                print(gun, kod, senaryo, "temiz degil: katmanlardan", kd, "lot islem gordu", flush=True)
                 continue
             W0 = pn.puanla(pn.pencere_ozellikleri(g0, pn.emir_olaylari(df)))
             W1 = pn.puanla(pn.pencere_ozellikleri(g1, pn.emir_olaylari(df, g1)))

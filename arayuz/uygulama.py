@@ -50,10 +50,11 @@ with st.sidebar:
                      saniye_once=st.number_input("Eşleştirmeden kaç sn önce", 1, 200, 10))
     elif senaryo == "yaniltici":
         param = dict(yon_alis=st.radio("Yanıltıcı emir yönü", ["Satış", "Alış"], horizontal=True) == "Alış",
-                     katman=st.number_input("Katman", 1, 10, 3), adim_uzak=st.number_input("En iyi fiyattan adım", 1, 20, 2),
+                     katman=st.number_input("Katman", 1, 10, 3), adim_uzak=st.number_input("En iyi fiyatın gerisinde adım", 1, 20, 2),
                      miktar=st.number_input("Katman miktarı", 1, 10_000_000, 50_000, step=10_000),
                      sure_sn=st.number_input("Süre (sn)", 1, 600, 30),
-                     karsi_miktar=st.number_input("Karşı emir miktarı", 1, 1_000_000, 1_000))
+                     karsi_miktar=st.number_input("Karşı emir miktarı", 1, 1_000_000, 1_000),
+                     karsi_agresif=st.radio("Karşı emir", ["Agresif", "Pasif"], horizontal=True) == "Agresif")
     elif senaryo == "yukseltme":
         param = dict(adim_sayisi=st.number_input("Adım sayısı", 1, 50, 10), aralik_sn=st.number_input("Aralık (sn)", 1, 600, 20),
                      miktar=st.number_input("Emir miktarı", 1, 10_000_000, 20_000, step=1_000))

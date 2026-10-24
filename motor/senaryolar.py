@@ -21,6 +21,13 @@ def son_fiyat(islemler, zaman):
     return islemler[k - 1].fiyat if k else None
 
 
+def en_iyi_fiyatlar(defter_ornekleri, zaman):
+    """zaman'dan onceki son defter orneginden (en iyi alis, en iyi satis); Gun.defter_ornekleri (surekli islem)."""
+    z = [o[0] for o in defter_ornekleri]
+    k = bisect.bisect_right(z, zaman)
+    return (defter_ornekleri[k - 1][3], defter_ornekleri[k - 1][4]) if k else (None, None)
+
+
 def _adimla(p, tablo, yukari):
     return yukari_adim(p, tablo) if yukari else asagi_adim(p, tablo)
 
@@ -39,21 +46,38 @@ def kapanis_etkileme(kapanis_toplama_bas, tablo, ref, alis=True, miktar=10000, s
 
 
 def yaniltici_emir(t, tablo, ref, yon_alis=False, katman=3, adim_uzak=2, miktar=20000, sure_sn=30,
-                   karsi_miktar=500):
-    """Yaniltici emir (spoofing/layering): bir tarafa en iyi fiyattan adim_uzak adim otede katman sayida buyuk emir,
-    sure_sn sonra iptal; arada karsi tarafta kucuk bir agresif emir. yon_alis: yaniltici emirlerin yonu."""
+                   karsi_miktar=500, en_iyi=None, karsi_agresif=True):
+    """Yaniltici emir (spoofing/layering): yaniltici tarafta, o tarafin en iyi fiyatindan adim_uzak adim geride katman
+    sayida buyuk emir, sure_sn sonra iptal; arada karsi tarafta kucuk bir emir. yon_alis: yaniltici emirlerin yonu.
+
+    en_iyi: giris anindaki (en iyi alis, en iyi satis) (taban oynatmasinin defter orneklerinden: en_iyi_fiyatlar);
+    yaniltici tarafta en iyi fiyat yoksa son islem fiyati (ref) kullanilir.
+    Karsi emir: karsi_agresif ise piyasadan limite ve KIE (karsi taraftaki en iyi seviyeden hemen islem gorur, kalan iptal:
+    yaniltici baskinin olusturdugu fiyattan yararlanma); degilse karsi tarafin en iyi fiyatindan pasif limit emir (fiyatin
+    yaniltici baskiyla o seviyeye gelmesini bekler; en iyi fiyat yoksa ref'in bir adim berisi)."""
     out, n = [], 0
-    a = adim(ref, tablo)
+    en_iyi_alis, en_iyi_satis = en_iyi or (None, None)
+    taban = (en_iyi_alis if yon_alis else en_iyi_satis) or ref
+    a = adim(taban, tablo)
     for k in range(katman):
         n += 1
-        p = ref - (adim_uzak + k) * a if yon_alis else ref + (adim_uzak + k) * a
+        p = taban - (adim_uzak + k) * a if yon_alis else taban + (adim_uzak + k) * a
         out.append(YeniEmir(t + k, _no("yaniltici", n), yon_alis, p, miktar, LIMIT))
     n += 1
-    # karsi tarafta (yaniltici emirlerin tersine) kucuk agresif emir: referansin bir adim otesinden
-    pk = ref + a if yon_alis else ref - a
-    out.append(YeniEmir(t + sure_sn * US // 2, _no("yaniltici", n), not yon_alis, pk, karsi_miktar, LIMIT))
+    tk = t + sure_sn * US // 2
+    if karsi_agresif:
+        out.append(YeniEmir(tk, _no("yaniltici", n), not yon_alis, 0, karsi_miktar, PIYASADAN_LIMITE, KIE))
+    else:
+        pk = (en_iyi_satis if yon_alis else en_iyi_alis) or (ref + a if yon_alis else ref - a)
+        out.append(YeniEmir(tk, _no("yaniltici", n), not yon_alis, pk, karsi_miktar, LIMIT))
     out += [Iptal(t + sure_sn * US + k, _no("yaniltici", k + 1)) for k in range(katman)]
     return out
+
+
+def katman_dolan(g, katman=3):
+    """Yaniltici emir katmanlarindan (SENT-yaniltici-1..katman) islem goren toplam miktar; temiz senaryoda 0."""
+    nos = {_no("yaniltici", k + 1) for k in range(katman)}
+    return sum(i.adet for _, i in g.islemler if i.alis_no in nos or i.satis_no in nos)
 
 
 def fiyat_yukseltme(t, tablo, ref, adim_sayisi=10, aralik_sn=20, miktar=1000):

@@ -41,7 +41,8 @@ def calistir(gunluk, gunsonu, gun, kod, senaryo, saat, **param):
         ref = senaryolar.son_fiyat(sirali, t)
         uret = {"yaniltici": senaryolar.yaniltici_emir, "yukseltme": senaryolar.fiyat_yukseltme,
                 "karsilikli": senaryolar.karsilikli_islem}[senaryo]
-        olaylar = uret(t, tb, ref, **param)
+        ek = dict(en_iyi=senaryolar.en_iyi_fiyatlar(taban.defter_ornekleri, t)) if senaryo == "yaniltici" else {}
+        olaylar = uret(t, tb, ref, **param, **ek)
     enj = Gun(df, gun, kod, gunsonu, tepe)
     enj.calistir(olaylar)
     s_isl = [(b, i) for b, i in enj.islemler if enj.sentetik_mi(i)]
