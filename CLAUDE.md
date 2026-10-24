@@ -40,6 +40,7 @@ Her dosyada `Kurallar` (madde no sona yazılı), `Açık sorular` (`[DOĞRULA]` 
 | `arayuz/` | Görselleştirme ve enjeksiyon arayüzü (Streamlit: `streamlit run arayuz/uygulama.py`); `TASARIM.md` 6.5 |
 | `motor/tarih_parametreleri.csv` | Tarihe bağlı kural parametreleri (marj, DK, EBDKS, fiyat adımı, açığa satış, müzayede pencereleri); veriden ya da metinden, geçerlilik aralığı ve kaynakla |
 | `rapor.md` | Çalışma raporu (vize raporunun kaynağı): 21.10.2026'ya kadar yapılanların özeti ve oturum kayıtları |
+| `ANLATIM.md` | Sistemin sıfırdan, ayrıntılı anlatımı (borsa kavramları, veri, motor, senaryolar, tespit, sonuçlar, sınırlar, sunum soruları) |
 | `veri/gunici-veri-dogrulama.md` | Mart 2025 DataStore gün içi verisi doğrulamaları (alan anlamları, gün sonu, marj, seans, Ek-19, emir kuralları, öncelik, tek fiyat, devre kesiciler, tarih parametreleri) |
 | `veri/itch-ornek-veri-dogrulama.md` | 08.10.2018 ITCH örnek verisi doğrulama sonuçları |
 | `veri/araclar/` | Doğrulama betikleri (yollar oturuma özgüdür) |

@@ -7,9 +7,11 @@ pay-gunleri yakalama orani olculur.
 - Olcek: payin o gunku toplam islem miktari (lot) H. Kapanis: emir H x KAPANIS_ORAN; yaniltici: 3 katman (son islem
   tarafin en iyi fiyatindan YANILTICI_ADIM adim geriden baslayarak; en iyi fiyat taban oynatmasinin defter orneginden),
   katman H x 0,02, karsi emir H x 0,002 (agresif: piyasadan limite KIE); yukseltme: 10 emir, her biri H x 0,005;
-  karsilikli: 10 tekrar, her biri H x 0,005.
-- Temiz yaniltici emir: katmanlardan islem goren miktar (senaryolar.katman_dolan) katman toplaminin KATMAN_DOLUM_EN_COK
-  oranini asarsa vaka temiz sayilmaz ve degerlendirmeye alinmaz (katmanlar dolarsa senaryo buyuk agresif isleme doner).
+  karsilikli: 10 tekrar, her biri H x 0,005 (makas en az iki adimsa makasin icinden).
+- Temiz vaka (temizlik): yaniltici emirde katmanlardan islem goren miktar (senaryolar.katman_dolan) katman toplaminin
+  KATMAN_DOLUM_EN_COK oranini asarsa (katmanlar dolarsa senaryo buyuk agresif isleme doner); karsilikli islemde aktorun
+  kendi emirleri arasindaki islem (senaryolar.kendi_islem) satis miktarinin KENDI_ISLEM_EN_AZ oranindan azsa (emirler
+  cogunlukla gercek katilimcilarla eslesmistir) vaka temiz sayilmaz ve degerlendirmeye alinmaz.
 - Kontrol: ayni pay-gunlerin enjeksiyonsuz motor ozellikleri de ayni yolla yerlestirilip puanlanir (yontem farkinin
   sahte tespit uretip uretmedigi). Ozellik farki ayrica ozet olarak yazilir.
 - Olcutler: enjekte edilen pay-gunun gun icindeki yuzdelik sirasi; gun icinde ilk %1 ve %5'e girme orani;
@@ -36,6 +38,7 @@ KAPANIS_ORAN = 0.03
 YANILTICI_ADIM = 4   # katmanlar ayni tarafin en iyi fiyatindan 4, 5, 6 adim geride (defterin derininde)
 YANILTICI_KATMAN = 3
 KATMAN_DOLUM_EN_COK = 0.01
+KENDI_ISLEM_EN_AZ = 0.5   # karsilikli islem: satis miktarinin en az yarisi aktorun kendi alisiyla islem gormeli
 OLCEK = float(os.environ.get("OLCEK", "1"))   # senaryo buyuklugu carpani (duyarlilik analizi)
 SENARYO_SIRASI = ["kapanis", "yaniltici", "yukseltme", "karsilikli"]
 PUANLAR = ["puan_zskor", "puan_kural", "puan_iforest", "puan_kesit_uc", "puan_kesit_iforest"]
@@ -68,14 +71,20 @@ def senaryo_olaylari(senaryo, g, df, gun, H, rng):
                                          en_iyi=senaryolar.en_iyi_fiyatlar(g.defter_ornekleri, t)), t
     if senaryo == "yukseltme":
         return senaryolar.fiyat_yukseltme(t, tb, ref, adim_sayisi=10, miktar=max(1, int(H * 0.005))), t
-    return senaryolar.karsilikli_islem(t, tb, ref, tekrar=10, miktar=max(1, int(H * 0.005))), t
+    return senaryolar.karsilikli_islem(t, tb, ref, tekrar=10, miktar=max(1, int(H * 0.005)),
+                                       defter=g.defter_ornekleri), t
 
 
-def temiz_degil(senaryo, olaylar, kd):
-    """Yaniltici emirde katmanlardan dolan miktar katman toplaminin KATMAN_DOLUM_EN_COK oranini asiyor mu."""
-    if senaryo != "yaniltici":
-        return False
-    return kd > KATMAN_DOLUM_EN_COK * sum(o.miktar for o in olaylar[:YANILTICI_KATMAN])
+def temizlik(senaryo, g1, olaylar):
+    """Senaryonun temizlik olcusu: yaniltici emirde katmanlardan islem goren miktar, karsilikli islemde aktorun kendi
+    emirleri arasindaki islem miktari. Donus: (olcu, temiz degil mi)."""
+    if senaryo == "yaniltici":
+        kd = senaryolar.katman_dolan(g1, YANILTICI_KATMAN)
+        return kd, kd > KATMAN_DOLUM_EN_COK * sum(o.miktar for o in olaylar[:YANILTICI_KATMAN])
+    if senaryo == "karsilikli":
+        ki = senaryolar.kendi_islem(g1)
+        return ki, ki < KENDI_ISLEM_EN_AZ * sum(o.miktar for o in olaylar if not o.alis)
+    return 0, False
 
 
 def puanla(tablo, e):
@@ -126,7 +135,7 @@ if __name__ == "__main__":
             df = veri.pay_gun_emirleri(GUNLUK, gun, kod)
             tepe = veri.tepe_tahmini(df)
             gs = gunsonu_ozellikleri(gunsonu(gun), gun).loc[kod]
-            H = int(pq_h) if (pq_h := gs.get("hacim_tl", 0) / max(gs["kapanis"], 1e-9)) else 0
+            H = int(gs["hacim_tl"] / max(gs["kapanis"], 1e-9))
             g0 = Gun(df, gun, kod, gunsonu(gun), tepe)
             g0.calistir()
             olaylar, t = senaryo_olaylari(senaryo, g0, df, gun, H, rng)
@@ -135,9 +144,13 @@ if __name__ == "__main__":
         except Exception as ex:
             print(gun, kod, senaryo, "HATA", type(ex).__name__, ex, flush=True)
             continue
-        kd = senaryolar.katman_dolan(g1, YANILTICI_KATMAN) if senaryo == "yaniltici" else 0
-        if temiz_degil(senaryo, olaylar, kd):
-            print(gun, kod, senaryo, "temiz degil: katmanlardan", kd, "lot islem gordu", flush=True)
+        if not g1.kabul:
+            red = sorted({f"{b}:{s}" for _, b, s in g1.reddedilen})
+            print(gun, kod, senaryo, "kabul edilen sentetik olay yok; red:", ", ".join(red) or "-", flush=True)
+            continue
+        olcu, kirli = temizlik(senaryo, g1, olaylar)
+        if kirli:
+            print(gun, kod, senaryo, "temiz degil:", olcu, flush=True)
             continue
         s0, s1 = mo.satir(g0, df, gs), mo.satir(g1, df, gs)
         base = {"islem_kodu": kod, "tarih": r.tarih}
@@ -146,7 +159,7 @@ if __name__ == "__main__":
         sent = [i for _, i in g1.islemler if g1.sentetik_mi(i)]
         kayit.append(dict(gun=gun, kod=kod, senaryo=senaryo, olay=len(olaylar), kabul=len(g1.kabul),
                           red=len(g1.reddedilen), sentetik_islem=len(sent), sentetik_adet=sum(i.adet for i in sent),
-                          katman_dolan=kd,
+                          temizlik_olcusu=olcu,
                           kapanis_taban=s0["kapanis"], kapanis_enj=s1["kapanis"]))
         fark.append({c: s0[c] - getattr(r, c) for c in y.OZELLIKLER if isinstance(s0.get(c), (int, float))})
         print(n + 1, gun, kod, senaryo, kayit[-1]["sentetik_islem"], f"{time.time() - t0:.0f} sn", flush=True)

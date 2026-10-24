@@ -20,6 +20,11 @@ def test_olcum_kontrolu():
         parametreler.satir("dk_yon", "2024-06-03", "Z")
     assert parametreler.deger("fiyat_marji", "2026-10-01", "Z") == 0.20
     assert parametreler.satir("kapanis_seansi_fiyat_bandi", "2025-04-15")   # veriden olculmeyen parametre
+    # pazara uygulanmayan parametre (YIP'te devre kesici orani) None; uygulanan pazarda olcum eksikse hata yutulmaz
+    assert parametreler.varsa("dk_tetikleme_orani", "2025-03-10", "W") is None
+    assert parametreler.varsa("dk_tetikleme_orani", "2025-03-10", "Z")["deger"] == "0.05"
+    with pytest.raises(parametreler.OlcumEksik):
+        parametreler.varsa("dk_yon", "2025-04-15", "Z")
 
 
 def test_yaniltici_katmanlar_en_iyi_fiyata_gore():
@@ -39,6 +44,19 @@ def test_yaniltici_karsi_emir():
     k = [o for o in senaryolar.yaniltici_emir(t, TABLO7, 100_000, en_iyi=(99_900, 100_300), karsi_agresif=False)
          if isinstance(o, YeniEmir) and o.alis]
     assert k[0].fiyat_turu == LIMIT and k[0].fiyat == 99_900
+
+
+def test_karsilikli_makasin_icinden():
+    """Her tekrar kendi araliginda makasin en az iki adim acik oldugu ilk anda, en iyi alisin bir adim ustunden
+    (makasin ici); aralikta makas hep tek adimsa aralik basinda son islem fiyatinin bir adim ustu."""
+    t = 1000 * US
+    defter = [(t - 5 * US, 0, 0, 99_900, 100_300), (t + 55 * US, 0, 0, 99_900, 99_950), (t + 70 * US, 0, 0, 99_900, 100_300),
+              (t + 115 * US, 0, 0, 99_900, 99_950)]
+    ol = senaryolar.karsilikli_islem(t, TABLO7, 100_000, tekrar=3, aralik_sn=60, defter=defter)
+    assert [(o.zaman, o.alis, o.fiyat) for o in ol] == [
+        (t, False, 99_950), (t + 1, True, 99_950),                          # makas acik: hemen
+        (t + 70 * US, False, 99_950), (t + 70 * US + 1, True, 99_950),      # 60. sn'de makas tek adim: 70. sn beklenir
+        (t + 120 * US, False, 100_100), (t + 120 * US + 1, True, 100_100)]  # aralikta hep tek adim: son islem + 1 adim
 
 
 if __name__ == "__main__":

@@ -17,6 +17,13 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from ozellikler import ACILIS_TOPLAMA, KAPANIS_TOPLAMA, KUCUK_ISLEM_TL, UZAK_ADIM, KISA_SN, fiyat_adimi, uzak_kisa_omurlu, makas
 
 
+def kapanis_muzayedesi_islemi(g, bolum, islem):
+    """Islem kapanis muzayedesinde mi: zamani kapanis eslestirme ani ve bolumu muzayede (surekli islem ve kapanis
+    fiyatindan islemler degil)."""
+    ka = getattr(g, "kapanis_ani", None)
+    return ka is not None and islem.zaman == ka and bolum not in (veri.SUREKLI, veri.KAPANIS_FIYATI)
+
+
 def _emir_sayilari(df, kabul):
     d = df[df["emir_kategorisi"] == 1]
     seb = d["degisiklik_sebebi"]
@@ -104,10 +111,8 @@ def satir(g, df, gs_satir):
         zaman_1745 = int((gun0 + pd.Timedelta(hours=17, minutes=45)).value // 1000)
     son = sur_isl[-1].fiyat / 1000 if sur_isl else np.nan
     once = [i.fiyat / 1000 for i in sur_isl if i.zaman < zaman_1745] if sur_isl else []
-    # kapanis muzayedesi: gunun son eslestirme bolumu islemleri (acilis da P_ESLESTIRME; son muzayedeyi ayir)
-    son_muz = next(((M, b) for M, b, s in reversed(g.muzayedeler) if b == "P_ESLESTIRME"), None)
-    kap_seans = np.array([b == "P_ESLESTIRME" and son_muz is not None and i.zaman == son_muz[0] for b, i in I]) \
-        if len(I) else np.array([], dtype=bool)
+    # kapanis muzayedesi islemleri: eslestirme ani Gun.kapanis_ani (acilis ve devre kesici de P_ESLESTIRME bolumundedir)
+    kap_seans = np.array([kapanis_muzayedesi_islemi(g, b, i) for b, i in I], dtype=bool)
     out.update(
         kapanis=kapanis, getiri=kapanis / baz - 1 if baz else np.nan,
         aralik=(fiyat.max() - fiyat.min()) / baz if len(I) and baz else np.nan,

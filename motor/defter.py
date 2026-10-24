@@ -52,5 +52,5 @@ class Defter:
     def derinlik(self, alis, n=5):
         """En iyi n seviye: [(fiyat, gorunen toplam, emir sayisi)]."""
         f = self.fiyatlar[alis]
-        sec = f[::-1][:n] if alis else f[:n]
+        sec = f[:-n - 1:-1] if alis else f[:n]
         return [(p, sum(e.gorunen for e in self.seviye[alis][p].values()), len(self.seviye[alis][p])) for p in sec]

@@ -2,16 +2,18 @@
 
 Son güncelleme: 24.10.2026. Bu dosya sohbet geçmişi olmadan çalışmaya devam etmek içindir. Görev tanımı: `gorev-kural-yazimi.md` (kurallar: kaynakta olmayanı ekleme, madde no sona, belirsizlik → "Açık sorular" [DOĞRULA], örnekler → "Test örnekleri", dosya adlarında Türkçe karakter yok, her oturumda tek kural dosyası, bitince [DOĞRULA] listesini göster).
 
-## Kaldığımız yer ve yapılacaklar (23.10.2026)
+## Kaldığımız yer ve yapılacaklar (24.10.2026)
 
-**Kaldığımız yer (23.10.2026).**
+**Kaldığımız yer (24.10.2026).**
 - 22.10.2026 sonundaki listeden yapılanlar:
   - fiyat yükseltme göstergesi (net agresif adım) ve 15 dakikalık pencere denemesi: senaryo bu büyüklükte ayırt edilemiyor (4.1, 4.3);
   - kapanış etkilemesi göstergeleri: ×1'de ROC-AUC 0,80, ×3'te 0,87 (4.2);
   - SPK etiketli günlerde pencere düzeyi: A'da sinyal yok, B'de zayıf (4.4);
   - defter göstergeleri: şimdilik katkı yok (4.5).
 - 24.10.2026 inceleme düzeltmeleri (`rapor.md` 5): veri döneminde ölçümü olmayan parametrede motor `OlcumEksik` ile durur; yanıltıcı emir katmanları en iyi fiyata göre, karşı emir agresif, katmanı dolan vakalar değerlendirme dışı (yanıltıcı emir pencere ROC-AUC 0,95).
-- Motor, arayüz ve tespit kodları, 32 test ve belgeler güncel; commit edildi.
+- 24.10.2026 sistem taraması (`rapor.md` 6): kapanış penceresi açılış müzayedesinden ayrıldı (`Gun.kapanis_ani`), Isolation Forest ve denetimli model kapanış penceresini puanlamaz, karşılıklı işlem makasın içinden (kendi emirleri arası işlem %75 → %89), ölçüm kontrolü devre kesicide yutulmuyor ve pazara göre, defter örneği 1 sn, tatil listesi 2024–2026, reddedilen vakalar değerlendirme dışı, arayüzde SPK etiketi. Bütün sentetik değerlendirmeler ve SPK pencere değerlendirmesi yeniden koşuldu.
+- Sistemin sıfırdan anlatımı: `ANLATIM.md`.
+- Motor, arayüz ve tespit kodları, 35 test ve belgeler güncel; commit edildi.
 
 **Yapılacaklar (öncelik sırasıyla).**
 1. **Veri indirme (kullanıcı):** yeni ayların parametreleri ölçülmeden motor çalışmaz (`OlcumEksik`). 2024-06…2025-02 (DataStore gün içi emir, gün içi işlem, gün sonu; ITCH yalnız 2025-01 ve 2025-02). Ardından her ay için parquet dönüşümü, günlük bölümleme, kayıpsızlık kontrolü (`rapor.md` 2.10). Aralık dışı dosyaların (2025-06…09) silinmesi kullanıcıdadır.

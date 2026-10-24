@@ -4,9 +4,10 @@ Bir parametre icin tarih ve kapsam (pazar harfi) uyan satirlardan en ozeli secil
 sonra tek ucu tarihli, sonra tarihsiz (yururlukteki metin). Ayni ozellikte birden fazla satir varsa en dar aralik.
 Kapsam metnindeki tek buyuk harfler pazar kodlaridir (Z Yildiz, N Ana, T Alt, W YIP, S POIP, K BYF, Q GSF, E emtia).
 
-Olcum kontrolu: veriden olculen parametrelerde (en az bir tarihli satirinin kaynagi "veri" ile baslar) veri donemindeki
-(VERI_DONEMI) bir gun icin secilen satir veriden degilse OlcumEksik hatasi verilir. Boylece yeni bir ayin parametresi
-olculmeden motor sessizce yururlukteki metin degerine (or. marj %20, devre kesici iki yonde) dusmez.
+Olcum kontrolu: bir parametre o pazar icin veriden olculuyorsa (kapsami pazari iceren en az bir tarihli satirinin
+kaynagi "veri" ile baslar), veri donemindeki (VERI_DONEMI) bir gun icin secilen satir veriden degilse OlcumEksik hatasi
+verilir. Boylece yeni bir ayin parametresi olculmeden motor sessizce yururlukteki metin degerine (or. marj %20,
+devre kesici iki yonde) dusmez. Pazara hic uygulanmayan parametrede (or. YIP'te devre kesici orani) KeyError verilir.
 """
 import csv, datetime, os, re
 
@@ -23,9 +24,17 @@ def _veriden(r):
     return r["kaynak"].startswith("veri")
 
 
-def olculen(parametre):
-    """Parametre veriden olculuyor mu: en az bir tarihli satirinin kaynagi veri."""
-    return any(r["parametre"] == parametre and (r["baslangic"] or r["bitis"]) and _veriden(r) for r in _oku())
+def _kapsamda(r, pazar):
+    if pazar is None:
+        return True
+    harfler = set(re.findall(r"\b([A-Z])\b", r["kapsam"]))
+    return not harfler or pazar in harfler
+
+
+def olculen(parametre, pazar=None):
+    """Parametre bu pazar icin veriden olculuyor mu: kapsami pazari iceren en az bir tarihli satirinin kaynagi veri."""
+    return any(r["parametre"] == parametre and (r["baslangic"] or r["bitis"]) and _veriden(r) and _kapsamda(r, pazar)
+               for r in _oku())
 
 
 def _oku():
@@ -40,20 +49,16 @@ def satir(parametre, tarih, pazar=None):
     t = datetime.date.fromisoformat(str(tarih))
     aday = []
     for r in _oku():
-        if r["parametre"] != parametre:
+        if r["parametre"] != parametre or not _kapsamda(r, pazar):
             continue
         bas = datetime.date.fromisoformat(r["baslangic"]) if r["baslangic"] else None
         bit = datetime.date.fromisoformat(r["bitis"]) if r["bitis"] else None
         if (bas and t < bas) or (bit and t > bit):
             continue
-        if pazar is not None:
-            harfler = set(re.findall(r"\b([A-Z])\b", r["kapsam"]))
-            if harfler and pazar not in harfler:
-                continue
         ozel = (bas is not None) + (bit is not None)
         genislik = ((bit or datetime.date.max) - (bas or datetime.date.min)).days
         aday.append((-ozel, genislik, r))
-    donemde = VERI_DONEMI[0] <= t <= VERI_DONEMI[1] and olculen(parametre)
+    donemde = VERI_DONEMI[0] <= t <= VERI_DONEMI[1] and olculen(parametre, pazar)
     if not aday:
         raise (OlcumEksik if donemde else KeyError)(f"{parametre} {tarih} {pazar}: uygun satir yok")
     r = min(aday, key=lambda x: x[:2])[2]
@@ -65,3 +70,14 @@ def satir(parametre, tarih, pazar=None):
 
 def deger(parametre, tarih, pazar=None, tip=float):
     return tip(satir(parametre, tarih, pazar)["deger"])
+
+
+def varsa(parametre, tarih, pazar=None):
+    """satir() ya da (parametre bu pazara / tarihe uygulanmiyorsa) None. OlcumEksik yutulmaz: olculmesi gereken
+    parametre eksikse motor durur."""
+    try:
+        return satir(parametre, tarih, pazar)
+    except OlcumEksik:
+        raise
+    except KeyError:
+        return None

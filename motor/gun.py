@@ -34,7 +34,7 @@ TOPLAMA = veri.ACILIS_TOPLAMA + veri.KAPANIS_TOPLAMA + DURDURMA + (
     "P_DK_TEKFIY_EMIR_TPL", "P_DK_TEKFIY_EMR_TPL2", "P_TF_EMIR_TPL_EBDK", "P_TF_EMIR_TPL2_EBDK",
     "P_TEKFIYAT_EMIR_TPL", "P_TEKFIYAT_EMIR_TPL2")
 DISSAL_IPTAL = (116, 117)
-DEFTER_ORNEK_US = 10 * 1_000_000   # surekli islemde defter ornekleme araligi (derinlik gostergeleri; tespit/pencere.py)
+DEFTER_ORNEK_US = 1_000_000   # surekli islemde defter ornekleme araligi (derinlik gostergeleri, senaryo fiyatlari)
 
 
 def kategori(seans):
@@ -74,15 +74,11 @@ class Gun:
         self.taban = yukari_adim(self.baz * (1 - marj), self.tablo)
         self.tavan = asagi_adim(self.baz * (1 + marj), self.tablo)
         self.referans = self.baz if parametreler.satir("tek_fiyat_adim4_referansi", gun)["deger"] == "baz" else None
-        try:
-            self.dk_oran = parametreler.deger("dk_tetikleme_orani", gun, self.pazar)
-            self.dk_yon = parametreler.satir("dk_yon", gun, self.pazar)["deger"]
-        except KeyError:
-            self.dk_oran, self.dk_yon = None, None
-        try:
-            aciga = parametreler.satir("aciga_satis_kapsami", gun)["deger"]
-        except KeyError:
-            aciga = None
+        # pazarda devre kesici / aciga satis satiri yoksa (or. GSF) uygulanmaz; olcumu eksikse OlcumEksik ile durur
+        oran, yon = parametreler.varsa("dk_tetikleme_orani", gun, self.pazar), parametreler.varsa("dk_yon", gun, self.pazar)
+        self.dk_oran, self.dk_yon = (float(oran["deger"]), yon["deger"]) if oran and yon else (None, None)
+        aciga = parametreler.varsa("aciga_satis_kapsami", gun)
+        aciga = aciga["deger"] if aciga else None
         izinli = bool(((df["emir_turu"] & 2) != 0).any())   # BIST 50 listesi yok: veride aciga satis gorulen sira
         self.dogrulayici = Dogrulayici(self.tablo, self.taban, self.tavan, aciga, izinli)
         self.islemler = []           # (bolum, Islem)
@@ -93,6 +89,7 @@ class Gun:
         self.defter_ornekleri = []   # surekli islemde (zaman, ilk 5 seviye alis miktari, satis miktari, en iyi alis, satis)
         self.sentetik_nolar = set()
         self.muzayedeler = []        # (eslestirme ani, bolum, denge sonucu)
+        self.kapanis_ani = None      # kapanis muzayedesinin eslestirme ani (islemleri bu zamanla yazilir)
         self.anlik = []              # (eslestirme ani, {emir_no: (alis, fiyat, kalan, fiyat_turu)}) tani icin
         self.sayac = collections.Counter()
 
@@ -157,6 +154,7 @@ class Gun:
                     son_fiyat = sonuc["fiyat"]
             if kapanis:
                 kapanis_fiyati = sonuc.get("fiyat") if isl else son_fiyat
+                self.kapanis_ani = M
             defter = Defter()
             for e in kalan:
                 defter.ekle(e)
@@ -231,6 +229,10 @@ class Gun:
                 for k, v in surekli.sayac.items():
                     self.sayac[kat + "_" + k] += v
             elif kat == "gunsonu":
+                if tf is not None and bekleyen:
+                    # veride eslestirme ve kapanis fiyatindan islemler satiri yok (or. kapanista islem olmamis); toplanan
+                    # defter yine eslestirilir (enjeksiyonla islem dogabilir)
+                    eslestir(bas - 1, "eslestirme_satirsiz")
                 self.reddedilen += [(o, seans, "gun_sonu") for o in sent + sentetik[si:]]
                 break
             else:

@@ -2,7 +2,7 @@
 
 Pencere ozellikleri motor ciktisindan (islemler) ve emir olaylarindan (veri satirlari + kabul edilen sentetik olaylar)
 hesaplanir; enjeksiyonlu ve enjeksiyonsuz kosu ayni yolla olculur. Muzayede islemleri gerceklestigi pencereye duser
-(kapanis muzayedesi 18:05 penceresi).
+(kapanis muzayedesi genellikle 18:05 penceresi; motorun kaydettigi kapanis eslestirme anindan, Gun.kapanis_ani).
 - Ozellikler: islem sayisi, hacim (lot), getiri (pencere son fiyati / onceki pencere son fiyati), aktif taraf
   dengesizligi, yeni emir, iptal, iptal orani, kisa omurlu uzak emir miktari payi (ozellikler.py tanimi), yeni limit
   emirlerde farkli fiyat kademesi sayisi, net agresif adim (surekli islemde ardisik islemlerde fiyati yukari iten
@@ -89,6 +89,10 @@ def pencere_ozellikleri(g, E):
     I = I.sort_values("zaman", kind="stable")
     I["p"] = I["zaman"] // PENCERE_US * PENCERE_US
     sur = I["bolum"] == "P_SUREKLI_ISLEM"
+    # kapanis muzayedesi islemleri: eslestirme ani Gun.kapanis_ani olan muzayede islemleri (acilis ve devre kesici
+    # muzayedeleri de P_ESLESTIRME bolumundedir; bolum adi kapanisi ayirmaz)
+    ka = getattr(g, "kapanis_ani", None)
+    I["kapanis"] = (I["zaman"] == ka) & ~sur & (I["bolum"] != "P_KAPANIS_FIY_ISLEM") if ka is not None else False
     dp = I["fiyat"].where(sur).diff()
     I["adim"] = np.where(sur & (dp > 0) & (I["aktif"] == 1), 1, np.where(sur & (dp < 0) & (I["aktif"] == -1), -1, 0))
     E = E.assign(p=E["zaman"] // PENCERE_US * PENCERE_US)
@@ -97,7 +101,7 @@ def pencere_ozellikleri(g, E):
                       "aktif_alis": I[I["aktif"] == 1].groupby("p")["adet"].sum(),
                       "aktif_satis": I[I["aktif"] == -1].groupby("p")["adet"].sum(),
                       "net_adim": gI["adim"].sum(),
-                      "kapanis_muzayedesi": gI["bolum"].agg(lambda b: (b == "P_ESLESTIRME").any())})
+                      "kapanis_muzayedesi": gI["kapanis"].any()})
     gE = E.groupby("p")
     W = W.join(pd.DataFrame({"yeni": gE["sebep"].agg(lambda s: (s == 6).sum()), "iptal": gE["sebep"].agg(lambda s: (s == 1).sum()),
                              "sl_miktar": E[E["surekli_limit"]].groupby("p")["miktar"].sum(),

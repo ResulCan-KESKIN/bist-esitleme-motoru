@@ -88,13 +88,38 @@ def fiyat_yukseltme(t, tablo, ref, adim_sayisi=10, aralik_sn=20, miktar=1000):
             for k in range(adim_sayisi)]
 
 
-def karsilikli_islem(t, tablo, ref, tekrar=5, aralik_sn=60, miktar=2000):
+def makas_ici(defter, bas, bit, tablo):
+    """[bas, bit) icinde makasin en az iki adim acik oldugu ilk an ve makasin ici fiyat (en iyi alis + 1 adim);
+    defter: Gun.defter_ornekleri. Yoksa None."""
+    z = [o[0] for o in defter]
+    for o in defter[max(bisect.bisect_right(z, bas) - 1, 0):]:
+        if o[0] >= bit:
+            break
+        b, a = o[3], o[4]
+        if b and a and a - b >= 2 * adim(b, tablo):
+            return max(o[0], bas), b + adim(b, tablo)
+    return None
+
+
+def karsilikli_islem(t, tablo, ref, tekrar=5, aralik_sn=60, miktar=2000, defter=None):
     """Karsilikli islem (wash trade): ayni sentetik aktorun ayni fiyattan satis ve hemen ardindan alis emri.
-    Fiyat referansin bir adim ustu (satis once girer, alis onu karsilar; defterde daha iyi satis yoksa)."""
+
+    Her tekrar kendi araliginda (aralik_sn) makasin en az iki adim acik oldugu ilk anda, makasin icinden girilir
+    (en iyi alisin bir adim ustu; defter: taban oynatmasinin defter ornekleri). Satis emri o fiyatta tek basina en iyi
+    satis olur, karsisinda alis yoktur; hemen ardindan gelen alis onu karsilar (kendinden kendine islem). Aralikta makas
+    hep tek adimsa ya da defter ornegi yoksa aralik basinda son islem fiyatinin bir adim ustu; o fiyatta ya da altinda
+    gercek satis emirleri varsa alis once onlarla islem gorur (kendi_islem ile olculur)."""
     out = []
     for k in range(tekrar):
-        p = ref + adim(ref, tablo)
         tz = t + k * aralik_sn * US
+        ici = makas_ici(defter, tz, tz + aralik_sn * US, tablo) if defter else None
+        tz, p = ici if ici else (tz, ref + adim(ref, tablo))
         out.append(YeniEmir(tz, _no("karsilikli", 2 * k + 1), False, p, miktar, LIMIT))
         out.append(YeniEmir(tz + 1, _no("karsilikli", 2 * k + 2), True, p, miktar, LIMIT))
     return out
+
+
+def kendi_islem(g, senaryo="karsilikli"):
+    """Sentetik aktorun kendi emirleri arasindaki (alis ve satis tarafi ayni senaryonun) toplam islem miktari."""
+    on = f"SENT-{senaryo}-"
+    return sum(i.adet for _, i in g.islemler if i.alis_no.startswith(on) and i.satis_no.startswith(on))

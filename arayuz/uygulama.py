@@ -71,6 +71,12 @@ if calis:
     st.session_state["sonuc"] = (gun, kod, sen_ad, oynat(gun, kod, senaryo, saat, tuple(sorted(param.items()))))
 gun, kod, sen_ad, r = st.session_state["sonuc"]
 oz = r["ozet"]
+et = hazirla.spk_etiketi(gun, kod)
+if et:
+    aciklama = {"A": "manipülasyon döneminin içinde (dönem bültende yazılı)",
+                "B": "işlem yasağından önceki 20 işlem günlük pencerede (varsayım)",
+                "B_belirsiz": "yasaktan önceki 2 iş günü (değerlendirme dışı)"}
+    st.warning(f"SPK etiketi: **{et[0]}** · bülten {et[1]} · bu gün {aciklama.get(et[0], '')}")
 
 c = st.columns(4)
 c[0].metric("Kapanış (taban)", f"{oz['kapanis_taban']:.2f}" if oz["kapanis_taban"] else "—")

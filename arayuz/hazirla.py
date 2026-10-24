@@ -7,7 +7,7 @@
   pencerelerine gore saglam z; kapanis penceresi ozellik tablosu varsa payin gecmis kapanislarina gore). Kural
   tetiklenen pencere uyaridir; puan ve bentler tabloda gorulur.
 """
-import glob, os, sys
+import functools, glob, os, sys
 
 import numpy as np
 import pandas as pd
@@ -31,6 +31,20 @@ def gecmis_tablo(gun):
 
 GUNLUK = os.path.join(KOK, "veri", "gun-ici-emir", "gunluk")
 ESIK = 3.0
+
+
+@functools.lru_cache(maxsize=1)
+def _etiketler():
+    import yontemler
+    return yontemler.etiketler(os.path.join(KOK, "veri", "etiketler", "vaka.csv"))
+
+
+def spk_etiketi(gun, kod):
+    """Pay-gunun SPK etiketi: (seviye, bulten) ya da None. Seviye A (donem kesin), B (tedbirden onceki 20 islem gunu
+    varsayimi), B_belirsiz (tedbirden onceki 2 is gunu); tespit/yontemler.etiketler."""
+    e = _etiketler()
+    r = e[(e["islem_kodu"] == kod) & (e["tarih"] == pd.Timestamp(gun))]
+    return None if r.empty else (r["seviye"].iloc[0], r["bulten"].iloc[0])
 
 
 def gunsonu_dosyasi(gun):
@@ -102,7 +116,8 @@ def pencere_uyarilari(g, df, islemler, gun=None, kod=None):
                                             np.where(W["kural_f"], "f", ""))]
     W = W[W["kural_sayisi"] >= 1]
     son = islemler.set_index("zaman")["fiyat"]
-    W["fiyat"] = [son[:b + pd.Timedelta(minutes=5)].iloc[-1] if len(son[:b + pd.Timedelta(minutes=5)]) else np.nan for b in W["bas"]]
+    uzun = pd.Timedelta(microseconds=pn.PENCERE_US)
+    W["fiyat"] = [son[:b + uzun].iloc[-1] if len(son[:b + uzun]) else np.nan for b in W["bas"]]
     return W[["bas", "fiyat", "bentler", "kural_sayisi", "puan_zskor", "z_uzak_kisa_pay", "z_iptal_orani", "z_getiri",
               "z_aktif_dengesizlik", "z_net_adim", "hacim", "islem_sayisi"]].reset_index(drop=True)
 
@@ -131,7 +146,8 @@ def oynat(gun, kod, senaryo=None, saat=None, **param):
             ref = senaryolar.son_fiyat(sirali, t)
             uret = {"yaniltici": senaryolar.yaniltici_emir, "yukseltme": senaryolar.fiyat_yukseltme,
                     "karsilikli": senaryolar.karsilikli_islem}[senaryo]
-            ek = dict(en_iyi=senaryolar.en_iyi_fiyatlar(tb.defter_ornekleri, t)) if senaryo == "yaniltici" else {}
+            ek = (dict(en_iyi=senaryolar.en_iyi_fiyatlar(tb.defter_ornekleri, t)) if senaryo == "yaniltici" else
+                  dict(defter=tb.defter_ornekleri) if senaryo == "karsilikli" else {})
             olaylar = uret(t, tb.tablo, ref, **param, **ek)
         ej = Gun(df, gun, kod, gunsonu, tepe)
         ej.calistir(olaylar)

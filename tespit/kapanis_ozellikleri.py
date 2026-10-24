@@ -6,7 +6,8 @@
   dengesizligi, (A - S) / (A + S).
 - kapanis_son_dakika_payi: kapanis emir toplamadaki yeni emir, degisiklik ve iptallerin, emir toplamanin son SON_SN
   saniyesine dusen payi (son an: payin kapanis emir toplamadaki son olayi).
-Kapanis muzayedesi islemleri: bolum P_ESLESTIRME ve saat 18:00 sonrasi.
+Kapanis muzayedesi islemleri: veride bolum P_ESLESTIRME ve saat 18:00 sonrasi; motorda eslestirme ani Gun.kapanis_ani
+olan muzayede islemleri.
 
 Kullanim (var olan ozellik tablosuna sutun ekler; gun basina ara dosyalar da guncellenir):
   python -I tespit/kapanis_ozellikleri.py GUNLUK_EMIR_KLASORU ISLEM.parquet OZELLIKLER.parquet
@@ -82,11 +83,10 @@ def motor_kapanis(g, df):
         t = _toplama(x)
         if "x" in t.index:
             out.update(t.loc["x"].to_dict())
+    from motor_ozellikleri import kapanis_muzayedesi_islemi
     I = sorted(((b, i) for b, i in g.islemler), key=lambda bi: bi[1].zaman)
     sur = [i.fiyat for b, i in I if b == "P_SUREKLI_ISLEM"]
-    gun0 = pd.Timestamp(pd.Timestamp(I[0][1].zaman, unit="us").date()) if I else None
-    t18 = int((gun0 + pd.Timedelta(hours=18)).value // 1000) if gun0 is not None else None
-    kap = [i.fiyat for b, i in I if b == "P_ESLESTIRME" and i.zaman >= t18] if I else []
+    kap = [i.fiyat for b, i in I if kapanis_muzayedesi_islemi(g, b, i)]
     if sur and kap:
         out["kapanis_muzayede_sapma"] = kap[-1] / sur[-1] - 1
     return out

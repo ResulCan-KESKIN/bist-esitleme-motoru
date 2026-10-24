@@ -1,6 +1,6 @@
 # Çalışma raporu
 
-Bu dosya, bitirme projesi vize raporunun yazılacağı kaynak kayıttır. Önce 21.10.2026'ya kadar yapılanlar özetlenir, sonra oturumlar tarih başlığı altında ayrıntılı kaydedilir (bölüm 2: 21.10.2026, bölüm 3: 22.10.2026, bölüm 4: 23.10.2026, bölüm 5: 24.10.2026). Ayrıntılı teknik sonuçlar ilgili dosyalardadır; bu raporda yalnız özetleri ve sayıları vardır.
+Bu dosya, bitirme projesi vize raporunun yazılacağı kaynak kayıttır. Önce 21.10.2026'ya kadar yapılanlar özetlenir, sonra oturumlar tarih başlığı altında ayrıntılı kaydedilir (bölüm 2: 21.10.2026, bölüm 3: 22.10.2026, bölüm 4: 23.10.2026, bölüm 5 ve 6: 24.10.2026). Ayrıntılı teknik sonuçlar ilgili dosyalardadır; bu raporda yalnız özetleri ve sayıları vardır.
 
 **Proje:** "Borsa İstanbul Pay Piyasası Kurallarına Uygun Eşleştirme Motoru ve Makine Öğrenmesi Destekli Piyasa Manipülasyonu Tespit Sistemi" (bilgisayar mühendisliği bitirme projesi, tek kişilik).
 
@@ -704,7 +704,7 @@ Kodun dışarıdan incelenmesinde iki sorun bildirildi. İkisi de veriyle sınan
 - **Düzeltme (`motor/senaryolar.py`):**
   - katmanlar aynı tarafın en iyi fiyatının `adim_uzak` adım gerisine yerleşir; en iyi fiyat taban (enjeksiyonsuz) oynatmanın defter örneğinden alınır (`en_iyi_fiyatlar`);
   - karşı emir varsayılan olarak agresiftir: piyasadan limite ve KİE, karşı taraftaki en iyi seviyeden hemen işlem görür, kalanı iptal edilir. Bu, yanıltıcı baskının oluşturduğu fiyattan yararlanmadır. Pasif seçenek (`karsi_agresif=False`: karşı tarafın en iyi fiyatından limit emir, fiyatın gelmesini bekler) parametre olarak durur; arayüzde seçilebilir;
-  - temiz vaka ölçütü: katmanlardan işlem gören miktar (`katman_dolan`) katman toplamının %1'ini aşarsa vaka temiz yanıltıcı emir sayılmaz ve değerlendirmeye alınmaz. Pencere değerlendirmesinde 20 vakanın 1'i (AVHOL.E 12.03, 3.687 lot) bu yüzden çıkarıldı.
+  - temiz vaka ölçütü: katmanlardan işlem gören miktar (`katman_dolan`) katman toplamının %1'ini aşarsa vaka temiz yanıltıcı emir sayılmaz ve değerlendirmeye alınmaz. Pay-gün sentetik değerlendirmesinde 20 vakanın 1'i (AVHOL.E 12.03, 3.687 lot) bu yüzden çıkarıldı (ilk yazımda "pencere değerlendirmesi" yazıyordu; düzeltme 6.1 madde 9).
 - **Yeniden ölçüm:** katmanlar 20 vakanın 19'unda en iyi fiyatın tam 4 adım gerisinde (birinde defter örnekle giriş arasında kaydığından 2 adım).
 
 ### 5.3 Güncel sonuçlar
@@ -738,3 +738,116 @@ Pencere değerlendirmesi ve büyüklük duyarlılığı düzeltilmiş senaryoyla
 ### 5.5 Kaldığımız yer
 
 Yapılacaklar listesi 4.7'deki gibidir. İlk madde (veri indirme) için not: yeni aylar oynatılmadan önce o ayların parametreleri ölçülüp `motor/tarih_parametreleri.csv`'ye eklenmelidir; eklenmezse motor artık `OlcumEksik` hatasıyla durur.
+
+## 6. 24.10.2026 — Sistem taraması: hatalar, eksikler ve düzeltmeler
+
+Kullanıcının isteğiyle bütün kod ve belgeler satır satır okundu. Şüpheli noktalar veriyle sınandı, bulunan hatalar düzeltildi ve bütün sentetik değerlendirmeler yeniden koşuldu. Sistemin baştan sona anlatımı ayrı bir belgededir: `ANLATIM.md`.
+
+### 6.1 Bulunan hatalar ve düzeltmeler
+
+1. **Kapanış penceresi yanlış işaretleniyordu (`tespit/pencere.py`).** Kapanış müzayedesi penceresi `P_ESLESTIRME` bölüm adından bulunuyordu. Açılış müzayedesi (09:55) ve bazı devre kesici müzayedeleri de bu adı taşıdığı için kapanış penceresi sayılıyordu. Ölçüm (×1 koşusu): 77 pay-günde 09:55 penceresi işaretliydi; kapanış senaryosunun 20 vakasının 19'unda açılış penceresi de pozitifti. Etkileri:
+   - açılış penceresine geçmiş kapanışlara göre puan ve bent d verildi;
+   - denetimli model açılış penceresini hiç görmedi.
+
+   Düzeltme: motor kapanış müzayedesinin eşleşme anını kaydeder (`Gun.kapanis_ani`). Pencere işareti, motor tarafındaki kapanış seansı hacim payı (`motor_ozellikleri.py`) ve kapanış müzayedesi sapması (`kapanis_ozellikleri.motor_kapanis`) bu andan bulunur. Bu iki gösterge önceden "son `P_ESLESTIRME` müzayedesi" ve "18:00 sonrası `P_ESLESTIRME`" ile bulunuyordu; kapanışta veri satırı yoksa açılışı kapanış sayabiliyordu.
+2. **Isolation Forest kapanış penceresini aynı günün pencerelerine göre puanlıyordu (`pencere_degerlendir.py`).** Bu pencere her gün uç değerdir. Kapanış senaryosunda kontrol kümesi de ROC-AUC 0,83 alıyordu (enjeksiyonlu 0,84), yani yöntem bir şey ayırt etmiyordu. Düzeltme: Isolation Forest yalnız sürekli işlem pencerelerinde eğitilir ve puanlar. Kapanış penceresini yalnız geçmiş kapanışlara dayanan Z-skor ve kural puanlar. Kapanış senaryosunda pozitif pencere yalnız kapanış müzayedesi penceresidir; emrin girildiği toplama penceresi pozitif sayılmaz. Denetimli model kapanış senaryosunun pay-günlerini dışarıda bırakır (`denetimli.py`).
+3. **Karşılıklı işlem senaryosu çoğu vakada karşılıklı işlem değildi (`motor/senaryolar.py`).** Fiyat "son işlem fiyatı + 1 adım" idi. O fiyatta ya da altında gerçek satış emirleri varsa aktörün alışı önce onlarla eşleşiyordu. Ölçüm (pencere değerlendirmesinin 20 vakası): senaryo miktarının ortalama %75'i aktörün kendi emirleri arasında işlem gördü, yalnız 5 vakada %90'ın üstündeydi, 3 vakada %10–35'ti. Düzeltme:
+   - fiyat makasın içindendir (en iyi alışın bir adım üstü); satış o fiyatta tek başına en iyi satış olur, ardından gelen alış onu karşılar;
+   - makas tek adımsa her tekrar kendi 60 saniyelik aralığında makasın en az iki adım açıldığı ilk anı bekler (`makas_ici`); aralıkta açılmazsa eski kural kullanılır;
+   - temizlik ölçütü (`sentetik_degerlendir.temizlik`): aktörün kendi emirleri arasındaki işlem (`kendi_islem`) satış miktarının yarısından azsa vaka değerlendirmeye alınmaz (`KENDI_ISLEM_EN_AZ = 0,5`, tasarım parametresi).
+
+   Yeniden ölçüm: ortalama %89, 13 vakada %90'ın üstü.
+4. **Ölçüm kontrolü devre kesici ve açığa satışta yutuluyordu (`motor/gun.py`).** `except KeyError` blokları `OlcumEksik`'i de yakalıyordu (`OlcumEksik`, `KeyError`'ın alt sınıfıdır). Marjı ölçülmüş ama devre kesicisi ölçülmemiş bir ayda devre kesici sessizce kapanırdı. Düzeltme: `parametreler.varsa` `OlcumEksik`'i geçirir, yalnız "parametre bu pazara uygulanmıyor" durumunda yok döndürür. Ölçüm kontrolü artık pazara göre yapılır (`olculen(parametre, pazar)`). Örneğin YİP ve PÖİP'te (tek fiyat pazarları) devre kesici oranı satırı yoktur; bu pazarlarda hata verilmez, devre kesici uygulanmaz.
+5. **Kapanış toplaması gün sonunda eşleştirilmeyebiliyordu (`motor/gun.py`).** Veride kapanış eşleştirme ve kapanış fiyatından işlemler satırı olmayan pay-günlerde (kapanışta işlem yoksa) toplanan defter gün sonuna kadar eşleştirilmeden kalıyordu. Tekrar oynatmada etkisizdi, ama enjeksiyonla kapanışta işlem doğabilir. Artık gün sonu bölümüne gelince eşleştirilir.
+6. **Defter örnekleme aralığı 10 sn'den 1 sn'ye indi (`motor/gun.py`).** Senaryoların kullandığı en iyi fiyat (yanıltıcı emir katmanları, karşı emir, karşılıklı işlem fiyatı) 10 saniyeye kadar eskiyebiliyordu. `Defter.derinlik` artık bütün fiyat listesini kopyalamaz, dilim alır. Tekrar oynatma doğruluğu değişmedi (THYAO 19.03: müzayedeler %100, sürekli işlem %99,82, bütün gün %99,34).
+7. **SPK etiketlerinde tatil listesi eksikti (`tespit/yontemler.py`).** 2024'ün ilk yarısı (1 Ocak, Ramazan Bayramı 10–12 Nisan, 23 Nisan, 1 Mayıs), 2025 Kurban Bayramı (6 ve 9 Haziran), 15 Temmuz ve 29 Ekim 2025 ile 2026 tatilleri yoktu. SPK tedbirleri 2024-01…2026-08 arasındadır ve B pencereleri iş günüyle sayılır. Bu yüzden 1.588 etiket satırının 102'si değişti. Veri döneminde değişen 2 satır var (SONME 28–29.05.2025, B oldu); Mart 2025'te değişen yok, SPK pay-gün değerlendirmesi değişmez.
+8. **Sessiz atlamalar ve sahte pozitif.** Bütün sentetik olayları reddedilen vaka pencere değerlendirmesinde sessizce atlanıyordu, pay-gün değerlendirmesinde ise "enjekte edilmiş" (pozitif) sayılıyordu. Örnek: VAKBN 21.03 11:32'de EBDKS durdurması vardı ve doğrulayıcı 7 olayın hepsini Ek-19'a göre doğru şekilde reddetti. Artık iki değerlendirme de bu vakayı sebebiyle yazıp dışarıda bırakır.
+9. **Kayıt düzeltmesi (bölüm 5.2).** "Pencere değerlendirmesinde 20 vakanın 1'i (AVHOL.E 12.03, 3.687 lot) çıkarıldı" yazıyordu. Doğrusu: AVHOL vakası pay-gün sentetik değerlendirmesindeydi (tohum 7). Pencere değerlendirmesinde yanıltıcı emir vakasının 19'da kalmasının nedeni madde 8'deki VAKBN vakasıdır.
+10. **Açıklama hataları.** `yontemler.py`'de bent b tanımına kısa ömürlü uzak emir payı eklendi. `ozellikler.py`'de karşılıklı işlem bendi "c" yazılmıştı; doğrusu (ç)'dir (VI-104.1 md 5/1-ç; c yön değiştiren emirdir). `TASARIM.md` 4.5'teki test sayısı, 5. bölümdeki karşılıklı işlem satırı, 6.5'teki arayüz açıklaması ve 6.6'daki tamamlanmış "sonraki adımlar" güncellendi.
+11. **Arayüz.** SPK etiketi kutusu eklendi: seçilen pay-gün etiketliyse seviye ve bülten görünür (tasarımda vardı, yapılmamıştı). Uyarı fiyatı pencere uzunluğuna bağlandı (5 dk sabit yazılıydı). Enjeksiyon özetinde "kapanış müzayedesi fiyatı" kapanış anından alınır; önceden kapanışta fiyat oluşmazsa açılış fiyatını gösterebiliyordu. Arayüz bütün senaryolarla uçtan uca sınandı (`hazirla.oynat` ve Streamlit `AppTest`, hata yok).
+
+Doğru bulunan ama sınır olarak not edilenler:
+- Bölüm geçişleri payın kendi satırlarından okunur. Çok seyrek işlem gören bir payda sentetik emir, payın o bölümdeki ilk satırına kadar bir önceki bölüme yerleşebilir. Değerlendirmede en az 300 işlemli paylar kullanıldığı için etkisizdir.
+- Kapanış son dakika payı, emir toplamanın değil payın son kapanış olayının son 60 saniyesine göre ölçülür (tanım veride ve motorda aynıdır).
+
+### 6.2 Yeniden ölçülen sonuçlar
+
+5 dakikalık pencere, ×1 (80 enjeksiyon, tohum 11; hücreler ROC-AUC / ilk 3 / kontrol ilk 3):
+
+| Senaryo | Pay-gün | Z-skor | Kurallar | Isolation Forest | Denetimli |
+|---|---|---|---|---|---|
+| Yanıltıcı emir | 19 | 0,94 / %74 / %0 | 0,95 / %89 / %5 | 0,82 / %5 / %0 | 0,95 / %95 / %0 |
+| Karşılıklı işlem | 20 | 0,48 / %0 / %0 | 0,48 / %5 / %5 | 0,49 / %5 / %5 | 0,90 / %80 / %10 |
+| Fiyat yükseltme | 20 | 0,58 / %0 / %0 | 0,60 / %10 / %5 | 0,59 / %5 / %5 | 0,71 / %30 / %5 |
+| Kapanış | 20 | 0,78 / %15 / %0 | 0,77 / %20 / %5 | — | — |
+
+Büyüklük duyarlılığı (`olcek_duyarlilik.csv`):
+
+| Senaryo | Ölçek | Kurallar | Denetimli |
+|---|---|---|---|
+| Yanıltıcı emir | ×0,3 | 0,95 / %89 / %5 | 0,94 / %79 / %0 |
+| Karşılıklı işlem | ×0,3 | 0,42 / %5 / %5 | 0,79 / %35 / %15 |
+| Fiyat yükseltme | ×0,3 | 0,56 / %5 / %5 | 0,68 / %25 / %5 |
+| Kapanış | ×0,3 | 0,58 / %5 / %5 | — |
+| Yanıltıcı emir | ×1 | 0,95 / %89 / %5 | 0,95 / %95 / %0 |
+| Karşılıklı işlem | ×1 | 0,48 / %5 / %5 | 0,90 / %80 / %10 |
+| Fiyat yükseltme | ×1 | 0,60 / %10 / %5 | 0,71 / %30 / %5 |
+| Kapanış | ×1 | 0,77 / %20 / %5 | — |
+| Yanıltıcı emir | ×3 | 0,95 / %89 / %5 | 0,95 / %89 / %0 |
+| Karşılıklı işlem | ×3 | 0,54 / %0 / %5 | 0,95 / %95 / %0 |
+| Fiyat yükseltme | ×3 | 0,62 / %10 / %5 | 0,67 / %25 / %0 |
+| Kapanış | ×3 | 0,87 / %45 / %5 | — |
+
+15 dakikalık pencere (`pencere_15dk/`):
+
+| Senaryo | Kurallar | Denetimli |
+|---|---|---|
+| Yanıltıcı emir | 0,95 / %95 / %5 | 0,99 / %95 / %26 |
+| Karşılıklı işlem | 0,47 / %5 / %10 | 0,87 / %90 / %10 |
+| Fiyat yükseltme | 0,51 / %10 / %5 | 0,63 / %25 / %15 |
+| Kapanış | 0,74 / %25 / %5 | — |
+
+- **Yanıltıcı emir:** değişmedi (kurallar 0,95 / %89 / %5, denetimli 0,95 / %95 / %0).
+- **Karşılıklı işlem:** kurallarda yine görünmez (0,48). Denetimli model ×1'de 0,87'den 0,90'a çıktı, ilk 3 %80, kontrol %10. Senaryo artık gerçekten aktörün kendi emirleri arasında işlem ürettiği için hacim izi daha temizdir.
+- **Fiyat yükseltme:** değişmedi. Bu büyüklükte ayırt edilemez.
+- **Kapanış etkilemesi:** kurallar ×1'de 0,79'dan 0,77'ye indi. Kontrol kümesinin ROC-AUC'si 0,56'dan 0,49'a, yani rastgeleye indi. Önceki değer açılış penceresinin pozitif sayılmasıyla hafifçe şişmişti. ×3'te 0,87 / %45 / %5 aynı kaldı, ×0,3'te 0,64'ten 0,58'e indi.
+- **Isolation Forest:** kapanış satırı artık yoktur (önceki 0,84 anlamsızdı). Diğer senaryolarda Z-skor ve kuralların gerisindedir.
+
+Pay-gün sentetik değerlendirmesi (`sentetik/`, 80 seçim, tohum 7): 76 vaka değerlendirildi. 4 vaka temizlik ölçütüyle dışarıda kaldı: 1 yanıltıcı emir (TKFEN 21.03, katmanlardan 72.469 lot işlem gördü) ve 3 karşılıklı işlem (PSGYO 18.03, EGSER 11.03, MRGYO 25.03; aktörün kendi emirleri arasındaki işlem satışının yarısından az). Önceki koşuda dışarıda kalan AVHOL 12.03 artık temizdir (1 sn'lik defter örneğiyle katmanlar doğru yere yerleşti).
+
+| Senaryo | Pay-gün | Z-skor | Kurallar | Isolation Forest | Kesitsel IF |
+|---|---|---|---|---|---|
+| Kapanış | 20 | 0,74 | 0,81 | 0,69 | 0,73 |
+| Yanıltıcı emir | 19 | 0,54 | 0,68 | 0,51 | 0,44 |
+| Fiyat yükseltme | 20 | 0,58 | 0,72 | 0,61 | 0,56 |
+| Karşılıklı işlem | 17 | 0,57 | 0,70 | 0,56 | 0,55 |
+| Hepsi | 76 | 0,61 | 0,73 | 0,59 | 0,57 |
+| Kontrol (enjeksiyonsuz) | 76 | 0,50 | 0,64 | 0,51 | 0,51 |
+
+- Hücreler ROC-AUC'dir. Kurallar kontrolde de 0,64 alır, çünkü seçilen likit pay-günler genel olarak daha yüksek puan alır; enjeksiyonun katkısı ≈ 0,09'dur. Kapanış dışındaki senaryolar gün düzeyinde zayıftır; kısa epizotlar günün toplamında kaybolur.
+- Motorla ve veriyle hesaplanan özellikler birebir aynıdır (fark ortancası 0). Kapanış seansı hacim payındaki en büyük fark 0,093'ten 0,00018'e indi. Önceki fark kapanış penceresi hatasından (madde 1) geliyordu: bir pay-günde açılış müzayedesi kapanış sayılmıştı.
+- Kapanış senaryosu kurallarda 0,85'ten 0,81'e indi; Z-skorda 0,82'den 0,74'e. Bu değerler artık doğru kapanış göstergeleriyle hesaplanmıştır.
+
+SPK etiketli günlerde pencere düzeyi (`spk_pencere/`; 76 etiketli, 400 etiketsiz pay-gün, hata 0): sonuç değişmedi. Gün başına uyarı penceresi sayısı A'yı ayırt etmez (ROC-AUC 0,44), B'de zayıf sinyal verir (0,61; a/b uyarıları 0,57). Kapanış bendi (d) uyarıları azaldı (etiketsiz günlerde ortalama 0,07'den 0,04'e), çünkü açılış penceresi artık kapanış sayılmıyor.
+
+| Grup | Uyarı penceresi (ortalama) | a/b | f | d |
+|---|---|---|---|---|
+| A (ALKLC) | 11,9 | 3,4 | 8,6 | 0,00 |
+| B | 19,6 | 12,4 | 8,4 | 0,02 |
+| Aynı payların etiketsiz günleri | 13,6 | 5,9 | 8,3 | 0,04 |
+| Rastgele pay-günler | 16,3 | 10,8 | 7,0 | 0,03 |
+
+### 6.3 Testler ve dosyalar
+
+- 35 birim testi, hepsi geçer. Yeni testler:
+  - pazara göre ölçüm kontrolü (YİP'te devre kesici yok; Nisan 2025'te Yıldız Pazar için ölçüm eksik hatası yutulmaz);
+  - karşılıklı işlemin makas içi fiyatı ve makasın açılmasını bekleme;
+  - kapanış penceresinin açılış müzayedesinden ayrılması;
+  - Kurban Bayramı'nda B penceresi.
+- Değişen kod: `motor/gun.py`, `motor/parametreler.py`, `motor/senaryolar.py`, `motor/defter.py`, `motor/enjeksiyon.py`, `tespit/pencere.py`, `tespit/motor_ozellikleri.py`, `tespit/kapanis_ozellikleri.py`, `tespit/yontemler.py`, `tespit/ozellikler.py`, `tespit/sentetik_degerlendir.py`, `tespit/pencere_degerlendir.py`, `tespit/denetimli.py`, `arayuz/hazirla.py`, `arayuz/uygulama.py`.
+- Yeniden üretilen çıktılar: `veri/gunici-dogrulama/2025-03/tespit/` altında `pencere/`, `pencere_olcek_0.3/`, `pencere_olcek_3/`, `pencere_15dk/`, `sentetik/`, `spk_pencere/`, `olcek_duyarlilik.csv`.
+- Yeni belge: `ANLATIM.md` (sistemin sıfırdan anlatımı; sunum hazırlığı).
+
+### 6.4 Kaldığımız yer
+
+Yapılacaklar listesi 4.7'deki gibidir (`DURUM.md` başı).

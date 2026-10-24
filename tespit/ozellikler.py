@@ -14,7 +14,8 @@ Birim: pay-gun (.E siralari, pay pazarlari). Gruplar ve VI-104.1 md 5/1 bentleri
   baz fiyattan sapmasi, kapanis oncesi (17:45 sonrasi surekli islem) getiri.
 - Referans: pazar, BIST 100 uyeligi, piyasa yapici, brut takas, ozsermaye hali (model girdisi degil, ayirt etme ve
   aciklama icin; brut takas bir tedbirdir, etiketle sizinti yaratabilir).
-Aktor gerektiren bentler (c yon degistiren emir, c kendinden kendine islem) gercek veride olculemez (uye/hesap yok).
+Aktor gerektiren bentler (c: yon degistiren emir; c-trencli bent: kendinden kendine ve karsilikli islem) gercek
+veride olculemez (uye/hesap yok).
 
 Kullanim: python -I tespit/ozellikler.py GUNLUK_EMIR_KLASORU ISLEM.parquet GUNSONU.parquet CIKTI.parquet [GUN ...]
           (gun verilmezse klasordeki butun gunler; gun basina ara dosyalar CIKTI_gunluk/ altinda, var olan gun atlanir;

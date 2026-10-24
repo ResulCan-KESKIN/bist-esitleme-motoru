@@ -17,7 +17,7 @@ from motor.gun import Gun, kosular
 
 def ozet_fiyatlar(g):
     isl = [i for b, i in g.islemler if b != "P_KAPANIS_FIY_ISLEM"]
-    kap = next((s.get("fiyat") for _, b, s in reversed(g.muzayedeler) if s.get("fiyat") is not None), None)
+    kap = next((s.get("fiyat") for M, _, s in g.muzayedeler if M == g.kapanis_ani), None)
     return dict(kapanis_muzayede_fiyati=kap, son_fiyat=isl[-1].fiyat if isl else None,
                 en_yuksek=max((i.fiyat for i in isl), default=None), en_dusuk=min((i.fiyat for i in isl), default=None),
                 islem=len(g.islemler), adet=sum(i.adet for _, i in g.islemler))
@@ -41,7 +41,8 @@ def calistir(gunluk, gunsonu, gun, kod, senaryo, saat, **param):
         ref = senaryolar.son_fiyat(sirali, t)
         uret = {"yaniltici": senaryolar.yaniltici_emir, "yukseltme": senaryolar.fiyat_yukseltme,
                 "karsilikli": senaryolar.karsilikli_islem}[senaryo]
-        ek = dict(en_iyi=senaryolar.en_iyi_fiyatlar(taban.defter_ornekleri, t)) if senaryo == "yaniltici" else {}
+        ek = (dict(en_iyi=senaryolar.en_iyi_fiyatlar(taban.defter_ornekleri, t)) if senaryo == "yaniltici" else
+              dict(defter=taban.defter_ornekleri) if senaryo == "karsilikli" else {})
         olaylar = uret(t, tb, ref, **param, **ek)
     enj = Gun(df, gun, kod, gunsonu, tepe)
     enj.calistir(olaylar)

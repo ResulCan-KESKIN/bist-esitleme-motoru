@@ -4,7 +4,7 @@
   Pay-gun puani: secili ozelliklerin |z| en buyugu.
 - Iktisadi kurallar (VI-104.1 md 5/1; esikler tasarim parametresidir, Prosedur kurali degildir):
   a) emir iptali / degisikligi: z(iptal_orani) veya z(emir_islem_orani) >= ESIK;
-  b) farkli fiyat kademelerine emir: z(fiyat_kademesi) >= ESIK;
+  b) farkli fiyat kademelerine emir ve yaniltici emir: z(fiyat_kademesi) veya z(kisa_omurlu_uzak_pay) >= ESIK;
   d) acilis / kapanis fiyatini etkileme: |z(kapanis_aof_sapma)| >= ESIK ve z(kapanis_seansi_payi) >= ESIK_2;
      ya da |z(kapanis_muzayede_sapma)| >= ESIK ve |z(kapanis_toplama_dengesizlik)| >= ESIK_2 ayni yonde;
      ya da z(acilis_iptal_orani) >= ESIK ve |z(acilis_sapma)| >= ESIK_2;
@@ -23,8 +23,14 @@ GECMIS_EN_AZ = 5
 ESIK, ESIK_2 = 3.0, 2.0
 N_B = 20
 B_BOSLUK = 2   # tedbirden onceki belirsiz is gunu sayisi
-TATILLER = ["2025-01-01", "2025-03-31", "2025-04-01", "2025-04-23", "2025-05-01", "2025-05-19",
-            "2024-06-17", "2024-06-18", "2024-06-19", "2024-07-15", "2024-08-30", "2024-10-29"]   # resmi tatiller (tam gun)
+# borsanin tam gun kapali oldugu resmi tatiller (hafta ici; arife yarim gunleri islem gunudur). SPK tedbirleri
+# 2024-01 ... 2026-08 arasindadir; B pencereleri bu yillarin tatillerine gore sayilir.
+TATILLER = ["2024-01-01", "2024-04-10", "2024-04-11", "2024-04-12", "2024-04-23", "2024-05-01", "2024-06-17",
+            "2024-06-18", "2024-06-19", "2024-07-15", "2024-08-30", "2024-10-29",
+            "2025-01-01", "2025-03-31", "2025-04-01", "2025-04-23", "2025-05-01", "2025-05-19", "2025-06-06",
+            "2025-06-09", "2025-07-15", "2025-10-29",
+            "2026-01-01", "2026-03-20", "2026-04-23", "2026-05-01", "2026-05-19", "2026-05-27", "2026-05-28",
+            "2026-05-29", "2026-07-15", "2026-10-29"]
 OZELLIKLER = ["getiri", "aralik", "hacim_tl", "kapanis_aof_sapma", "acilis_sapma", "kapanis_seansi_payi", "kfi_payi",
               "iptal_orani", "degisiklik_orani", "piyasa_payi", "kie_payi", "afk_payi", "fiyat_kademesi",
               "acilis_iptal_orani", "kapanis_degisiklik_yogunlugu", "aktif_dengesizlik", "kucuk_islem_payi",

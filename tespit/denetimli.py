@@ -4,7 +4,8 @@ ciktisi pencereler.parquet) uzerinde gradyan artirmali karar agaci.
 - Girdi: pencere ozellikleri (ham, log donusumlu) ve ayni pay-gune gore saglam z'ler.
 - Model yalniz surekli islem pencerelerinde egitilir ve puanlar. Kapanis muzayedesi penceresi her gun uc degerdir ve
   kapanis senaryosunda pozitif pencere hep odur; model bu pencereyi taniyabildigi surece "kapanis penceresi pozitiftir"
-  ogrenir. Kapanis penceresi pencere.kapanis_gecmisi ile (payin gecmis kapanislarina gore) puanlanir.
+  ogrenir. Kapanis penceresi pencere.kapanis_gecmisi ile (payin gecmis kapanislarina gore) puanlanir; kapanis
+  senaryosunun pay-gunleri (pozitif penceresi yalniz kapanis penceresidir) modelin disindadir.
 - Dogrulama: pay-gune gore gruplu 5 katli capraz dogrulama (ayni pay-gunun pencereleri egitim ve testte bir arada
   olmaz). Katin modeli, test pay-gunlerinin enjeksiyonsuz (kontrol) pencerelerini de puanlar.
 - Olcutler: ROC-AUC, ortalama kesinlik; gun icinde pozitif pencerelerden biri ilk 3'te mi; kontrolde ayni pencerelerin
@@ -41,7 +42,7 @@ if __name__ == "__main__":
     os.makedirs(out, exist_ok=True)
     A = pd.read_parquet(src)
     A["grup"] = A["gun"].astype(str) + "|" + A["kod"]
-    A = A[~A["kapanis_muzayedesi"]]
+    A = A[~A["kapanis_muzayedesi"] & (A["senaryo"] != "kapanis")]
     E, K = A[A["kume"] == "enjeksiyonlu"].copy(), A[A["kume"] == "kontrol"].copy()
     E["puan_denetimli"], K["puan_denetimli"] = np.nan, np.nan
     XE, XK = girdi(E), girdi(K)

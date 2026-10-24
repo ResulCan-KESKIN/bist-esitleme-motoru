@@ -28,6 +28,19 @@ def test_b_penceresi(tmp_path=None):
     assert sorted(e.loc[e["seviye"] == "B_belirsiz", "tarih"]) == [pd.Timestamp("2025-03-28"), pd.Timestamp("2025-04-02")]
 
 
+def test_b_penceresi_kurban_bayrami():
+    """Tedbir 11.06.2025: 06.06 ve 09.06 (Kurban Bayrami) is gunu sayilmaz; belirsiz gunler 05.06 ve 10.06."""
+    yol = os.path.join(os.path.dirname(os.path.abspath(__file__)), "_vaka_test2.csv")
+    pd.DataFrame([dict(pay_kodu="ABC", seviye_nihai="B", etiket_nihai="1", nihai_tedbir_bas="2025-06-11",
+                       nihai_donem_bas=None, nihai_donem_bit=None, bulten="x")]).to_csv(yol, index=False)
+    try:
+        e = y.etiketler(yol)
+    finally:
+        os.remove(yol)
+    assert sorted(e.loc[e["seviye"] == "B_belirsiz", "tarih"]) == [pd.Timestamp("2025-06-05"), pd.Timestamp("2025-06-10")]
+    assert max(e.loc[e["seviye"] == "B", "tarih"]) == pd.Timestamp("2025-06-04")
+
+
 def test_zskor_yalniz_gecmis():
     """Bir gundeki uc deger yalniz o gunun z'sini buyutur; once gelen gunlerin z'si degismez."""
     gun = pd.bdate_range("2025-03-03", periods=10)
@@ -99,6 +112,22 @@ def test_derinlik_penceresi():
     W = pn.pencere_ozellikleri(g, E)
     assert abs(W["derinlik_dengesizlik"].iloc[0] - 0.25) < 1e-12   # (0,5 + 0) / 2
     assert W["derinlik"].iloc[0] == 300                             # (400 + 200) / 2
+
+
+def test_kapanis_penceresi_acilis_degil():
+    """Kapanis muzayedesi penceresi Gun.kapanis_ani'den: acilis muzayedesi (o da P_ESLESTIRME) isaretlenmez."""
+    import pencere as pn
+    from motor.emir import Islem
+    gun0 = int(pd.Timestamp("2025-03-03").value // 1000)
+    acilis, sur, kapanis = (gun0 + int(h * 3600e6) for h in (9 + 56 / 60, 11, 18 + 5.5 / 60))
+    isl = [("P_ESLESTIRME", Islem(0, acilis, "", "", "A0", "S0", 100000, 10)),
+           ("P_SUREKLI_ISLEM", Islem(1, sur, "A1", "S1", "A1", "S1", 100100, 10)),
+           ("P_ESLESTIRME", Islem(2, kapanis, "", "", "A2", "S2", 100200, 10))]
+    g = type("G", (), {"islemler": isl, "kapanis_ani": kapanis})()
+    E = pd.DataFrame({"zaman": [acilis], "sebep": [6], "limit": [True], "fiyat": [100000], "miktar": [10],
+                      "surekli_limit": [False], "uzak_kisa": [False]})
+    W = pn.pencere_ozellikleri(g, E)
+    assert W.index[W["kapanis_muzayedesi"]].tolist() == [kapanis // pn.PENCERE_US * pn.PENCERE_US]
 
 
 if __name__ == "__main__":
