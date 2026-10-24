@@ -44,7 +44,7 @@ Ana veri Mart 2025'tir; bu tarihte bazı kurallar yürürlükteki metinden farkl
 
 Notlar:
 - DataStore zamanları: emir giriş/değiştirilme ve işlem zamanı İstanbul saatidir; `guncelleme_zamani` ve işlem değiştirilme zamanı UTC'dir (ayrıntı `gunici-veri-dogrulama.md` bölüm 2).
-- Eldeki parquet dosyaları (22.10.2026): emir 2025-03…07 (2025-08 yalnız zip); işlem 2025-03…09; gün sonu 2025-03…08. Hedef kapsam emir, işlem ve gün sonu için 2024-06…2025-05'tir; 2025-06 ve sonrası aralık dışıdır (`TASARIM.md` 6.4). Günlük bölümleme yalnız 2025-03 için yapıldı. Doğrulamalar yalnız Mart 2025 ile yapıldı.
+- Eldeki parquet dosyaları (22.10.2026): emir 2025-03…07 (2025-08 yalnız zip); işlem 2025-03…09; gün sonu 2025-03…08. Hedef kapsam emir, işlem ve gün sonu için 2024-06…2025-05'tir; 2025-06 ve sonrası aralık dışıdır (`TASARIM.md` 6.4). Günlük bölümleme 2025-03…06 için yapıldı (24.10.2026; aylık dosyayla satır sayısı tutar: 2025-04 20 gün 1.026.868.890 satır, 2025-05 20 gün 947.232.947 satır, 2025-06 19 gün 894.030.467 satır). Doğrulamalar yalnız Mart 2025 ile yapıldı.
 - Klasör adı `itch/2018-10-08` (8 Ekim 2018 tarihli veri).
 - TXT dosyalarındaki zaman UTC'dir (İstanbul = UTC + 3). `TM-n.VRD` ile `TR-n.VRD` bayt bayt aynıdır; `partition-1` ↔ `TM-1`, `partition-2` ↔ `TM-2`.
 - `.VRD` dosyası MoldUDP64 paketi değil, `[2 bayt uzunluk][mesaj]` dizisidir (ayrıntı: `itch-ornek-veri-dogrulama.md`).

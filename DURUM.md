@@ -60,7 +60,7 @@ Açık soru sayısı (21.10.2026; `- [DOĞRULA` ile başlayan satırlar): 01: 13
   - emir parquet 2025-03…07 (Mayıs 947.232.947 satır; Haziran ve Temmuz satır sayısı kayda geçmedi), 2025-08 yalnız zip (dönüştürülmedi); 06 ve 07 zip'leri de duruyor (22.10.2026),
   - işlem 2025-03…09,
   - gün sonu 2025-03…08.
-- **Bölümleme:** Mart emir dosyası `veri/gun-ici-emir/gunluk/` altına bölümlendi (kayıpsız, 1.128.466.831 satır).
+- **Bölümleme:** emir dosyaları `veri/gun-ici-emir/gunluk/` altına bölümlendi: 2025-03 (kayıpsız, 1.128.466.831 satır), 2025-04, 2025-05 ve 2025-06 (24.10.2026; satır sayıları `veri/README.md`). Doğrulamalar yalnız Mart ile yapıldı.
 - **Doğrulamalar:** Mart 2025 verisiyle yapıldı. Rapor `veri/gunici-veri-dogrulama.md` (13 bölüm). Betikler `veri/araclar/gunici_*.py`, `tek_fiyat_algoritma.py`. Çıktılar `veri/gunici-dogrulama/2025-03/`.
 - **Tasarım:** `TASARIM.md` yazıldı:
   - veri katmanı,
@@ -75,7 +75,7 @@ Açık soru sayısı (21.10.2026; `- [DOĞRULA` ile başlayan satırlar): 01: 13
   5. **Veri kapsamı (22.10.2026):** DataStore gün içi emir, işlem ve gün sonu verisi 2024-06…2025-05 arası alınır (12 ay; gerekirse genişletilir). Bu aralık 12.10.2026 planından gelir (o gün ITCH + gün sonu için seçilmişti); DataStore ana veri olunca bu dosyalara aktarıldı. 2025-01/02 (ITCH ayları) aralığın içindedir. 2025-06 ve sonrası indirilen dosyalar aralık dışıdır. Baz fiyat, pazar ve işlem yöntemi için aynı ayların gün sonu dosyası gerekir.
 - **Bekleyen:**
   - 2025-01/02: ITCH, emir ve işlem dosyalarının indirilmesi; gün sonu dosyası da gerekir. Tablo: `veri/etiketler/ay_etiket_ortusmesi.csv`. Dikkat edilecekler (disk, biçim kontrolü, tarih parametrelerinin yeniden ölçülmesi, ITCH eşlemesi): `rapor.md` 2.10.
-  - Aralıkta eksik: emir, işlem ve gün sonu 2024-06…2025-02 (9 ay). Aralık dışı indirilenler: emir 2025-06, 07 (parquet + zip), 08 (zip); işlem 2025-06…09; gün sonu 2025-06…08. 2025-04/05 emir doğrulanmadı ve günlük bölümlenmedi.
+  - Aralıkta eksik: emir, işlem ve gün sonu 2024-06…2025-02 (9 ay). Aralık dışı indirilenler: emir 2025-06, 07 (parquet + zip), 08 (zip); işlem 2025-06…09; gün sonu 2025-06…08. 2025-04…06 emir günlük bölümlendi ama doğrulanmadı.
   - Disk: tüm kapsam aylık parquet + günlük bölümleme olarak D:'ye sığmaz (ay başına emir ≈ 17–21 GB parquet + ≈ 14 GB günlük). Saklamayı kullanıcı yönetir.
 
 ## Eşleştirme motoru, arayüz ve tespit (22.10.2026)
