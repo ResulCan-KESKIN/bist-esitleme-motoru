@@ -215,7 +215,7 @@ Dört manipülasyon türünü günlük dille anlatalım:
 
 ---
 
-## 2. Projenin fikri ve öneri formundan farkı
+## 2. Projenin fikri ve öneri formuyla karşılaştırma
 
 ### 2.1 Üç parça
 
@@ -229,12 +229,62 @@ Dört manipülasyon türünü günlük dille anlatalım:
 - Hazır açık kaynak motorlar BIST'e özgü kuralları bilmez: Mart 2025'teki ±%10 marj, yalnız düşüşte çalışan devre kesici, kapanışta ±%3 bandı, BIST'in müzayede dağıtım sırası, kısmi görünme davranışı.
 - Manipülasyonu enjekte edebilmek için motorun içine girebilmemiz gerekir: "gerçek emirler + benim emirlerim" ile gün yeniden oynatılmalıdır.
 
-### 2.3 Öneri formundan fark
+### 2.3 Öneri formu ve sistemdeki karşılığı
 
-Öneri formunda ajan tabanlı yapay borsa vardı: yatırımcı ajanları, GA/PSO ile kalibrasyon, Monte Carlo bandı. 22.10.2026'da bunun yerine gerçek emir akışını kullanma kararı verildi. Gerekçe:
-- Ajanlar gerçek piyasayı ancak kabaca taklit eder; gerçek emir akışı piyasanın kendisidir.
-- Motorun doğruluğu gerçek işlemlerle birebir ölçülebilir. Ajan simülasyonunda böyle bir ölçüt yoktur.
-- Formdaki Z-skor karşılaştırması, Isolation Forest ve görselleştirme sistemde korundu.
+Bölüme verilen öneri formu (danışman Doç. Dr. Ersin Kaya) projenin başlığını, 12 adımını, iki yarıyılın hedeflerini ve Eylül–Mayıs iş-zaman çizelgesini verir. Formun başlığı bu belgenin başlığıyla aynıdır. Bu belgede anlatılan sistem formdaki planın uygulamasıdır. Plan kısaca şudur:
+- veri temini, ITCH çözümleyici ve emir defteri;
+- eşleştirme motoru, tekrar oynatma ve motorun doğrulanması;
+- özellikler ve üç tespit yöntemi (iktisadi kurallar, denetimsiz model, denetimli model); denetimli model için enjeksiyonla etiketli veri;
+- yöntemlerin birleştirilmesi, SPK vakalarıyla değerlendirme ve arayüz.
+
+Tabloda formdaki her adım, parantez içinde formdaki takvimiyle ve 25.10.2026 itibarıyla sistemdeki karşılığıyla verilir.
+
+| Formdaki adım (takvim) | Sistemde | Durum |
+|---|---|---|
+| 1. Literatür taraması ve gereksinim analizi: manipülasyon türleri ve tespit yöntemleri, Prosedür'den uygulanacak kurallar, literatürden iktisadi kurallar (Eylül–Ekim) | Prosedür kuralları kaynak maddesiyle `kurallar/` dosyalarında; manipülasyon türleri ve Tebliğ bentleri bölüm 1.9'da | Kısmen: tespit yöntemleri literatürü henüz yazılmadı |
+| 2. Veri temini: DataStore'dan ITCH ve gün sonu verisi; KAP bildirim zamanları; SPK kararlarından etiket listesi (Ekim–Kasım) | DataStore gün içi emir, gün içi işlem ve gün sonu verisi (Mart 2025 hazır, hedef 2024-06…2025-05); ITCH yalnız 2025-01/02; SPK etiketleri 197 bültenden | Ana veri değişti (bölüm 2.4); KAP bildirimleri henüz derlenmedi |
+| 3. ITCH çözümleyici ve emir defteri yeniden kurucusu; Borsa İstanbul'un örnek çözülmüş verisiyle doğrulama (Ekim–Kasım) | ITCH ikili dosyası 08.10.2018 örneğinde çözüldü: mesajlar Borsa İstanbul'un çözülmüş metniyle birebir aynı, ITCH'ten defter kurma testi tutarlı. Motorun defteri DataStore emir olaylarından kurulur | Yapıldı; defterin ana kaynağı DataStore |
+| 4. Eşleştirme motoru: sürekli işlem, açılış ve kapanış tek fiyatı, fiyat adımları, fiyat değişme sınırları, öncelik kuralları, emir tipleri; Prosedür örnekleriyle test (Kasım–Aralık) | `motor/` (bölüm 4); ayrıca devre kesici ve EBDKS, tarihe bağlı parametreler, sentetik emir doğrulaması; testlerde Ek-16 ve Ek-18 örnekleri | Yapıldı |
+| 5. Tekrar oynatma ve motor doğrulaması: motorun açılış/kapanış fiyatları ve işlemlerinin gerçek işlemler ve gün sonu verisiyle karşılaştırılması (Şubat) | Her işlem iki tarafın emir numarası, fiyat ve adetle karşılaştırılır; bütün paylarda %99,85 ve %99,91 aynı (bölüm 4.7) | Yapıldı (Mart 2025) |
+| 6. Özellik çıkarımı: emir/işlem oranı, iptal oranları, alış-satış derinlik dengesizliği, hacim ve fiyat değişimleri, piyasa genelinden sapma, son KAP bildiriminden geçen süre (Aralık) | Pay-gün için 24 özellik, 5 dakikalık pencere özellikleri; piyasa genelinden sapma kesitsel karşılaştırmayla (bölüm 6.7, 7.2, 7.5) | Yapıldı; KAP özelliği yok |
+| 7. İktisadi kural tabanlı tespit (Aralık–Ocak) | Bent a, b, d, f kuralları; pay-gün ve pencere düzeyinde (bölüm 6.8, 7.3, 7.5) | Yapıldı |
+| 8. Denetimsiz öğrenme: Isolation Forest, otokodlayıcı vb. (Aralık–Ocak) | Isolation Forest; pay-gün, kesitsel ve pencere düzeyinde (bölüm 6.10) | Isolation Forest yapıldı; otokodlayıcı yok |
+| 9. Manipülasyon enjeksiyonu ile etiketli veri üretimi (Şubat–Mart) | 4 senaryo; enjeksiyonlu ve enjeksiyonsuz oynatma (bölüm 5) | Yapıldı |
+| 10. Denetimli öğrenme: XGBoost vb. (Mart–Nisan) | Gradyan artırmalı karar ağaçları, sentetik etiketlerle (bölüm 6.11, 7.6) | Yapıldı; SPK etiketleriyle sınama 12 aylık veriyi bekliyor |
+| 11. Birleştirme ve değerlendirme: üç yöntemin alarmlarından uyarı seviyeleri; KAP bildirimiyle açıklanabilen alarmların ayıklanması; SPK vakalarında ve bilinen vaka olmayan dönemlerde ayrı ayrı ve birlikte karşılaştırma; yöntemler arası uyuşmazlıkların incelenmesi (Nisan–Mayıs) | Yöntemler ayrı ayrı ölçüldü: SPK vakaları, aynı payların etiketsiz günleri, rastgele pay-günler, enjeksiyonsuz kontrol (bölüm 8) | Kısmen: birleşik uyarı seviyesi, KAP ayıklaması ve uyuşmazlık incelemesi yok |
+| 12. Arayüz ve raporlama: uyarıları, emir defterini ve göstergeleri gösteren arayüz; proje raporu (Ocak, Nisan–Mayıs) | Streamlit arayüzü: fiyat ve hacim grafiği, sentetik işlemler, kural uyarıları, SPK etiketi (bölüm 9) | Kısmen: arayüzde emir defteri görünümü yok; vize raporu hazırlanıyor |
+
+**Yarıyıl hedefleri.** Formda birinci yarıyılın hedefleri şunlardır:
+- örnek veriyle doğrulanmış ITCH çözümleyici ve emir defteri yeniden kurucusu, seçilen hisseler için özellik tabloları;
+- Prosedür örnekleriyle test edilmiş eşleştirme motoru;
+- gerçek veride alarm üreten iktisadi kurallar;
+- denetimsiz modelin ilk sürümü.
+
+İkinci yarıyılın hedefleri: tekrar oynatma ve motor doğrulaması, enjeksiyon altyapısı, denetimli model, birleşik uyarı sistemi, SPK vakalarında ve vaka olmayan dönemlerde karşılaştırmalı değerlendirme, arayüz ve teslim.
+
+25.10.2026 itibarıyla birinci yarıyıl hedefleri Mart 2025 verisiyle karşılanmıştır; veri altyapısı ITCH yerine DataStore verisiyle kuruldu. İkinci yarıyıl hedeflerinden tekrar oynatma, enjeksiyon, denetimli model ve arayüzün ilk sürümleri de çalışıyor. Açık kalanlar: birleşik uyarı sistemi, 12 aylık veriyle karşılaştırmalı değerlendirme ve teslim belgeleri.
+
+### 2.4 Formdan farklar
+
+**Ana veri: ITCH yerine DataStore gün içi verisi.** Formda tekrar oynatılacak emir akışı ITCH'ten, yani Borsa İstanbul'un kamuya yayımladığı emir ve işlem mesajlarından alınacaktı. Sistemde ana girdi DataStore gün içi emir ve gün içi işlem verisidir (bölüm 3.1). Nedeni:
+- ITCH, müzayedelerin emir toplama aşamasında tek tek emir yayımlamaz; yalnız denge fiyatını yayımlar. Açılış, kapanış ve devre kesici müzayedelerinin defteri ITCH'ten kurulamaz. Gün içi emir verisinde ise her emrin her olayı vardır.
+- ITCH'in işlem mesajı yalnız pasif emri gösterir. Gün içi işlem verisinde iki tarafın emir numarası ve aktif/pasif bayrağı vardır. Motor ancak bu bilgiyle her işlemi birebir karşılaştırarak doğrulanabilir.
+
+Bu yüzden formdaki "açılış/kapanış fiyatlarını gerçek verilerle karşılaştırma" ölçütü, müzayedeler dâhil işlem işlem karşılaştırmaya dönüştü. ITCH'in rolü çapraz doğrulamadır: DataStore'dan kurulan defterin kamu yayınıyla aynı olduğu 2025-01 ve 2025-02 ITCH verisiyle sınanacaktır.
+
+**Formda olup sistemde henüz olmayanlar:**
+- **KAP bildirimleri** (KAP: şirketlerin özel durum açıklamalarını yayımladığı Kamuyu Aydınlatma Platformu). Formda üç yerde geçer: bildirim zamanlarının derlenmesi (adım 2), "son KAP bildiriminden geçen süre" özelliği (adım 6) ve haberle açıklanabilen alarmların ayıklanması (adım 11). Bunlar olmadan, bir haberle olağan dışı hareket eden pay-gün yanlış alarm olarak kalır.
+- **Birleşik uyarı sistemi:** üç yöntemin alarmlarını tek uyarı seviyesinde birleştirmek ve yöntemler arası uyuşmazlıkları incelemek (adım 11; ikinci yarıyıl hedefi). Şu an her yöntem ayrı ölçülür.
+- **Otokodlayıcı** (adım 8; formda Isolation Forest ile birlikte örnek olarak geçer).
+- **Arayüzde emir defteri görünümü** (adım 12).
+- **Literatür bölümü** (adım 1).
+
+**Sistemde olup formda olmayanlar:**
+- Z-skor temel çizgisi (bölüm 6.4); iktisadi kurallar da z üzerinden tanımlanır.
+- Motorda devre kesici ve EBDKS müzayedeleri, tarihe bağlı parametreler ve ölçüm kontrolü (bölüm 3.3), sentetik emirlerin borsa kurallarıyla doğrulanması (bölüm 4.6).
+- Değerlendirmede enjeksiyonsuz kontrol, yani yanlış alarm tabanı (bölüm 6.13), ve senaryo büyüklüğüne duyarlılık analizi (bölüm 8.2).
+
+**Takvim:** formun çizelgesinde tekrar oynatma Şubat'a, enjeksiyon Şubat–Mart'a, denetimli model Mart–Nisan'a konmuştur. Bu adımların ilk sürümleri Ekim'de Mart 2025 verisiyle çalışıyor; 12 aylık veriyle tekrarları bekleniyor. Çizelgede Eylül–Ekim'e konan literatür taraması ve Ekim–Kasım'a konan KAP bildirimleri henüz yapılmadı.
 
 ---
 
@@ -485,7 +535,7 @@ Bu yüzden |z| ≥ 3 geleneksel olarak "olağan dışı" sayılır. Bizim kural 
 - **Her payın "normali" farklıdır.** THYAO'da günde 75.000 işlem olağandır, küçük bir payda 300 işlem bile yoğundur. Ham değerleri karşılaştırmak anlamsızdır. Z-skor her payı **kendi geçmişiyle** karşılaştırır ve bütün payları aynı ölçeğe getirir: "bu pay için ne kadar olağan dışı?"
 - **Birimden bağımsızdır.** İptal oranı (%), hacim (TL) ve getiri (%) farklı birimlerdedir; z'leri ise doğrudan karşılaştırılabilir. Bu yüzden "özelliklerin en büyük |z|'si" tek bir puan olabilir.
 - **Basit ve açıklanabilirdir.** "Bugün iptal oranı bu pay için 4,2 sapma yüksek" cümlesi bir gözetim uzmanına doğrudan anlam ifade eder.
-- **Temel çizgidir.** Daha karmaşık bir yöntemin (Isolation Forest, model) işe yarayıp yaramadığını anlamak için önce basit yöntemle karşılaştırırız. Öneri formundaki "klasik yöntem karşılaştırması" budur.
+- **Temel çizgidir.** Daha karmaşık bir yöntemin (Isolation Forest, model) işe yarayıp yaramadığını anlamak için önce basit yöntemle karşılaştırırız. Öneri formunda yoktur; temel çizgi olarak eklendi (bölüm 2.4).
 
 **Projedeki ayrıntılar** (`tespit/yontemler.py`, `z_skorlari`):
 - Ortalama ve standart sapma yalnız **önceki günlerden** hesaplanır; bugünün kendisi katılmaz. Yoksa bugünkü uç değer ortalamayı çekip kendi z'sini küçültürdü. Ayrıca bu, gerçek hayatta olduğu gibi "o gün elde olan bilgi" ile hesaplamaktır; geleceği kullanmayız. Bunu bir birim testi sınar (`test_zskor_yalniz_gecmis`).
@@ -587,7 +637,7 @@ ALKLC'nin değeri piyasa ortancasının 4–7 katıdır. Ama payın kendi geçmi
 **Bu projede neden:**
 - Etiket gerektirmez.
 - Çok boyutludur: 24 özelliğe birlikte bakar. "Hiçbir özellik tek başına uç değil ama birleşimi garip" durumunu da görebilir.
-- Öneri formunda vardı ve standart bir aykırılık tespiti yöntemidir.
+- Öneri formunda denetimsiz model örneği olarak geçer (adım 8) ve standart bir aykırılık tespiti yöntemidir.
 
 **Projedeki ayrıntılar:** pay-gün düzeyinde z-skorlar üzerinde (`yontemler.isolation_forest`; uçlar ±10 ile kırpılır), kesitsel düzeyde yüzdelik sıralar üzerinde, pencere düzeyinde sürekli işlem pencerelerinin z'leri üzerinde çalışır. `random_state` sabittir: aynı veriyle her çalıştırmada aynı sonuç çıkar.
 
@@ -627,6 +677,8 @@ Benzetme: bir öğrenci deneme sınavını çözer, yanlışlarına bakar ve sad
 - Az veriyle çalışır. Derin öğrenme binlerce pozitif örnek ister; bizde 111 pozitif pencere vardır.
 
 Kodda: `sklearn.ensemble.HistGradientBoostingClassifier(max_iter=300, learning_rate=0.05, random_state=0)`. "Hist" (histogram) sürümü sayısal değerleri kutulara ayırarak hızlı çalışır. Eğitim birkaç saniye sürer.
+
+Öneri formunda denetimli model örneği olarak XGBoost geçer (adım 10). XGBoost ve `HistGradientBoostingClassifier` aynı yöntemin, gradyan artırmalı karar ağaçlarının iki ayrı uygulamasıdır.
 
 ### 6.12 Ezber (aşırı öğrenme) ve çapraz doğrulama
 
@@ -899,6 +951,7 @@ Ekranda:
 - **Eşikler (3 ve 2) tasarım parametresidir,** Prosedür kuralı değildir.
 - **Denetimli model sentetik etiketle eğitildi:** öğrendiği, bizim senaryolarımızın imzasıdır. Gerçek manipülatör farklı davranırsa model bunu tanımayabilir. SPK etiketleriyle eğitim 12 aylık veriyle yapılacak.
 - **Kapsam dışı:** kotasyonlar (piyasa yapıcı), orta nokta emirleri, özel işlem bildirimleri.
+- **Formda olup henüz olmayanlar (bölüm 2.4):** KAP bildirimleri yok; haberle açıklanabilen olağan dışı hareketler ayıklanmıyor ve yanlış alarm olarak kalıyor. Üç yöntemin alarmları henüz tek uyarı seviyesinde birleştirilmiyor.
 - **Özsermaye günleri:** düzeltilmiş baz fiyat kaynağı yok; bu günler dışarıda.
 - **Bilinmeyenler:** değişiklik sebebi 116/117'nin anlamı; `guncelleme_no` atlamaları (%0,9); aynı µs içindeki olayların sırası (ITCH ile çözülebilir).
 - **Bölüm sınırları payın kendi satırlarından okunur.** Çok seyrek işlem gören bir payda sentetik emir, payın o bölümdeki ilk satırına kadar bir önceki bölüme yerleşebilir. Değerlendirmede en az 300 işlemli paylar kullanıldığı için etkisizdir.
@@ -943,7 +996,7 @@ Doğrulama: 35 birim testi geçer. Motorun tekrar oynatma doğruluğu değişmed
 
 **"Prosedür'de yazan kuralı mı uyguladınız, verideki kuralı mı?"** Kural dosyaları yürürlükteki Prosedür'ü yazar. Veri tarihinde farklı uygulanan kurallar (marj ±%10, devre kesici yalnız düşüşte %5, EBDKS eski eşikleri) veriden ölçüldü ve tarih parametresi olarak tutuldu. Fark "Tablo-4 dipnotundaki geçici duyuru/uygulama farkı" olarak kayıtlıdır.
 
-**"Neden ajan tabanlı simülasyon yapmadınız?"** Gerçek emir akışı ajanlardan daha gerçekçidir ve motorun doğruluğu ölçülebilir. Ajan simülasyonunun kalibrasyonu (GA/PSO) doğrulanamayan bir varsayımlar zinciri olurdu.
+**"Öneri formundaki plandan farkınız ne?"** Plan aynı: motor, gerçek emir akışının tekrar oynatılması, sentetik manipülasyon enjeksiyonu, iktisadi kurallar, denetimsiz ve denetimli model, SPK vakalarıyla değerlendirme, arayüz. Ana fark veri kaynağıdır: formda ITCH, sistemde DataStore gün içi emir ve işlem verisi. ITCH müzayedelerde tek tek emir yayımlamaz ve işlemde yalnız pasif emri gösterir; gün içi veride her emir olayı ve işlemin iki tarafı vardır. Bu yüzden motor müzayedeler dâhil işlem işlem doğrulanabiliyor. ITCH çapraz doğrulamada kullanılıyor. Formda olup henüz yapılmayanlar: KAP bildirimleri ve üç yöntemi birleştiren uyarı seviyesi (bölüm 2.4).
 
 **"Z-skor nedir, neden kullandınız?"** Bir değerin, payın kendi geçmişindeki ortalamadan kaç standart sapma uzak olduğu. Her payın normali farklı olduğu için ham değer yerine "bu pay için ne kadar olağan dışı" sorusunu sorar ve farklı birimlerdeki özellikleri aynı ölçeğe getirir. Basit ve açıklanabilir bir temel çizgidir. Zayıf yanı: geçmiş de manipülasyonluysa olağan dışılığı göremez. Bunu ALKLC örneğinde gösteriyoruz ve kesitsel karşılaştırmayla çözüyoruz.
 
@@ -1001,14 +1054,18 @@ Sözlük:
 | Ezber (overfitting) | Modelin eğitim örneklerini ezberleyip yenilerde başarısız olması |
 | Gradyan artırma | Hataları sırayla düzelten küçük karar ağaçlarının toplamı |
 | Isolation Forest | Az rastgele bölmeyle yalnız kalan noktaları aykırı sayan yöntem |
+| ITCH | Borsa İstanbul'un kamuya yayımladığı piyasa verisi akışı (emir ekleme, silme, işlem mesajları) |
+| KAP | Kamuyu Aydınlatma Platformu; şirketlerin özel durum açıklamalarını yayımladığı platform |
 | Kesinlik (precision) | Alarmların doğru çıkan oranı |
 | Kesitsel | Aynı gün diğer paylarla karşılaştırma |
 | KİE | Kalanı iptal et |
 | MAD | Ortancadan mutlak sapmaların ortancası |
+| Otokodlayıcı (autoencoder) | Girdisini sıkıştırıp yeniden üretmeyi öğrenen sinir ağı; iyi yeniden üretemediği örneği aykırı sayar |
 | Özellik | Bir pay-gün ya da pencere için hesaplanan sayısal gösterge |
 | Pay-gün | Bir payın bir işlem günü |
 | Pencere | 5 dakikalık zaman dilimi |
 | ROC-AUC | Rastgele bir pozitifin rastgele bir negatiften yüksek puan alma olasılığı |
 | Tepe | Kısmi görünme emrinde görünen kısım |
 | Tohum (seed) | Rastgele seçimleri tekrar edilebilir kılan başlangıç sayısı |
+| XGBoost | Gradyan artırmalı karar ağaçlarının yaygın bir kütüphanesi |
 | Z-skor | Değerin ortalamadan kaç standart sapma uzak olduğu |

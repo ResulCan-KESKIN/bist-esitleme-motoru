@@ -18,4 +18,8 @@ __pycache__/
 
 # Kisisel bilgi iceren basvuru belgeleri (oneri formu, veri talep dilekcesi)
 Bitirme_Projesi_Oneri_Formu_*.docx
+Bitirme_Projesi_Oneri_Formu_*.pdf
 Ba*vuru Dilek*e*.pdf
+
+# Literatur makaleleri (yayinci lisansli PDF'ler; push edilmez). Notlar (.md, .txt) git'te kalir
+Literat*r Ara*t*rmas*/*.pdf

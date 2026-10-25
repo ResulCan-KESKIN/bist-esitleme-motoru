@@ -1,10 +1,11 @@
 # Çalışma raporu
 
-Bu dosya, bitirme projesi vize raporunun yazılacağı kaynak kayıttır. Önce 21.10.2026'ya kadar yapılanlar özetlenir, sonra oturumlar tarih başlığı altında ayrıntılı kaydedilir (bölüm 2: 21.10.2026, bölüm 3: 22.10.2026, bölüm 4: 23.10.2026, bölüm 5 ve 6: 24.10.2026). Ayrıntılı teknik sonuçlar ilgili dosyalardadır; bu raporda yalnız özetleri ve sayıları vardır.
+Bu dosya, bitirme projesi vize raporunun yazılacağı kaynak kayıttır. Önce 21.10.2026'ya kadar yapılanlar özetlenir, sonra oturumlar tarih başlığı altında ayrıntılı kaydedilir (bölüm 2: 21.10.2026, bölüm 3: 22.10.2026, bölüm 4: 23.10.2026, bölüm 5 ve 6: 24.10.2026, bölüm 7: 25.10.2026). Ayrıntılı teknik sonuçlar ilgili dosyalardadır; bu raporda yalnız özetleri ve sayıları vardır.
 
 **Proje:** "Borsa İstanbul Pay Piyasası Kurallarına Uygun Eşleştirme Motoru ve Makine Öğrenmesi Destekli Piyasa Manipülasyonu Tespit Sistemi" (bilgisayar mühendisliği bitirme projesi, tek kişilik).
 
 **Üç bileşen:**
+
 1. Tarihsel emir ve işlem verisinden emir defterinin yeniden kurulması (veri katmanı).
 2. Borsa İstanbul (BIST) kurallarına uygun eşleştirme motoru: sürekli işlem, tek fiyat (müzayede), devre kesiciler. Gerçek emir akışı tekrar oynatılır, araya sentetik manipülatif emirler enjekte edilir.
 3. Manipülasyon tespiti: iktisadi kurallar, denetimsiz model ve denetimli model; SPK vakalarıyla değerlendirme.
@@ -33,18 +34,19 @@ Bu dosya, bitirme projesi vize raporunun yazılacağı kaynak kayıttır. Önce 
 
 Prosedürden motorun kodlanmasında kullanılacak, madde numaralı ve kaynak gösterimli 8 kural dosyası yazıldı:
 
-| Dosya | Kapsam | Madde |
-|---|---|---|
-| `01-seanslar.md` | Seans saatleri, bölümler/aşamalar, geçici durdurma, seans uzama/iptal | 92 |
-| `02-fiyat.md` | Lot, fiyat adımı, baz/referans fiyat, fiyat değişme sınırları, AOF, maddi hata | 47 |
-| `03-tek-fiyat.md` | Tek fiyat yöntemi, 9 adımlı denge fiyatı algoritması, kapanış seansı, kapanış fiyatından işlemler | 99 |
-| `04-surekli-islem.md` | Sürekli işlem, fiyat-zaman önceliği, değişiklikte öncelik, SMP | 48 |
-| `05-emirler.md` | Emir tipleri, değiştirme/iptal, değer sınırları, geçerlilik, Ek-19 bölüm × emir tipi matrisi | 143 |
-| `06-devre-kesici.md` | Pay bazında devre kesici, endekse bağlı devre kesici (EBDKS) | 53 |
-| `07-itch.md` | ITCH mesaj kuralları, veri tipleri, emir defteri görünümü | 68 |
-| `08-pazarlar-tedbirler.md` | Pazarlar, piyasa yapıcılık, brüt takas, gruplama, bülten | 55 |
+| Dosya                      | Kapsam                                                                                            | Madde |
+| -------------------------- | ------------------------------------------------------------------------------------------------- | ----- |
+| `01-seanslar.md`           | Seans saatleri, bölümler/aşamalar, geçici durdurma, seans uzama/iptal                             | 92    |
+| `02-fiyat.md`              | Lot, fiyat adımı, baz/referans fiyat, fiyat değişme sınırları, AOF, maddi hata                    | 47    |
+| `03-tek-fiyat.md`          | Tek fiyat yöntemi, 9 adımlı denge fiyatı algoritması, kapanış seansı, kapanış fiyatından işlemler | 99    |
+| `04-surekli-islem.md`      | Sürekli işlem, fiyat-zaman önceliği, değişiklikte öncelik, SMP                                    | 48    |
+| `05-emirler.md`            | Emir tipleri, değiştirme/iptal, değer sınırları, geçerlilik, Ek-19 bölüm × emir tipi matrisi      | 143   |
+| `06-devre-kesici.md`       | Pay bazında devre kesici, endekse bağlı devre kesici (EBDKS)                                      | 53    |
+| `07-itch.md`               | ITCH mesaj kuralları, veri tipleri, emir defteri görünümü                                         | 68    |
+| `08-pazarlar-tedbirler.md` | Pazarlar, piyasa yapıcılık, brüt takas, gruplama, bülten                                          | 55    |
 
 Kurallar:
+
 - Belirsiz ya da çelişkili noktalar yorumlanmadı; her dosyanın "Açık sorular" bölümüne [DOĞRULA] ile yazıldı.
 - Belgeler arası çelişkiler kullanıcı kararıyla kapatıldı. Örnekler:
   - gün "tek seans", parçalar "bölüm/aşama" olarak adlandırılır;
@@ -87,28 +89,29 @@ Kurallar:
 
 **Kullanıcı kararı:** ITCH verisi yalnız 2 aylık örnek olarak alınacak. Ana veri Borsa İstanbul DataStore'un gün içi dosyalarıdır:
 
-| DataStore dosyası | İçerik |
-|---|---|
-| `PP_GUNICIEMIR` (gün içi emir) | Her emir olayından sonra emrin tam durumu: giriş, değişiklik, iptal, işlem, süre dolumu. Müzayede aşamaları dâhil |
-| `PP_GUNICIISLEM` (gün içi işlem) | Her işlemin alış ve satış tarafı, iki tarafın emir numarası, aktif/pasif tarafı |
-| `PP_GUNSONUFIYATHACIM` (gün sonu fiyat-hacim) | Sıra-gün bülteni: baz fiyat, pazar, işlem yöntemi, fiyat ve hacim özetleri |
+| DataStore dosyası                             | İçerik                                                                                                            |
+| --------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `PP_GUNICIEMIR` (gün içi emir)                | Her emir olayından sonra emrin tam durumu: giriş, değişiklik, iptal, işlem, süre dolumu. Müzayede aşamaları dâhil |
+| `PP_GUNICIISLEM` (gün içi işlem)              | Her işlemin alış ve satış tarafı, iki tarafın emir numarası, aktif/pasif tarafı                                   |
+| `PP_GUNSONUFIYATHACIM` (gün sonu fiyat-hacim) | Sıra-gün bülteni: baz fiyat, pazar, işlem yöntemi, fiyat ve hacim özetleri                                        |
 
 Gerekçe: ITCH'te müzayede aşamasındaki emirler yayımlanmaz. DataStore emir dosyasında ise bütün emir olayları vardır. Böylece açılış, kapanış ve devre kesici müzayedeleri dâhil eşleştirme motoru uçtan uca doğrulanabilir.
 
 ### 2.2 Veri indirme ve parquet dönüşümleri (20–21.10.2026)
 
 DataStore'dan aylık CSV (zip) dosyaları indirildi. Dosyalar kayıpsız tip dönüşümüyle Apache Parquet biçimine (zstd sıkıştırma) çevrildi. Dönüştürme betikleri:
+
 - `veri/araclar/gunici_emir_csv2parquet.py`
 - `veri/araclar/gunici_islem_csv2parquet.py`
 - `veri/araclar/gunsonu_fiyat_hacim_csv2parquet.py` (gün sonu dosyasında her hücre kaynak metinle yeniden karşılaştırılır)
 
-| Dosya | Aylar | Satır | Parquet boyutu | Dönüşüm tarihi |
-|---|---|---|---|---|
-| Gün içi emir | 2025-03 | 1.128.466.831 | 20,7 GB | 20.10.2026 |
-| Gün içi emir | 2025-04 | 1.026.868.890 | 17,7 GB (CSV 209 GB) | 21.10.2026 |
-| Gün içi emir | 2025-05 | 947.232.947 | 17,3 GB | 21.10.2026 |
-| Gün içi işlem | 2025-03 … 2025-09 (7 ay) | 192–269 milyon/ay (toplam 1.640.155.088) | 3,2–4,5 GB/ay | 20–21.10.2026 |
-| Gün sonu fiyat-hacim | 2025-03 … 2025-08 (6 ay) | 147–198 bin/ay | ≈ 3 MB/ay | 21.10.2026 |
+| Dosya                | Aylar                    | Satır                                    | Parquet boyutu       | Dönüşüm tarihi |
+| -------------------- | ------------------------ | ---------------------------------------- | -------------------- | -------------- |
+| Gün içi emir         | 2025-03                  | 1.128.466.831                            | 20,7 GB              | 20.10.2026     |
+| Gün içi emir         | 2025-04                  | 1.026.868.890                            | 17,7 GB (CSV 209 GB) | 21.10.2026     |
+| Gün içi emir         | 2025-05                  | 947.232.947                              | 17,3 GB              | 21.10.2026     |
+| Gün içi işlem        | 2025-03 … 2025-09 (7 ay) | 192–269 milyon/ay (toplam 1.640.155.088) | 3,2–4,5 GB/ay        | 20–21.10.2026  |
+| Gün sonu fiyat-hacim | 2025-03 … 2025-08 (6 ay) | 147–198 bin/ay                           | ≈ 3 MB/ay            | 21.10.2026     |
 
 Ham veri git dışıdır (`.gitignore`).
 
@@ -125,22 +128,23 @@ Ham veri git dışıdır (`.gitignore`).
 
 20 işlem günü (03–28.03.2025) üzerinde yapılan kontroller ve ana sonuçlar:
 
-| # | Kontrol | Sonuç |
-|---|---|---|
-| 1 | Alan anlamları | Zaman dilimleri çözüldü: emir zamanları İstanbul saati, µs; güncelleme zamanı UTC. Emir↔işlem anahtarı: `islem_numarasi = int(ortak_sozlesme_no, 16)`. Değişiklik sebepleri ve geçerlilik türleri belirlendi (yalnız Gün ve KİE; her gün bağımsız) |
-| 2 | İşlem defteri ↔ gün sonu bülteni | 74.979 sıra-günde bütün bülten alanları işlemlerden yeniden üretildi: toplam/özel işlem 74.979/74.979, AOF 74.960/74.979 |
-| 3 | Fiyat marjı | Tüm pazarlarda ±%10; 495 tavan ve 786 taban isabeti içe yuvarlanmış sınırlara tam eşit |
-| 4 | Fiyat adımı | 797.067.974 emir fiyatında Tablo-7/8'e aykırı 0; 117 milyon işlemde yalnız 1 (özel işlem bildirimi) |
-| 5 | Seans bölümleri ve saatler | 22 bölüm adı, Ek-10 akışlarıyla uyumlu; müzayede eşleşme anı aşama başına ortak rastlantısal saniye |
-| 6 | Ek-19 (bölüm × emir tipi) | 230,8 milyon yeni emirde izin dışı tip 0 |
-| 7 | Emir yaşam döngüsü | Açılışın son 5 dakikasında iptal/kötüleştirme/azaltma 0; EBDKS durdurmasında yalnız izinli değişiklikler; kapanış seansında ±%3 dışı %0,04 |
-| 8 | Fiyat-zaman önceliği (3 gün, 9,6 milyon pasif gerçekleşme) | Fiyat önceliği %99,998; zaman önceliği %99,76 (öncelik kalan miktar artışında ve kısmi görünme yenilemesinde de kaybolur) |
-| 9 | **Tek fiyat (müzayede) defterinin yeniden kurulması** | 29.633 müzayedenin 29.621'inde (%99,96) hesaplanan denge fiyatı gerçek fiyata eşit; Adım 4 referansı = baz fiyat; kapanışta son işlem ±%3 sınırı; dengeleyici emir eşleşmesi doğrulandı |
-| 10 | Pay bazında devre kesici (1.195 olay) | Yalnız düşüş yönlü, %5 eşik, 15 dk emir toplama + 2 dk eşleştirme bölümü; eşleştirme ilk 30 sn'de rastlantısal |
-| 11 | EBDKS | 19 ve 21 Mart'ta ikişer kez; `.E` sıraları 20 dk, `.V/.C/.F` 30 dk durdurma (01.09.2025 öncesi kural) |
-| 12 | Açığa satış | 03–21.03 yalnız 50 payda (BIST 50), 24.03'ten itibaren 0 |
+| #   | Kontrol                                                    | Sonuç                                                                                                                                                                                                                                              |
+| --- | ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Alan anlamları                                             | Zaman dilimleri çözüldü: emir zamanları İstanbul saati, µs; güncelleme zamanı UTC. Emir↔işlem anahtarı: `islem_numarasi = int(ortak_sozlesme_no, 16)`. Değişiklik sebepleri ve geçerlilik türleri belirlendi (yalnız Gün ve KİE; her gün bağımsız) |
+| 2   | İşlem defteri ↔ gün sonu bülteni                           | 74.979 sıra-günde bütün bülten alanları işlemlerden yeniden üretildi: toplam/özel işlem 74.979/74.979, AOF 74.960/74.979                                                                                                                           |
+| 3   | Fiyat marjı                                                | Tüm pazarlarda ±%10; 495 tavan ve 786 taban isabeti içe yuvarlanmış sınırlara tam eşit                                                                                                                                                             |
+| 4   | Fiyat adımı                                                | 797.067.974 emir fiyatında Tablo-7/8'e aykırı 0; 117 milyon işlemde yalnız 1 (özel işlem bildirimi)                                                                                                                                                |
+| 5   | Seans bölümleri ve saatler                                 | 22 bölüm adı, Ek-10 akışlarıyla uyumlu; müzayede eşleşme anı aşama başına ortak rastlantısal saniye                                                                                                                                                |
+| 6   | Ek-19 (bölüm × emir tipi)                                  | 230,8 milyon yeni emirde izin dışı tip 0                                                                                                                                                                                                           |
+| 7   | Emir yaşam döngüsü                                         | Açılışın son 5 dakikasında iptal/kötüleştirme/azaltma 0; EBDKS durdurmasında yalnız izinli değişiklikler; kapanış seansında ±%3 dışı %0,04                                                                                                         |
+| 8   | Fiyat-zaman önceliği (3 gün, 9,6 milyon pasif gerçekleşme) | Fiyat önceliği %99,998; zaman önceliği %99,76 (öncelik kalan miktar artışında ve kısmi görünme yenilemesinde de kaybolur)                                                                                                                          |
+| 9   | **Tek fiyat (müzayede) defterinin yeniden kurulması**      | 29.633 müzayedenin 29.621'inde (%99,96) hesaplanan denge fiyatı gerçek fiyata eşit; Adım 4 referansı = baz fiyat; kapanışta son işlem ±%3 sınırı; dengeleyici emir eşleşmesi doğrulandı                                                            |
+| 10  | Pay bazında devre kesici (1.195 olay)                      | Yalnız düşüş yönlü, %5 eşik, 15 dk emir toplama + 2 dk eşleştirme bölümü; eşleştirme ilk 30 sn'de rastlantısal                                                                                                                                     |
+| 11  | EBDKS                                                      | 19 ve 21 Mart'ta ikişer kez; `.E` sıraları 20 dk, `.V/.C/.F` 30 dk durdurma (01.09.2025 öncesi kural)                                                                                                                                              |
+| 12  | Açığa satış                                                | 03–21.03 yalnız 50 payda (BIST 50), 24.03'ten itibaren 0                                                                                                                                                                                           |
 
 Doğrulamanın projeye katkısı:
+
 - **Tek fiyat algoritması:** 2018 ITCH verisiyle sınanamayan algoritma, gerçek müzayede defterleriyle doğrulandı. Başvuru uygulaması `veri/araclar/tek_fiyat_algoritma.py`, birim testi `tek_fiyat_algoritma_test.py` (Ek-16'nın beş örneği).
 - **Tarihe bağlı kurallar:** Veri tarihinde geçerli kuralların yürürlükteki Prosedürden farklı olduğu belirlendi: marj, devre kesici yönü/oranı/süresi, EBDKS eşikleri ve süreleri. Bunlar tarih parametresi olarak ayrıldı (`motor/tarih_parametreleri.csv`).
 - **Kapanan açık sorular:** Kural dosyalarındaki bazı açık sorular veriyle kapandı:
@@ -172,6 +176,7 @@ Doğrulamanın projeye katkısı:
   - enjeksiyon: gerçek akışa sentetik aktörün emirleri eklenir.
 
   Bileşenler kural dosyalarına bağlandı.
+
 - **Sentetik manipülasyon senaryoları:** kapanış/açılış fiyatını etkileme, yanıltıcı emir (spoofing/layering), adım adım fiyat yükseltme, karşılıklı işlem.
 - **Tespit:** Veride üye/hesap kimliği olmadığından birim pay-penceredir. Özellik grupları: emir akışı, defter, işlem, referans. Modeller: kurallar, denetimsiz ve denetimli; değerlendirme SPK vakalarıyla.
 - **ITCH'in rolü:** ikincil. Kamuya yayımlanan defter ve A seviyesi vaka dönemleri için kullanılır.
@@ -187,14 +192,14 @@ Doğrulamanın projeye katkısı:
 
 ### 2.8 Bu oturumda üretilen dosyalar
 
-| Tür | Dosya |
-|---|---|
-| Tasarım ve rapor | `TASARIM.md`, `rapor.md`, `veri/gunici-veri-dogrulama.md` |
-| Parametre | `motor/tarih_parametreleri.csv` |
-| Hazırlama betikleri | `gunici_emir_gunluk_bol.py`, `gunici_emir_profil.py` |
+| Tür                 | Dosya                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Tasarım ve rapor    | `TASARIM.md`, `rapor.md`, `veri/gunici-veri-dogrulama.md`                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| Parametre           | `motor/tarih_parametreleri.csv`                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| Hazırlama betikleri | `gunici_emir_gunluk_bol.py`, `gunici_emir_profil.py`                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | Doğrulama betikleri | `gunici_islem_gunsonu_karsilastir.py`, `gunici_marj_kontrol.py`, `gunici_fiyat_adimi_sinir_kontrol.py`, `gunici_emir_sinir_disi.py`, `gunici_ek19_kontrol.py`, `gunici_emir_kural_kontrol.py`, `gunici_emir_kural_ozet.py`, `gunici_oncelik_kontrol.py`, `gunici_tek_fiyat_kontrol.py`, `gunici_tek_fiyat_ozet.py`, `gunici_tek_fiyat_karisik.py`, `gunici_eslestirme_zamani.py`, `gunici_seans_akis_kontrol.py`, `gunici_devre_kesici_kontrol.py`, `etiket_ay_ortusmesi.py` |
-| Algoritma ve test | `tek_fiyat_algoritma.py`, `tek_fiyat_algoritma_test.py` |
-| Çıktılar | `veri/gunici-dogrulama/2025-03/` (özet CSV/TXT), `veri/etiketler/ay_etiket_ortusmesi.csv` |
+| Algoritma ve test   | `tek_fiyat_algoritma.py`, `tek_fiyat_algoritma_test.py`                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| Çıktılar            | `veri/gunici-dogrulama/2025-03/` (özet CSV/TXT), `veri/etiketler/ay_etiket_ortusmesi.csv`                                                                                                                                                                                                                                                                                                                                                                                    |
 
 Betikler `veri/araclar/` altındadır. Bu oturumun çalışması 22.10.2026'da `c9a3f7e` ile commit edildi.
 
@@ -219,6 +224,7 @@ Betikler `veri/araclar/` altındadır. Bu oturumun çalışması 22.10.2026'da `
 ### 2.10 2025-01/02 verisi için dikkat edilecekler
 
 İndirme ve dönüştürme:
+
 - **İndirilecek dosyalar (her biri 2025-01 ve 2025-02):** ITCH, `PP_GUNICIEMIR`, `PP_GUNICIISLEM`, `PP_GUNSONUFIYATHACIM`.
   - Gün sonu dosyası olmadan baz fiyat, pazar ve işlem yöntemi bilinmez; gün sonu karşılaştırması ve tek fiyat doğrulaması yapılamaz.
 - **Disk:** D: sürücüsünde 290 GB boş alan var (21.10.2026).
@@ -230,6 +236,7 @@ Betikler `veri/araclar/` altındadır. Bu oturumun çalışması 22.10.2026'da `
 - **Kaynak:** 16 GB RAM nedeniyle büyük işler en çok ikişer paralel çalıştırılmalıdır.
 
 Veri alanları (Mart 2025'te öğrenilenler):
+
 - Aylık emir dosyası tarihe göre sıralı değildir. Gün bazlı işler `gun-ici-emir/gunluk/` bölümlemesinden yapılır (`gunici_emir_gunluk_bol.py`).
 - `guncelleme_zamani` UTC'dir (yerel saat − 3 sa); `emir_degistirilme_zamani` yerel saattir.
 - `islem_numarasi` 18 hanelidir. pandas'a geçmeden önce `fill_null(0)` uygulanmalı, yoksa float'a dönüp hassasiyet kaybolur. Eşleme: `emir.islem_numarasi = int(islem.ortak_sozlesme_no, 16)`.
@@ -237,6 +244,7 @@ Veri alanları (Mart 2025'te öğrenilenler):
 - Değişiklik sebeplerinde yeni kod çıkıp çıkmadığına bakılmalıdır (Mart 2025'te 116 ve 117'nin anlamı bilinmiyor).
 
 Tarih parametreleri (`motor/tarih_parametreleri.csv`):
+
 - Veriden ölçülen satırların geçerlilik aralığı 2025-03-03…28'dir. Haziran 2024–Şubat 2025 için (2025-01/02 dahil) aynı değerler varsayılmamalı, veriden yeniden ölçülmelidir: fiyat marjı, devre kesici yönü / oranı / emir toplama süresi / rastlantısal pencere, kapanışa taşma saati, Adım 4 referansı, EBDKS süreleri.
 - Varant `P_SALTKOTASYON` başlangıcı 07.03.2025'ten önce 10:00:00'dır; Ocak–Şubat'ta bu değer beklenir.
 - Açığa satış: `DURUM.md` notuna göre yasak BIST 50 payları için 02.01.2025'te kalktı. Ocak–Şubat'ta açığa satışın yalnız BIST 50 paylarında görülmesi beklenir; veriyle doğrulanmalı.
@@ -244,6 +252,7 @@ Tarih parametreleri (`motor/tarih_parametreleri.csv`):
 - EBDKS bu aylarda hiç oluşmamış olabilir. Bu durumda eşikler ve süreler bu aylarla sınanamaz.
 
 ITCH ↔ DataStore karşılaştırması:
+
 - ITCH sürümü 2112'dir. 2018 örneğinde `R` mesajı 129, `A` mesajı 37 bayttı. 2025 dosyasında mesaj uzunlukları ve dosya biçimi (VRD/TXT, 2 bayt uzunluk öneki, MoldUDP64 başlığı) ITCH 2112 çevirisiyle yeniden sınanmalıdır [DOĞRULA].
 - ITCH zamanları UTC'dir (2018 örneği).
 - Eşleme gerekir:
@@ -253,6 +262,7 @@ ITCH ↔ DataStore karşılaştırması:
 - ITCH'in mesaj sırası, DataStore'da aynı µs içindeki olayların sırasını çözmek için kullanılabilir (`TASARIM.md` 8).
 
 Doğrulama:
+
 - Mart 2025 betikleri aynı sırayla çalıştırılmalıdır: profil → işlem ↔ gün sonu → marj → fiyat adımı → Ek-19 → emir kuralları → öncelik → seans akışı → devre kesici / EBDKS → tek fiyat → karışık yön.
 - Çıktılar `veri/gunici-dogrulama/2025-01/` ve `2025-02/` altına yazılmalıdır.
 - SPK vakaları: KRGYO 10.01, TDGYO 24.01, ALKLC 04.02'de başlar. ALKLC dönemi 18.03'e kadar sürer, yani Mart verisiyle devam eder.
@@ -276,6 +286,7 @@ Doğrulama:
 ### 3.2 Öneri formu ile mevcut sistem
 
 Öneri formu (`Bitirme_Projesi_Oneri_Formu_Resul_Can_KESKIN.docx`) başlığı: "Ajan Tabanlı Yapay Borsa Simülasyonu ile Borsa İstanbul Pay Piyasasında Kural Dışı Fiyat Hareketlerinin (Anomalilerin) Tespiti". Kullanıcı kararıyla (22.10.2026) sistem ajan tabanlı simülasyon olmayacak; `TASARIM.md`'deki sistem uygulanacaktır:
+
 - eşleştirme motoru,
 - veriye dayalı (denetimsiz) makine öğrenmesi,
 - etiketli verilerle (denetimli) makine öğrenmesi,
@@ -283,19 +294,19 @@ Doğrulama:
 
 Farklar vize raporunda açıklanacaktır. Gerekçe sütununda `[kullanıcı]` yazan satırları kullanıcı tamamlayacaktır.
 
-| Öneri formunda | Mevcut sistemde | Gerekçe (taslak) |
-|---|---|---|
-| Küçük, büyük ve yabancı yatırımcı ajanları | Yok; DataStore'daki gerçek emir akışı tekrar oynatılır | Gün içi emir verisi her emir olayını içerir; piyasa akışı yapay ajanlarla üretilmek yerine gerçek veriden alınır |
-| GA/PSO ile ajan kalibrasyonu | Yok | Ajan olmadığı için kalibrasyon gerekmez; motor gerçek işlemlerin yeniden üretilmesiyle doğrulanır |
-| Monte Carlo "kurallara uygun piyasa" olasılık bandı | Yok; iktisadi kurallar + denetimsiz model | [kullanıcı] |
-| Sentetik manipülasyon senaryoları (pompala-boşalt, danışıklı işlem) | Var; gerçek emir akışına enjekte edilir | Değişmedi; gerçek emirlerle etkileşim hesaplanır |
-| Anomalilerin piyasa geneli / paya özgü sınıflandırılması | Denetimli model (SPK etiketleri) | [kullanıcı] |
-| Sanal-reel paralel çalışma, gecikmeli canlı veri, gün sonu eşitleme | Yalnız tarihsel tekrar oynatma | [kullanıcı] |
-| Z-skor, Isolation Forest ile karşılaştırma | Z-skor temel çizgi olarak korunur; Isolation Forest eklenebilirse eklenir | Korunabilecek basit yöntemler korunur (kullanıcı kararı, 22.10.2026) |
-| BIST 30'dan 5–10 pay, günlük ve dakikalık veri | Tüm paylar, olay düzeyinde gün içi emir ve işlem verisi | DataStore verisi pay ve olay düzeyindedir |
-| Emir defteri ve fiyat-zaman öncelikli eşleştirme motoru | Var; sürekli işlem, tek fiyat, devre kesiciler | Değişmedi; kurallar Prosedürden ve veriden doğrulandı |
-| SPK kararlarından etiketli olay kümesi | Var (`veri/etiketler/`) | Değişmedi |
-| Görselleştirme arayüzü | Var, zorunlu (`TASARIM.md` 6.5): emir enjeksiyonu ve manipülasyon uyarıları grafikte | Değişmedi; arayüz emir enjeksiyonunu da içerir |
+| Öneri formunda                                                      | Mevcut sistemde                                                                      | Gerekçe (taslak)                                                                                                 |
+| ------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
+| Küçük, büyük ve yabancı yatırımcı ajanları                          | Yok; DataStore'daki gerçek emir akışı tekrar oynatılır                               | Gün içi emir verisi her emir olayını içerir; piyasa akışı yapay ajanlarla üretilmek yerine gerçek veriden alınır |
+| GA/PSO ile ajan kalibrasyonu                                        | Yok                                                                                  | Ajan olmadığı için kalibrasyon gerekmez; motor gerçek işlemlerin yeniden üretilmesiyle doğrulanır                |
+| Monte Carlo "kurallara uygun piyasa" olasılık bandı                 | Yok; iktisadi kurallar + denetimsiz model                                            | [kullanıcı]                                                                                                      |
+| Sentetik manipülasyon senaryoları (pompala-boşalt, danışıklı işlem) | Var; gerçek emir akışına enjekte edilir                                              | Değişmedi; gerçek emirlerle etkileşim hesaplanır                                                                 |
+| Anomalilerin piyasa geneli / paya özgü sınıflandırılması            | Denetimli model (SPK etiketleri)                                                     | [kullanıcı]                                                                                                      |
+| Sanal-reel paralel çalışma, gecikmeli canlı veri, gün sonu eşitleme | Yalnız tarihsel tekrar oynatma                                                       | [kullanıcı]                                                                                                      |
+| Z-skor, Isolation Forest ile karşılaştırma                          | Z-skor temel çizgi olarak korunur; Isolation Forest eklenebilirse eklenir            | Korunabilecek basit yöntemler korunur (kullanıcı kararı, 22.10.2026)                                             |
+| BIST 30'dan 5–10 pay, günlük ve dakikalık veri                      | Tüm paylar, olay düzeyinde gün içi emir ve işlem verisi                              | DataStore verisi pay ve olay düzeyindedir                                                                        |
+| Emir defteri ve fiyat-zaman öncelikli eşleştirme motoru             | Var; sürekli işlem, tek fiyat, devre kesiciler                                       | Değişmedi; kurallar Prosedürden ve veriden doğrulandı                                                            |
+| SPK kararlarından etiketli olay kümesi                              | Var (`veri/etiketler/`)                                                              | Değişmedi                                                                                                        |
+| Görselleştirme arayüzü                                              | Var, zorunlu (`TASARIM.md` 6.5): emir enjeksiyonu ve manipülasyon uyarıları grafikte | Değişmedi; arayüz emir enjeksiyonunu da içerir                                                                   |
 
 Öneri formundaki iş-zaman çizelgesi: emir defteri ve eşleştirme motoru Kasım–Aralık, ajanlar Aralık–Ocak, birinci dönem raporu Ocak. Birinci yarıyıl hedeflerinde literatür taraması da vardır; projede henüz literatür bölümü yoktur.
 
@@ -321,19 +332,21 @@ Farklar vize raporunda açıklanacaktır. Gerekçe sütununda `[kullanıcı]` ya
 Motor ITCH olmadan kuruldu. Girdi DataStore emir olaylarıdır; doğrulama `PP_GUNICIISLEM` ile yapılır. ITCH yalnız aynı µs'deki olayların sırası ve defter çapraz doğrulaması için gerekir.
 
 Yöntem (tekrar oynatma, `TASARIM.md` 4.1):
+
 - Her emrin satırlarından yalnız kullanıcı eylemleri alınır: yeni emir (sebep 6), değişiklik (5), iptal (1). Diğer satırlar motorun üretmesi beklenen çıktılardır.
 - Değişiklik, kalan miktar farkı olarak verilir. Böylece motorun kalanı saparsa da uygulanabilir.
 - Motorun ürettiği işlemler gerçek işlemlerle (alış emri, satış emri, fiyat, adet) birebir karşılaştırılır; ilk sapma noktası yazılır.
 
 Veriden öğrenilenler ve motora etkisi (THYAO.E 03.03.2025 üzerinde, sırayla):
 
-| Adım | Bulgu | Birebir aynı işlem |
-|---|---|---|
-| İlk sürüm | Fiyat-zaman önceliği, öncelik kaybı (fiyat değişikliği, kalan artışı), kısmi görünme yenilemesi | %99,59 |
-| Kısmi görünme yazımı | Gelen emir yenilenen kısımdan aynı eşleşmede tekrar alırsa veride tek işlem yazılır | %99,65 |
-| Tepe tahmini | Sebep 13, görünen kısmı bitiren işlemde yazılır; yenilemeden (ve müzayededen geçişten) sonraki ilk işlem 3 ya da 13 olabilir; tek işlemde iki yenileme olabilir | %99,81 |
+| Adım                 | Bulgu                                                                                                                                                           | Birebir aynı işlem |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
+| İlk sürüm            | Fiyat-zaman önceliği, öncelik kaybı (fiyat değişikliği, kalan artışı), kısmi görünme yenilemesi                                                                 | %99,59             |
+| Kısmi görünme yazımı | Gelen emir yenilenen kısımdan aynı eşleşmede tekrar alırsa veride tek işlem yazılır                                                                             | %99,65             |
+| Tepe tahmini         | Sebep 13, görünen kısmı bitiren işlemde yazılır; yenilemeden (ve müzayededen geçişten) sonraki ilk işlem 3 ya da 13 olabilir; tek işlemde iki yenileme olabilir | %99,81             |
 
 Açıklanamayan sapmalar:
+
 - Aynı fiyatta miktar azaltmada öncelik çoğunlukla korunur; THYAO.E 03.03'te 551 azaltmanın 2'sinde kaybolmuştur. Ayırt edici bir özellik bulunamadı (2018 ITCH'teki %4,2 istisnayla aynı tür).
 - Tek yenilemesi olan kısmi görünme emirlerinde birden çok tepe değeri veriyle uyumludur; tahmin yanlış olabilir.
 - Bir sapmadan sonra defter birkaç işlem boyunca farklı kalır; oranlar bu zincirleme etkiyi içerir.
@@ -348,14 +361,14 @@ Açıklanamayan sapmalar:
 
 Sonuç (Mart 2025; açılıştan kapanış fiyatından işlemlere kadar bütün gün oynatıldı):
 
-| Sıra-gün | Açılış | Sürekli işlem | Kapanış | Kapanış fiyatından |
-|---|---|---|---|---|
-| THYAO.E 03.03 | 1.872 / %100 | 74.046 / %99,81 | 716 / %100 | 178 / %100 |
-| GARAN.E 03.03 | 462 / %100 | 54.468 / %99,89 | 280 / %100 | 54 / %100 |
-| ASELS.E 03.03 | 1.464 / %100 | 98.284 / %99,54 | 346 / %100 | 160 / %100 |
-| ALKLC.E 11.03 | 75 / %100 | 22.648 / %100 | 61 / %100 | 21 / %100 |
-| AKBNK.E 27.03 | 565 / %100 | 93.759 / %99,42 | 630 / %100 | 197 / %100 |
-| KRGYO.E 27.03 | 20 / %100 | 7.620 / %100 | 27 / %100 | 8 / %100 |
+| Sıra-gün      | Açılış       | Sürekli işlem   | Kapanış    | Kapanış fiyatından |
+| ------------- | ------------ | --------------- | ---------- | ------------------ |
+| THYAO.E 03.03 | 1.872 / %100 | 74.046 / %99,81 | 716 / %100 | 178 / %100         |
+| GARAN.E 03.03 | 462 / %100   | 54.468 / %99,89 | 280 / %100 | 54 / %100          |
+| ASELS.E 03.03 | 1.464 / %100 | 98.284 / %99,54 | 346 / %100 | 160 / %100         |
+| ALKLC.E 11.03 | 75 / %100    | 22.648 / %100   | 61 / %100  | 21 / %100          |
+| AKBNK.E 27.03 | 565 / %100   | 93.759 / %99,42 | 630 / %100 | 197 / %100         |
+| KRGYO.E 27.03 | 20 / %100    | 7.620 / %100    | 27 / %100  | 8 / %100           |
 
 Hücreler: gerçek işlem sayısı / birebir aynı oran. Devre kesici ve EBDKS içeren günler 3.6'dadır.
 
@@ -364,19 +377,21 @@ Müzayede sonrası motorun kurduğu sürekli işlem defteri, 6 sıra-günün hep
 ### 3.6 Eşleştirme motoru: devre kesici ve EBDKS
 
 Bir sıra-günün bütün bölüm akışı tek yerde oynatılır (`motor/gun.py`). Bölüm geçişleri ve eşleşme anları veriden alınır:
+
 - Emir toplama bölümlerinde ve EBDKS durdurmasında emirler toplanır, eşleştirme yapılmaz.
 - Eşleştirme, veride eşleştirme bölümü satırı varsa o anda yapılır. Toplamadan başka bir toplamaya geçişte (devre kesicinin kapanışa taşması, açılıştan EBDKS durdurmasına) eşleştirme yapılmaz.
 
 Veriden öğrenilenler (`06-devre-kesici.md` Açık sorular):
+
 - **Eşik:** son müzayede fiyatının (yoksa baz fiyatın) %5 altı, içe yuvarlanır. Eşik fiyatından işlem olur, altından olmaz.
 - **Tetikleme:** eşiğin ötesinde eşleşecek gelen emrin kalanı iptal edilir (hiç işlem görmediyse tamamı) ve devre kesici tetiklenir. Tetiklemeden sonra veride bölüm adı birkaç yüz ms "sürekli işlem" kalır; bu sürede eşleşme olmaz, KİE emirleri müzayedeye taşınır.
 - **EBDKS durdurması:** sistem iptalleri (sebep 117) görünür alanlardan ayırt edilemez; dışsal olay olarak alınır.
 - **Kısmi görünme emirleri müzayedede:** görünen kısım kadar sırayla dağıtılır. Yalnız müzayedede işlem gören emirde tepe büyüklüğü bilinemez (`03-tek-fiyat.md` Açık sorular).
 
-| Sıra-gün | Müzayedeler | Sürekli işlem | Kapanış fiyatından | Bütün gün |
-|---|---|---|---|---|
-| KRGYO.E 03.03 (devre kesici) | 286 / %100 | 21.217 / %99,92 | 22 / %100 | %99,92 |
-| THYAO.E 19.03 (2 EBDKS, devre kesici) | 6.807 / %100; EBDKS 3.227 / %71,4 | 176.028 / %99,82 | 276 / %100 | %99,34 |
+| Sıra-gün                              | Müzayedeler                       | Sürekli işlem    | Kapanış fiyatından | Bütün gün |
+| ------------------------------------- | --------------------------------- | ---------------- | ------------------ | --------- |
+| KRGYO.E 03.03 (devre kesici)          | 286 / %100                        | 21.217 / %99,92  | 22 / %100          | %99,92    |
+| THYAO.E 19.03 (2 EBDKS, devre kesici) | 6.807 / %100; EBDKS 3.227 / %71,4 | 176.028 / %99,82 | 276 / %100         | %99,34    |
 
 19.03 EBDKS müzayedelerinde fiyat, toplam miktar ve emir bazında gerçekleşen miktar aynıdır (3.213/3.213); farklı olan, tepe büyüklüğü bilinmeyen kısmi görünme emirlerinin karşı emir çiftleridir.
 
@@ -395,6 +410,7 @@ Veriden öğrenilenler (`06-devre-kesici.md` Açık sorular):
 ### 3.8 Görselleştirme arayüzü
 
 `arayuz/uygulama.py` (Streamlit; `streamlit run arayuz/uygulama.py`). Veri hazırlığı `arayuz/hazirla.py` (Streamlit'ten bağımsız).
+
 - **Seçimler:** gün, pay, senaryo ve parametreleri.
 - **Grafikler:** işlem fiyatı (taban çizgisi ve enjeksiyonlu; sentetik işlemler işaretli) ve dakikalık hacim, iki ayrı grafik (tek eksen). Z-skor uyarıları ve bölüm bantları (müzayede, devre kesici, EBDKS, kapanış) iki grafikte de görünür.
 - **Tablolar:** sentetik işlemler, reddedilen sentetik olaylar, dakikalık seri.
@@ -405,6 +421,7 @@ Veriden öğrenilenler (`06-devre-kesici.md` Açık sorular):
 Bu bölüm tespit modülünün yapısını, kullanılan etiketleri ve iki değerlendirmeyi (SPK etiketleri, sentetik enjeksiyon) açıklar. Ölçütler: ROC-AUC (rastgele seçilen bir pozitifin rastgele bir negatiften yüksek puan alma olasılığı; 0,5 rastgele); "ilk 3" (enjekte edilen pencerelerden birinin günün en yüksek puanlı 3 penceresinde olma oranı); "kontrol" (aynı pencerelerin enjeksiyonsuz koşuda ilk 3'e girme oranı, yani yanlış alarm tabanı).
 
 Kod `tespit/`:
+
 - `ozellikler.py`: pay-gün özellikleri (6.2'deki emir akışı, işlem, defter ve referans grupları). Mart 2025: 20 gün × 590 sıra, gün başına ≈ 160 sn. Gün başına ara dosyalar tutulur, iş yarıda kalırsa kaldığı yerden devam eder. Çıktı `veri/gunici-dogrulama/2025-03/tespit/ozellikler.parquet` (git dışı).
 - `yontemler.py`: Z-skor (payın önceki günlerine göre), iktisadi kurallar (VI-104.1 md 5/1 a, b, d, f; eşikler tasarım parametresidir), Isolation Forest, kesitsel karşılaştırma (aynı gün aynı pazardaki paylar içinde yüzdelik sıra; 5 günlük birikimli getiri ve hacim artışı dahil) ve SPK etiketlerinin pay-güne çevrilmesi.
 - `degerlendir.py`: SPK etiketleriyle pay-gün sıralama ölçütleri.
@@ -413,20 +430,21 @@ Kod `tespit/`:
 - `sentetik_degerlendir.py`, `pencere_degerlendir.py`, `denetimli.py`: sentetik enjeksiyonla değerlendirme ve denetimli model.
 
 **Özellikler.** 6.2'deki gruplara ek olarak:
-- *Kısa ömürlü uzak emir payı:* sürekli işlemde aynı taraftaki en iyi fiyattan en az 3 adım uzakta girilip 60 sn içinde işlem görmeden iptal edilen emirlerin miktar payı. Yanıltıcı emir (spoofing/layering) göstergesidir; bent a/b kuralına bağlıdır. Verideki olay anındaki en iyi alış/satış fiyatından hesaplanır. Mart 2025 ortancası %1,2; ALKLC'nin manipülasyon günlerinde %7'nin üstünde.
-- *Makas:* sürekli işlemde göreli makasın ortancası.
+
+- _Kısa ömürlü uzak emir payı:_ sürekli işlemde aynı taraftaki en iyi fiyattan en az 3 adım uzakta girilip 60 sn içinde işlem görmeden iptal edilen emirlerin miktar payı. Yanıltıcı emir (spoofing/layering) göstergesidir; bent a/b kuralına bağlıdır. Verideki olay anındaki en iyi alış/satış fiyatından hesaplanır. Mart 2025 ortancası %1,2; ALKLC'nin manipülasyon günlerinde %7'nin üstünde.
+- _Makas:_ sürekli işlemde göreli makasın ortancası.
 
 **SPK etiketleri.** A: dönemin işlem günleri. B: tedbirden önceki 20 işlem günü; pencere tedbirden 3 iş günü önce biter, tedbirden önceki 2 iş günü belirsizdir ve değerlendirmeden çıkarılır (kullanıcı kararı 22.10.2026; gerekçe: dönemi ve tedbiri birlikte bilinen 4 A vakasının dördünde de dönem tedbirden 3 iş günü önce biter; bu 2 gün eski kuralda pozitiflerin ≈ %10'unu oluşturuyordu ve dönem dışıydı, ancak SPK'nın inceleme penceresinin kesilmesinden kaynaklanabileceği için negatif de sayılmaz). Etiketsiz gün negatif değildir (bilinmiyor); ölçütler bu nedenle alt sınırdır.
 
 **SPK etiketleriyle sonuç** (Mart 2025; `veri/gunici-dogrulama/2025-03/tespit/degerlendirme.csv`). Pozitifler: A ALKLC (12 pay-gün); B HEDEF, SEGMN, ENSRI, BAKAB, KRGYO, OZATD, SMRTG, VKFYO (64 pay-gün).
 
-| Puan | ROC-AUC (A) | ROC-AUC (B) | ROC-AUC (A+B) |
-|---|---|---|---|
-| Z-skor (kendi geçmişi) | 0,65 | 0,52 | 0,53 |
-| İktisadi kurallar | 0,47 | 0,59 | 0,57 |
-| Isolation Forest (Z-skor) | 0,53 | 0,53 | 0,53 |
-| Kesitsel uç sıra | 0,89 | 0,50 | 0,56 |
-| Kesitsel Isolation Forest | 0,90 | 0,53 | 0,59 |
+| Puan                      | ROC-AUC (A) | ROC-AUC (B) | ROC-AUC (A+B) |
+| ------------------------- | ----------- | ----------- | ------------- |
+| Z-skor (kendi geçmişi)    | 0,65        | 0,52        | 0,53          |
+| İktisadi kurallar         | 0,47        | 0,59        | 0,57          |
+| Isolation Forest (Z-skor) | 0,53        | 0,53        | 0,53          |
+| Kesitsel uç sıra          | 0,89        | 0,50        | 0,56          |
+| Kesitsel Isolation Forest | 0,90        | 0,53        | 0,59          |
 
 - Payın kendi geçmişine dayanan yöntemler haftalarca süren manipülasyonda zayıftır: geçmiş de manipülasyon içerir (ALKLC dönemi 04.02'de başlar).
 - Kesitsel karşılaştırma bu kirlenmeye duyarlı değildir. ALKLC pay-günleri gün içinde ortalama 91. yüzdeliktedir. Yeni iki özellik ALKLC'de ROC-AUC'yi 0,85'ten 0,90'a çıkardı.
@@ -434,6 +452,7 @@ Kod `tespit/`:
 - Pozitif sayısı azdır; sonuçlar 12 aylık veriyle yeniden ölçülmelidir.
 
 **Sentetik enjeksiyonla değerlendirme.** Yöntem:
+
 - Rastgele pay-günler: 10.03 sonrası, sürekli işlemde en az 300 işlem, özsermaye günleri ile SPK etiketli ve belirsiz günler hariç.
 - Senaryolar sırayla, payın o günkü işlem miktarına (H) göre ölçekli:
   - kapanış: kapanış emir toplamanın sonunda H × %3, bandın ucundan;
@@ -442,43 +461,45 @@ Kod `tespit/`:
   - karşılıklı işlem: 60 sn arayla 10 kez aynı aktörün satış ve alışı, her biri H × %0,5.
 - Özellikler motor çıktısından hesaplanır. Kontrol: enjeksiyonsuz motor özellikleri veriden hesaplananlarla neredeyse aynıdır; kontrol kümesinde ROC-AUC ≈ 0,5 (yöntem farkı sahte tespit üretmez).
 
-*Pay-gün düzeyi* (`veri/gunici-dogrulama/2025-03/tespit/sentetik/`): 80 enjeksiyonda yöntemler kısa süreli enjeksiyonları ayırt edemez: ROC-AUC 0,43–0,71, enjeksiyonsuz kontrol kümesinde 0,48–0,62. Kuralların kontrolde de 0,62 alması, seçilen likit pay-günlerin genel olarak daha yüksek puan almasındandır; enjeksiyonun katkısı ≈ 0,05'tir. Yeni iki özellik bu düzeyde sonucu değiştirmedi; motordan ve veriden hesaplanan değerleri birebir aynıdır. Kısa bir epizot (30 sn'lik yanıltıcı emir, 200 sn'lik fiyat yükseltme) günün toplamında kaybolur; bu, pencere düzeyine geçişin gerekçesidir.
+_Pay-gün düzeyi_ (`veri/gunici-dogrulama/2025-03/tespit/sentetik/`): 80 enjeksiyonda yöntemler kısa süreli enjeksiyonları ayırt edemez: ROC-AUC 0,43–0,71, enjeksiyonsuz kontrol kümesinde 0,48–0,62. Kuralların kontrolde de 0,62 alması, seçilen likit pay-günlerin genel olarak daha yüksek puan almasındandır; enjeksiyonun katkısı ≈ 0,05'tir. Yeni iki özellik bu düzeyde sonucu değiştirmedi; motordan ve veriden hesaplanan değerleri birebir aynıdır. Kısa bir epizot (30 sn'lik yanıltıcı emir, 200 sn'lik fiyat yükseltme) günün toplamında kaybolur; bu, pencere düzeyine geçişin gerekçesidir.
 
-*5 dakikalık pencere* (79 pay-gün, pozitif pencere oranı %1,5; `veri/gunici-dogrulama/2025-03/tespit/pencere/`). Pencere, aynı pay-günün diğer pencerelerine göre sağlam z (ortanca, MAD) ile puanlanır. Kapanış müzayedesi penceresi ise payın önceki günlerdeki kapanışlarına göre puanlanır (kapanışın AOF'den sapması, kapanış seansı hacim payı, kapanış öncesi getiri), çünkü bu pencere her gün aynı günün diğer pencerelerine göre uç değerdir. Denetimli model (gradyan artırmalı karar ağacı) yalnız sürekli işlem pencerelerinde, pay-güne göre gruplu 5 katlı çapraz doğrulamayla eğitilir. "İlk 3": pozitif pencerelerden biri günün en yüksek puanlı 3 penceresinde. "Kontrol": aynı pencerelerin enjeksiyonsuz koşuda ilk 3'e girme oranı (yanlış alarm tabanı).
+_5 dakikalık pencere_ (79 pay-gün, pozitif pencere oranı %1,5; `veri/gunici-dogrulama/2025-03/tespit/pencere/`). Pencere, aynı pay-günün diğer pencerelerine göre sağlam z (ortanca, MAD) ile puanlanır. Kapanış müzayedesi penceresi ise payın önceki günlerdeki kapanışlarına göre puanlanır (kapanışın AOF'den sapması, kapanış seansı hacim payı, kapanış öncesi getiri), çünkü bu pencere her gün aynı günün diğer pencerelerine göre uç değerdir. Denetimli model (gradyan artırmalı karar ağacı) yalnız sürekli işlem pencerelerinde, pay-güne göre gruplu 5 katlı çapraz doğrulamayla eğitilir. "İlk 3": pozitif pencerelerden biri günün en yüksek puanlı 3 penceresinde. "Kontrol": aynı pencerelerin enjeksiyonsuz koşuda ilk 3'e girme oranı (yanlış alarm tabanı).
 
-| Senaryo | Kurallar: ROC-AUC / ilk 3 / kontrol | Denetimli: ROC-AUC / ilk 3 / kontrol |
-|---|---|---|
-| Yanıltıcı emir | 0,90 / %84 / %5 | 0,89 / %74 / %0 |
-| Karşılıklı işlem | 0,49 / %0 / %0 | 0,89 / %80 / %20 |
-| Fiyat yükseltme | 0,56 / %0 / %0 | 0,64 / %30 / %5 |
-| Kapanış | 0,60 / %0 / %0 | — |
+| Senaryo          | Kurallar: ROC-AUC / ilk 3 / kontrol | Denetimli: ROC-AUC / ilk 3 / kontrol |
+| ---------------- | ----------------------------------- | ------------------------------------ |
+| Yanıltıcı emir   | 0,90 / %84 / %5                     | 0,89 / %74 / %0                      |
+| Karşılıklı işlem | 0,49 / %0 / %0                      | 0,89 / %80 / %20                     |
+| Fiyat yükseltme  | 0,56 / %0 / %0                      | 0,64 / %30 / %5                      |
+| Kapanış          | 0,60 / %0 / %0                      | —                                    |
 
 Yorum:
-- *Yanıltıcı emir* iyi yakalanır: kısa ömürlü uzak emir payı bu senaryonun doğrudan izidir; kurallar enjekte edilen pencereyi 19 günün 16'sında günün ilk 3 penceresine koyar, enjeksiyonsuz günde yanlış alarm %5'tir.
-- *Karşılıklı işlem* yalnız denetimli modelle yakalanır ve bunu hacim artışından yapar (modelin en önemli özelliği hacim z'sidir). Aktör kimliği olmadan "aynı kişinin iki tarafı" ayırt edilemez; kontrol yanlış alarmı %20'dir.
-- *Fiyat yükseltme* en zor senaryodur: 10 küçük agresif alış, likit paylarda günün olağan dalgalanmasından ayrışmaz.
-- *Kapanış:* kapanış penceresi aynı günün pencerelerine göre puanlandığında sonuç yüksek görünüyordu (ROC-AUC 0,84, ilk 3 %42), ama enjeksiyonsuz günde de aynı oranda alarm veriyordu; yani ayırt edicilik yoktu. Geçmiş kapanışlara göre puanlanınca yanlış alarm sıfıra iner ama günlük hacmin %3'ü büyüklüğündeki bir kapanış emri payın olağan kapanış oynaklığından ayrışmaz. Bu büyüklükte kapanış etkilemesi bu veriyle tespit edilemez; daha büyük senaryolarla ve 12 aylık geçmişle yeniden ölçülmelidir.
+
+- _Yanıltıcı emir_ iyi yakalanır: kısa ömürlü uzak emir payı bu senaryonun doğrudan izidir; kurallar enjekte edilen pencereyi 19 günün 16'sında günün ilk 3 penceresine koyar, enjeksiyonsuz günde yanlış alarm %5'tir.
+- _Karşılıklı işlem_ yalnız denetimli modelle yakalanır ve bunu hacim artışından yapar (modelin en önemli özelliği hacim z'sidir). Aktör kimliği olmadan "aynı kişinin iki tarafı" ayırt edilemez; kontrol yanlış alarmı %20'dir.
+- _Fiyat yükseltme_ en zor senaryodur: 10 küçük agresif alış, likit paylarda günün olağan dalgalanmasından ayrışmaz.
+- _Kapanış:_ kapanış penceresi aynı günün pencerelerine göre puanlandığında sonuç yüksek görünüyordu (ROC-AUC 0,84, ilk 3 %42), ama enjeksiyonsuz günde de aynı oranda alarm veriyordu; yani ayırt edicilik yoktu. Geçmiş kapanışlara göre puanlanınca yanlış alarm sıfıra iner ama günlük hacmin %3'ü büyüklüğündeki bir kapanış emri payın olağan kapanış oynaklığından ayrışmaz. Bu büyüklükte kapanış etkilemesi bu veriyle tespit edilemez; daha büyük senaryolarla ve 12 aylık geçmişle yeniden ölçülmelidir.
 - Pay-gün düzeyi kısa epizotları kaçırır; pencere düzeyi gereklidir.
 - Senaryo büyüklükleri bir varsayımdır; sonuçlar bu büyüklüklere bağlıdır (aşağıdaki duyarlılık analizi).
 
-*Senaryo büyüklüğüne duyarlılık* (pencere düzeyi; büyüklükler ×0,3, ×1, ×3; her biri 80 enjeksiyon; `veri/gunici-dogrulama/2025-03/tespit/olcek_duyarlilik.csv`, `pencere_olcek_0.3/`, `pencere_olcek_3/`). Hücreler: ROC-AUC / ilk 3 / kontrol ilk 3.
+_Senaryo büyüklüğüne duyarlılık_ (pencere düzeyi; büyüklükler ×0,3, ×1, ×3; her biri 80 enjeksiyon; `veri/gunici-dogrulama/2025-03/tespit/olcek_duyarlilik.csv`, `pencere_olcek_0.3/`, `pencere_olcek_3/`). Hücreler: ROC-AUC / ilk 3 / kontrol ilk 3.
 
-| Senaryo | Ölçek | Kurallar | Denetimli |
-|---|---|---|---|
-| Yanıltıcı emir | ×0,3 | 0,90 / %84 / %5 | 0,86 / %58 / %0 |
-| Yanıltıcı emir | ×1 | 0,90 / %84 / %5 | 0,89 / %74 / %0 |
-| Yanıltıcı emir | ×3 | 0,90 / %84 / %5 | 0,91 / %79 / %0 |
-| Karşılıklı işlem | ×0,3 | 0,44 / %0 / %0 | 0,79 / %45 / %25 |
-| Karşılıklı işlem | ×1 | 0,49 / %0 / %0 | 0,89 / %80 / %20 |
-| Karşılıklı işlem | ×3 | 0,57 / %0 / %0 | 0,96 / %100 / %5 |
-| Fiyat yükseltme | ×0,3 | 0,54 / %0 / %0 | 0,65 / %20 / %10 |
-| Fiyat yükseltme | ×1 | 0,56 / %0 / %0 | 0,64 / %30 / %5 |
-| Fiyat yükseltme | ×3 | 0,57 / %0 / %0 | 0,62 / %35 / %0 |
-| Kapanış | ×0,3 | 0,41 / %0 / %0 | — |
-| Kapanış | ×1 | 0,60 / %0 / %0 | — |
-| Kapanış | ×3 | 0,70 / %15 / %0 | — |
+| Senaryo          | Ölçek | Kurallar        | Denetimli        |
+| ---------------- | ----- | --------------- | ---------------- |
+| Yanıltıcı emir   | ×0,3  | 0,90 / %84 / %5 | 0,86 / %58 / %0  |
+| Yanıltıcı emir   | ×1    | 0,90 / %84 / %5 | 0,89 / %74 / %0  |
+| Yanıltıcı emir   | ×3    | 0,90 / %84 / %5 | 0,91 / %79 / %0  |
+| Karşılıklı işlem | ×0,3  | 0,44 / %0 / %0  | 0,79 / %45 / %25 |
+| Karşılıklı işlem | ×1    | 0,49 / %0 / %0  | 0,89 / %80 / %20 |
+| Karşılıklı işlem | ×3    | 0,57 / %0 / %0  | 0,96 / %100 / %5 |
+| Fiyat yükseltme  | ×0,3  | 0,54 / %0 / %0  | 0,65 / %20 / %10 |
+| Fiyat yükseltme  | ×1    | 0,56 / %0 / %0  | 0,64 / %30 / %5  |
+| Fiyat yükseltme  | ×3    | 0,57 / %0 / %0  | 0,62 / %35 / %0  |
+| Kapanış          | ×0,3  | 0,41 / %0 / %0  | —                |
+| Kapanış          | ×1    | 0,60 / %0 / %0  | —                |
+| Kapanış          | ×3    | 0,70 / %15 / %0 | —                |
 
 Yorum:
+
 - Yanıltıcı emir kuralı ölçekten bağımsızdır: kısa ömürlü uzak emir payı bir orandır; katmanlar küçük olsa da pencerede bu tür emirlerin payını belirgin artırır. Bu, kuralın büyüklüğe değil davranış biçimine duyarlı olduğunu gösterir.
 - Karşılıklı işlem tespiti büyüklüğe güçlü biçimde bağlıdır: model bunu hacim artışından yakalar; küçük karşılıklı işlemler olağan hacim dalgalanmasında kaybolur.
 - Fiyat yükseltme her ölçekte zayıftır; mevcut özellikler bu senaryonun izini taşımaz. Yeni gösterge gerekir (sonraki adımlar).
@@ -486,6 +507,7 @@ Yorum:
 - Denetimli modelin kapanış satırı yoktur: model yalnız sürekli işlem pencerelerinde çalışır, kapanış penceresi geçmiş kapanışlarla puanlanır.
 
 Sonraki adımlar:
+
 - fiyat yükseltme göstergesi: pencerede net agresif adım (agresif alışların fiyatı yukarı ittiği adım sayısı eksi agresif satışların aşağı ittiği adım sayısı), bent f kuralına bağlanır;
 - kapanış etkilemesi için daha güçlü göstergeler (kapanış denge fiyatının son sürekli işlem fiyatından sapması, kapanış emir toplamadaki alış/satış dengesizliği ve son dakikalardaki değişiklikler);
 - defter derinliği ve dengesizliği (motorla yeniden kurulan defterden);
@@ -495,10 +517,10 @@ Sonraki adımlar:
 
 `motor/toplu_oynat.py` ile günün bütün `.E` sıraları baştan sona oynatıldı (`veri/gunici-dogrulama/2025-03/motor/toplu_GUN.csv`).
 
-| Gün | Sıra | Gerçek işlem | Bütün gün | Sürekli işlem | Müzayedeler | EBDKS müzayedeleri | Kapanış fiyatından | %100 olan sıra | %95 altı sıra | Süre |
-|---|---|---|---|---|---|---|---|---|---|---|
-| 03.03.2025 | 588 | 4.915.057 | %99,85 | %99,85 | %99,69 | — | %99,58 | 419 / 586 | 1 | 17 dk |
-| 19.03.2025 | 582 | 6.825.508 | %99,91 | %99,93 | %99,90 | %99,21 | %99,91 | 439 / 580 | 2 | 24 dk |
+| Gün        | Sıra | Gerçek işlem | Bütün gün | Sürekli işlem | Müzayedeler | EBDKS müzayedeleri | Kapanış fiyatından | %100 olan sıra | %95 altı sıra | Süre  |
+| ---------- | ---- | ------------ | --------- | ------------- | ----------- | ------------------ | ------------------ | -------------- | ------------- | ----- |
+| 03.03.2025 | 588  | 4.915.057    | %99,85    | %99,85        | %99,69      | —                  | %99,58             | 419 / 586      | 1             | 17 dk |
+| 19.03.2025 | 582  | 6.825.508    | %99,91    | %99,93        | %99,90      | %99,21             | %99,91             | 439 / 580      | 2             | 24 dk |
 
 - Emir bazında gerçekleşen miktar: 03.03'te 5.433.516 emrin 5.432.976'sında, 19.03'te 7.717.972 emrin 7.717.497'sinde aynıdır.
 - Bütün sıralar hatasız çalıştı. Tek fiyatla işlem gören sıralar da oynatıldı.
@@ -508,6 +530,7 @@ Sonraki adımlar:
 ### 3.11 Testler
 
 26 birim testi, hepsi geçer (`python -m pytest motor/testler tespit/testler`):
+
 - `motor/testler/` (23):
   - sürekli işlem: Ek-18 2.2.2 piyasa emri ve 3.2.2 piyasadan limite örnekleri; KİE; işlemin pasif emrin fiyatından olması; öncelik kaybı ve korunması; fiyat değişikliğinin agresif eşleşmesi; iptal; kısmi görünme; görünmeyen alan değişikliği;
   - tek fiyat: dağıtım sırası, dengeleyici emirler, kalanlar, emir toplamada öncelik;
@@ -517,13 +540,13 @@ Sonraki adımlar:
 
 ### 3.12 Bu oturumda üretilen dosyalar
 
-| Tür | Dosya |
-|---|---|
-| Motor | `motor/emir.py`, `defter.py`, `surekli_islem.py`, `tek_fiyat.py`, `gun.py`, `dogrulama.py`, `veri.py`, `parametreler.py`, `senaryolar.py`, `tekrar_oynat.py`, `toplu_oynat.py`, `enjeksiyon.py` |
-| Testler | `motor/testler/test_surekli_islem.py`, `test_tek_fiyat.py`, `test_tepe.py`, `test_dogrulama.py`; `tespit/testler/test_tespit.py` |
-| Arayüz | `arayuz/uygulama.py`, `arayuz/hazirla.py` |
-| Tespit | `tespit/ozellikler.py`, `yontemler.py`, `degerlendir.py`, `motor_ozellikleri.py`, `pencere.py`, `sentetik_degerlendir.py`, `pencere_degerlendir.py`, `denetimli.py` |
-| Çıktılar | `veri/gunici-dogrulama/2025-03/motor/` (sıra-gün özetleri, `ozet.csv`, `toplu_*.csv`), `veri/gunici-dogrulama/2025-03/tespit/` (`degerlendirme.csv`, `kural_oranlari.csv`, `etiketli_siralama.csv`; `sentetik/`, `pencere/` alt klasörleri) |
+| Tür      | Dosya                                                                                                                                                                                                                                                                                                                      |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Motor    | `motor/emir.py`, `defter.py`, `surekli_islem.py`, `tek_fiyat.py`, `gun.py`, `dogrulama.py`, `veri.py`, `parametreler.py`, `senaryolar.py`, `tekrar_oynat.py`, `toplu_oynat.py`, `enjeksiyon.py`                                                                                                                            |
+| Testler  | `motor/testler/test_surekli_islem.py`, `test_tek_fiyat.py`, `test_tepe.py`, `test_dogrulama.py`; `tespit/testler/test_tespit.py`                                                                                                                                                                                           |
+| Arayüz   | `arayuz/uygulama.py`, `arayuz/hazirla.py`                                                                                                                                                                                                                                                                                  |
+| Tespit   | `tespit/ozellikler.py`, `yontemler.py`, `degerlendir.py`, `motor_ozellikleri.py`, `pencere.py`, `sentetik_degerlendir.py`, `pencere_degerlendir.py`, `denetimli.py`                                                                                                                                                        |
+| Çıktılar | `veri/gunici-dogrulama/2025-03/motor/` (sıra-gün özetleri, `ozet.csv`, `toplu_*.csv`), `veri/gunici-dogrulama/2025-03/tespit/` (`degerlendirme.csv`, `kural_oranlari.csv`, `etiketli_siralama.csv`; `sentetik/`, `pencere/` alt klasörleri)                                                                                |
 | Belgeler | `TASARIM.md` (1, 4.5, 6.3, 6.5, 6.6), `kurallar/03-tek-fiyat.md`, `04-surekli-islem.md`, `05-emirler.md`, `06-devre-kesici.md` ([BİLGİ] notları ve kararlar), `veri/etiketler/etiket-cikarim-kurallari.md` (N ve B penceresi kararları), `DURUM.md`, `CLAUDE.md`, `veri/README.md`, `.gitignore`, `ekler/ek3.md`, `ek4.md` |
 
 Commit'ler (22.10.2026): `c9a3f7e` (veri doğrulamaları, tasarım, kararlar), `5bd7ed1` (motor, arayüz, tespit ilk sürümü), `ae7e866` (5 dk pencere, denetimli model, sentetik değerlendirme) ve bu bölümdeki son güncellemeler. Ham veri ve parquet ara çıktıları git dışıdır.
@@ -550,6 +573,7 @@ Commit'ler (22.10.2026): `c9a3f7e` (veri doğrulamaları, tasarım, kararlar), `
 ### 3.14 Günün sonu: kaldığımız yer ve yapılacaklar
 
 **Kaldığımız yer (22.10.2026 akşamı).**
+
 - **Motor (`motor/`):** bir sıra-günü baştan sona (açılış, sürekli işlem, devre kesici ve EBDKS müzayedeleri, kapanış, kapanış fiyatından işlemler) tekrar oynatır. Bütün paylarla ölçüldü: 03.03.2025'te %99,85, 19.03.2025'te %99,91 işlem birebir (özsermaye günleri hariç). Sentetik emir doğrulama ve enjeksiyon çalışır. 26 test geçer.
 - **Arayüz (`arayuz/`):** Streamlit; oynatma, enjeksiyon, fiyat ve hacim grafikleri, 5 dk pencere kural uyarıları.
 - **Tespit (`tespit/`):**
@@ -562,6 +586,7 @@ Commit'ler (22.10.2026): `c9a3f7e` (veri doğrulamaları, tasarım, kararlar), `
 - **Git:** bütün çalışma commit edildi (son commit: "Günün sonu: büyüklük duyarlılığı, kaldığımız yer ve yapılacaklar").
 
 **Yapılacaklar (öncelik sırasıyla).**
+
 1. **Fiyat yükseltme göstergesi:** pencerede net agresif adım (agresif alışların fiyatı yukarı ittiği adım sayısı eksi agresif satışların aşağı ittiği adım sayısı). `tespit/pencere.py`'ye eklenir, bent f kuralına bağlanır; `pencere_degerlendir.py` ve `denetimli.py` yeniden çalıştırılır.
 2. **Kapanış etkilemesi göstergeleri:** kapanış denge fiyatının son sürekli işlem fiyatından sapması, kapanış emir toplamadaki alış/satış dengesizliği, son dakikalardaki değişiklik ve iptaller. Pay-gün özelliklerine ve kapanış penceresi puanına eklenir.
 3. **Veri indirme:** 2024-06…2025-02 (DataStore gün içi emir, gün içi işlem, gün sonu; ITCH yalnız 2025-01 ve 2025-02). Her ay için parquet dönüşümü, günlük bölümleme, kayıpsızlık kontrolü (`rapor.md` 2.10). Aralık dışı dosyaların (2025-06…09) silinmesi kullanıcıdadır.
@@ -574,6 +599,7 @@ Commit'ler (22.10.2026): `c9a3f7e` (veri doğrulamaları, tasarım, kararlar), `
 10. **Özsermaye günleri:** düzeltilmiş baz fiyat kaynağı (motor bu günlerde işlem üretemez).
 
 **Çalıştırma notları.**
+
 - Tek sıra-gün: `python -I motor/tekrar_oynat.py veri/gun-ici-emir/gunluk veri/gun-ici-islem/PP_GUNICIISLEM.M.202503.parquet GUN KOD --gunsonu veri/gun-sonu-fiyat-hacim/PP_GUNSONUFIYATHACIM.M.202503.parquet`.
 - Bütün gün: `python -I motor/toplu_oynat.py GUNLUK ISLEM GUNSONU GUN CIKTI.csv`.
 - Özellikler: `python -I tespit/ozellikler.py GUNLUK ISLEM GUNSONU CIKTI.parquet [GUN ...]` (parça parça çalıştırılabilir).
@@ -596,9 +622,9 @@ Bu oturumda, 22.10.2026 sonunda zayıf kalan iki senaryo için yeni göstergeler
 ### 4.2 Kapanış etkilemesi: üç yeni gösterge
 
 - **Tanımlar (`tespit/kapanis_ozellikleri.py`; pay-gün):**
-  - *kapanış müzayedesi sapması:* kapanış müzayedesi fiyatı / günün son sürekli işlem fiyatı − 1. Kapanışı itmenin doğrudan sonucudur;
-  - *kapanış emir toplama dengesizliği:* kapanış emir toplamada girilen yeni emirlerin alış−satış miktar dengesizliği, (A − S)/(A + S);
-  - *son dakika payı:* kapanış emir toplamadaki yeni emir, değişiklik ve iptallerin son 60 saniyeye düşen payı.
+  - _kapanış müzayedesi sapması:_ kapanış müzayedesi fiyatı / günün son sürekli işlem fiyatı − 1. Kapanışı itmenin doğrudan sonucudur;
+  - _kapanış emir toplama dengesizliği:_ kapanış emir toplamada girilen yeni emirlerin alış−satış miktar dengesizliği, (A − S)/(A + S);
+  - _son dakika payı:_ kapanış emir toplamadaki yeni emir, değişiklik ve iptallerin son 60 saniyeye düşen payı.
 - **Hesap:** veriden (yalnız kapanış bölümü satırları okunduğu için 20 gün 3 dakikada) ve motor çıktısından aynı tanımlarla; KRGYO.E 27.03'te iki hesap birebir aynıdır. Mart 2025'te kapanış müzayedesi sapmasının standart sapması %0,5, uç değerleri ±%4.
 - **Kurallar:** bent d kuralına eklendi: |z(kapanış müzayedesi sapması)| ≥ 3 ve |z(toplama dengesizliği)| ≥ 2 aynı yönde. Pay-gün kuralında (`yontemler.py`) ve kapanış penceresinin geçmiş kapanışlarla puanlanmasında (`pencere.kapanis_gecmisi`) aynı kural kullanılır.
 - **Örnek (KRGYO.E 27.03, günlük hacmin %3'ü kadar kapanış alışı):** kapanış müzayedesi sapması %0,9 → %3,0; toplama dengesizliği 0,34 → 0,71.
@@ -610,44 +636,45 @@ Bu oturumda, 22.10.2026 sonunda zayıf kalan iki senaryo için yeni göstergeler
 
 Bütün yeni göstergelerle, 80'er enjeksiyon; büyüklükler ×0,3, ×1, ×3 (`veri/gunici-dogrulama/2025-03/tespit/olcek_duyarlilik.csv`, `pencere/`, `pencere_olcek_0.3/`, `pencere_olcek_3/`). Hücreler: ROC-AUC / ilk 3 / kontrol ilk 3.
 
-| Senaryo | Ölçek | Kurallar | Denetimli |
-|---|---|---|---|
-| Yanıltıcı emir | ×0,3 | 0,89 / %79 / %5 | 0,81 / %58 / %0 |
-| Karşılıklı işlem | ×0,3 | 0,45 / %5 / %5 | 0,78 / %40 / %15 |
-| Fiyat yükseltme | ×0,3 | 0,58 / %5 / %5 | 0,63 / %15 / %10 |
-| Kapanış | ×0,3 | 0,66 / %5 / %5 | — |
-| Yanıltıcı emir | ×1 | 0,89 / %79 / %5 | 0,88 / %63 / %0 |
-| Karşılıklı işlem | ×1 | 0,49 / %5 / %5 | 0,90 / %75 / %20 |
-| Fiyat yükseltme | ×1 | 0,61 / %10 / %5 | 0,62 / %25 / %5 |
-| Kapanış | ×1 | 0,80 / %20 / %5 | — |
-| Yanıltıcı emir | ×3 | 0,89 / %79 / %5 | 0,90 / %79 / %0 |
-| Karşılıklı işlem | ×3 | 0,56 / %0 / %5 | 0,96 / %100 / %15 |
-| Fiyat yükseltme | ×3 | 0,63 / %10 / %5 | 0,63 / %30 / %0 |
-| Kapanış | ×3 | 0,87 / %45 / %5 | — |
+| Senaryo          | Ölçek | Kurallar        | Denetimli         |
+| ---------------- | ----- | --------------- | ----------------- |
+| Yanıltıcı emir   | ×0,3  | 0,89 / %79 / %5 | 0,81 / %58 / %0   |
+| Karşılıklı işlem | ×0,3  | 0,45 / %5 / %5  | 0,78 / %40 / %15  |
+| Fiyat yükseltme  | ×0,3  | 0,58 / %5 / %5  | 0,63 / %15 / %10  |
+| Kapanış          | ×0,3  | 0,66 / %5 / %5  | —                 |
+| Yanıltıcı emir   | ×1    | 0,89 / %79 / %5 | 0,88 / %63 / %0   |
+| Karşılıklı işlem | ×1    | 0,49 / %5 / %5  | 0,90 / %75 / %20  |
+| Fiyat yükseltme  | ×1    | 0,61 / %10 / %5 | 0,62 / %25 / %5   |
+| Kapanış          | ×1    | 0,80 / %20 / %5 | —                 |
+| Yanıltıcı emir   | ×3    | 0,89 / %79 / %5 | 0,90 / %79 / %0   |
+| Karşılıklı işlem | ×3    | 0,56 / %0 / %5  | 0,96 / %100 / %15 |
+| Fiyat yükseltme  | ×3    | 0,63 / %10 / %5 | 0,63 / %30 / %0   |
+| Kapanış          | ×3    | 0,87 / %45 / %5 | —                 |
 
 Yorum:
+
 - **Yanıltıcı emir:** kurallar ölçekten bağımsızdır (0,89 / %79 / %5). Kısa ömürlü uzak emir payı bir oran olduğundan küçük katmanlar da iz bırakır; kural büyüklüğe değil davranış biçimine duyarlıdır. Bent f'nin genişlemesiyle bazı pencereler yarıştığından isabet %84'ten %79'a indi.
 - **Kapanış etkilemesi:** yeni göstergelerle büyüklükle ölçeklenir: ×0,3'te zayıf (0,66), ×1'de 0,80, ×3'te 0,87 ve ilk 3'te %45; yanlış alarm her ölçekte %5. Önceki sürümde (geçmiş kapanışlarla puanlama, yeni göstergeler yok) ×1'de 0,60 ve isabet %0'dı.
 - **Karşılıklı işlem:** yalnız denetimli modelle ve hacim artışıyla yakalanır; büyüklüğe güçlü bağlıdır (×0,3'te %40, ×3'te %100). Aktör kimliği olmadan "aynı kişinin iki tarafı" ayırt edilemez; yanlış alarm %15–20'dir.
 - **Fiyat yükseltme:** net agresif adım göstergesine rağmen her ölçekte zayıftır (kurallar 0,58–0,63, denetimli ilk 3 en çok %30). 10 agresif alışın bıraktığı iz, likit paylarda olağan fiyat hareketi içinde kalır. Bu senaryo için daha uzun pencere (15–30 dk) ya da payın likiditesine göre ölçeklenmiş gösterge gerekir.
 - Denetimli modelin kapanış satırı yoktur: model yalnız sürekli işlem pencerelerinde çalışır; kapanış penceresi geçmiş kapanışlarla puanlanır.
 
-*Pencere uzunluğu (fiyat yükseltme):* 15 dakikalık pencereyle (`PENCERE_DK=15`; `pencere_15dk/`) fiyat yükseltme iyileşmedi: kurallar ROC-AUC 0,55, denetimli 0,56 (ilk 3 %35, kontrol %15). 15 dakikalık pencerede günde ≈ 33 pencere olduğundan ilk 3 hem pozitifte hem kontrolde daha kolay tutar. Sonuç: bu büyüklükteki fiyat yükseltme (200 sn'de 10 agresif alış, toplam ≈ günlük hacmin %5'i) likit paylarda olağan fiyat yolundan ayrışan bir iz bırakmaz. Bu, göstergenin değil senaryonun özelliğidir; senaryo daha büyük ve uzun yükseltmelerle sınanmalıdır.
-
+_Pencere uzunluğu (fiyat yükseltme):_ 15 dakikalık pencereyle (`PENCERE_DK=15`; `pencere_15dk/`) fiyat yükseltme iyileşmedi: kurallar ROC-AUC 0,55, denetimli 0,56 (ilk 3 %35, kontrol %15). 15 dakikalık pencerede günde ≈ 33 pencere olduğundan ilk 3 hem pozitifte hem kontrolde daha kolay tutar. Sonuç: bu büyüklükteki fiyat yükseltme (200 sn'de 10 agresif alış, toplam ≈ günlük hacmin %5'i) likit paylarda olağan fiyat yolundan ayrışan bir iz bırakmaz. Bu, göstergenin değil senaryonun özelliğidir; senaryo daha büyük ve uzun yükseltmelerle sınanmalıdır.
 
 ### 4.4 SPK etiketli günlerde pencere düzeyi
 
 - **Yöntem (`tespit/spk_pencere.py`):** Mart 2025'te SPK etiketli 76 pay-gün (A 12, B 64; belirsiz günler hariç), aynı payların 100 etiketsiz günü ve rastgele 300 pay-gün motorla oynatıldı. 5 dakikalık pencereler puanlandı (kapanış penceresi geçmiş kapanışlara göre). Gün puanı olarak uyarı penceresi sayısı, bent bazında uyarı sayıları ve en yüksek pencere puanı kullanıldı. Sonuçlar: `veri/gunici-dogrulama/2025-03/tespit/spk_pencere/`.
 - **Sonuç:**
 
-| Grup | Uyarı penceresi (ortalama) | a/b | f | d |
-|---|---|---|---|---|
-| A (ALKLC) | 11,9 | 3,4 | 8,6 | 0,00 |
-| B | 19,5 | 12,4 | 8,4 | 0,02 |
-| Aynı payların etiketsiz günleri | 13,7 | 5,8 | 8,4 | 0,07 |
-| Rastgele pay-günler | 16,3 | 10,7 | 7,0 | 0,03 |
+| Grup                            | Uyarı penceresi (ortalama) | a/b  | f   | d    |
+| ------------------------------- | -------------------------- | ---- | --- | ---- |
+| A (ALKLC)                       | 11,9                       | 3,4  | 8,6 | 0,00 |
+| B                               | 19,5                       | 12,4 | 8,4 | 0,02 |
+| Aynı payların etiketsiz günleri | 13,7                       | 5,8  | 8,4 | 0,07 |
+| Rastgele pay-günler             | 16,3                       | 10,7 | 7,0 | 0,03 |
 
-  ROC-AUC (etiketsiz bütün günler negatif): A için uyarı sayısı 0,43; B için 0,61 (a/b uyarıları 0,57).
+ROC-AUC (etiketsiz bütün günler negatif): A için uyarı sayısı 0,43; B için 0,61 (a/b uyarıları 0,57).
+
 - **Yorum:**
   - Pencere puanı aynı günün diğer pencerelerine göre hesaplanır. Manipülasyon bütün güne ve haftalara yayıldığında (ALKLC) gün içinde öne çıkan pencere olmaz; bu vakalarda doğru araç gün düzeyinde kesitsel karşılaştırmadır (ROC-AUC 0,90).
   - B günlerinde a/b (iptal, yanıltıcı emir) uyarıları daha sıktır; zayıf bir sinyaldir ve gün içi iptal / yanıltıcı emir epizotlarına işaret edebilir.
@@ -668,6 +695,7 @@ Yorum:
 ### 4.7 Kaldığımız yer ve yapılacaklar
 
 **Kaldığımız yer (23.10.2026).**
+
 - 22.10.2026 sonundaki listeden yapılanlar:
   - fiyat yükseltme göstergesi (net agresif adım) ve 15 dakikalık pencere denemesi: senaryo bu büyüklükte ayırt edilemiyor (4.1, 4.3);
   - kapanış etkilemesi göstergeleri: ×1'de ROC-AUC 0,80, ×3'te 0,87 (4.2);
@@ -676,6 +704,7 @@ Yorum:
 - Motor, arayüz ve tespit kodları, 29 test ve belgeler güncel; bu bölümle birlikte commit edildi.
 
 **Yapılacaklar (öncelik sırasıyla).**
+
 1. **Veri indirme (kullanıcı):** 2024-06…2025-02 (DataStore gün içi emir, gün içi işlem, gün sonu; ITCH yalnız 2025-01 ve 2025-02). Ardından her ay için parquet dönüşümü, günlük bölümleme, kayıpsızlık kontrolü (`rapor.md` 2.10). Aralık dışı dosyaların (2025-06…09) silinmesi kullanıcıdadır.
 2. **Yeni aylar için tarih parametreleri:** marj, devre kesici yönü/oranı/süreleri, açığa satış kapsamı veriden yeniden ölçülür; Mart doğrulama betikleri yeni aylarda çalıştırılır.
 3. **12 ay ölçeğinde çalıştırma:** toplu oynatma ve özellik hesabı; SPK değerlendirmesinin (gün ve pencere düzeyi) 12 ayla tekrarı; denetimli modelin SPK etiketleriyle sınanması. Uzun işler parça parça çalıştırılmalı.
@@ -711,20 +740,20 @@ Kodun dışarıdan incelenmesinde iki sorun bildirildi. İkisi de veriyle sınan
 
 Pencere değerlendirmesi ve büyüklük duyarlılığı düzeltilmiş senaryoyla yeniden (80 enjeksiyon; hücreler ROC-AUC / ilk 3 / kontrol ilk 3):
 
-| Senaryo | Ölçek | Kurallar | Denetimli |
-|---|---|---|---|
-| Yanıltıcı emir | ×0,3 | 0,95 / %89 / %5 | 0,94 / %89 / %0 |
-| Karşılıklı işlem | ×0,3 | 0,44 / %5 / %5 | 0,73 / %25 / %20 |
-| Fiyat yükseltme | ×0,3 | 0,57 / %5 / %5 | 0,70 / %25 / %5 |
-| Kapanış | ×0,3 | 0,64 / %5 / %5 | — |
-| Yanıltıcı emir | ×1 | 0,95 / %89 / %5 | 0,95 / %95 / %0 |
-| Karşılıklı işlem | ×1 | 0,48 / %5 / %5 | 0,87 / %80 / %10 |
-| Fiyat yükseltme | ×1 | 0,60 / %10 / %5 | 0,71 / %25 / %10 |
-| Kapanış | ×1 | 0,79 / %20 / %5 | — |
-| Yanıltıcı emir | ×3 | 0,95 / %89 / %5 | 0,94 / %95 / %0 |
-| Karşılıklı işlem | ×3 | 0,54 / %0 / %5 | 0,95 / %100 / %0 |
-| Fiyat yükseltme | ×3 | 0,62 / %10 / %5 | 0,75 / %40 / %0 |
-| Kapanış | ×3 | 0,87 / %45 / %5 | — |
+| Senaryo          | Ölçek | Kurallar        | Denetimli        |
+| ---------------- | ----- | --------------- | ---------------- |
+| Yanıltıcı emir   | ×0,3  | 0,95 / %89 / %5 | 0,94 / %89 / %0  |
+| Karşılıklı işlem | ×0,3  | 0,44 / %5 / %5  | 0,73 / %25 / %20 |
+| Fiyat yükseltme  | ×0,3  | 0,57 / %5 / %5  | 0,70 / %25 / %5  |
+| Kapanış          | ×0,3  | 0,64 / %5 / %5  | —                |
+| Yanıltıcı emir   | ×1    | 0,95 / %89 / %5 | 0,95 / %95 / %0  |
+| Karşılıklı işlem | ×1    | 0,48 / %5 / %5  | 0,87 / %80 / %10 |
+| Fiyat yükseltme  | ×1    | 0,60 / %10 / %5 | 0,71 / %25 / %10 |
+| Kapanış          | ×1    | 0,79 / %20 / %5 | —                |
+| Yanıltıcı emir   | ×3    | 0,95 / %89 / %5 | 0,94 / %95 / %0  |
+| Karşılıklı işlem | ×3    | 0,54 / %0 / %5  | 0,95 / %100 / %0 |
+| Fiyat yükseltme  | ×3    | 0,62 / %10 / %5 | 0,75 / %40 / %0  |
+| Kapanış          | ×3    | 0,87 / %45 / %5 | —                |
 
 - **Yanıltıcı emir iyileşti:** kurallarda 0,89 / %79'dan 0,95 / %89'a, denetimli modelde 0,88 / %74'ten 0,95 / %95'e (kontrol %0). Neden: katmanlar artık her vakada en iyi fiyatın en az 3 adım gerisinde, yani "kısa ömürlü uzak emir" tanımına giriyor. Önce bazı katmanlar en iyi fiyata yakın ya da önündeydi ve göstergeye girmiyordu.
 - Diğer senaryolarda değişiklik rastlantısal dalgalanma düzeyinde (aynı pay-günler; denetimli model yeniden eğitildi).
@@ -750,6 +779,7 @@ Kullanıcının isteğiyle bütün kod ve belgeler satır satır okundu. Şüphe
    - denetimli model açılış penceresini hiç görmedi.
 
    Düzeltme: motor kapanış müzayedesinin eşleşme anını kaydeder (`Gun.kapanis_ani`). Pencere işareti, motor tarafındaki kapanış seansı hacim payı (`motor_ozellikleri.py`) ve kapanış müzayedesi sapması (`kapanis_ozellikleri.motor_kapanis`) bu andan bulunur. Bu iki gösterge önceden "son `P_ESLESTIRME` müzayedesi" ve "18:00 sonrası `P_ESLESTIRME`" ile bulunuyordu; kapanışta veri satırı yoksa açılışı kapanış sayabiliyordu.
+
 2. **Isolation Forest kapanış penceresini aynı günün pencerelerine göre puanlıyordu (`pencere_degerlendir.py`).** Bu pencere her gün uç değerdir. Kapanış senaryosunda kontrol kümesi de ROC-AUC 0,83 alıyordu (enjeksiyonlu 0,84), yani yöntem bir şey ayırt etmiyordu. Düzeltme: Isolation Forest yalnız sürekli işlem pencerelerinde eğitilir ve puanlar. Kapanış penceresini yalnız geçmiş kapanışlara dayanan Z-skor ve kural puanlar. Kapanış senaryosunda pozitif pencere yalnız kapanış müzayedesi penceresidir; emrin girildiği toplama penceresi pozitif sayılmaz. Denetimli model kapanış senaryosunun pay-günlerini dışarıda bırakır (`denetimli.py`).
 3. **Karşılıklı işlem senaryosu çoğu vakada karşılıklı işlem değildi (`motor/senaryolar.py`).** Fiyat "son işlem fiyatı + 1 adım" idi. O fiyatta ya da altında gerçek satış emirleri varsa aktörün alışı önce onlarla eşleşiyordu. Ölçüm (pencere değerlendirmesinin 20 vakası): senaryo miktarının ortalama %75'i aktörün kendi emirleri arasında işlem gördü, yalnız 5 vakada %90'ın üstündeydi, 3 vakada %10–35'ti. Düzeltme:
    - fiyat makasın içindendir (en iyi alışın bir adım üstü); satış o fiyatta tek başına en iyi satış olur, ardından gelen alış onu karşılar;
@@ -757,6 +787,7 @@ Kullanıcının isteğiyle bütün kod ve belgeler satır satır okundu. Şüphe
    - temizlik ölçütü (`sentetik_degerlendir.temizlik`): aktörün kendi emirleri arasındaki işlem (`kendi_islem`) satış miktarının yarısından azsa vaka değerlendirmeye alınmaz (`KENDI_ISLEM_EN_AZ = 0,5`, tasarım parametresi).
 
    Yeniden ölçüm: ortalama %89, 13 vakada %90'ın üstü.
+
 4. **Ölçüm kontrolü devre kesici ve açığa satışta yutuluyordu (`motor/gun.py`).** `except KeyError` blokları `OlcumEksik`'i de yakalıyordu (`OlcumEksik`, `KeyError`'ın alt sınıfıdır). Marjı ölçülmüş ama devre kesicisi ölçülmemiş bir ayda devre kesici sessizce kapanırdı. Düzeltme: `parametreler.varsa` `OlcumEksik`'i geçirir, yalnız "parametre bu pazara uygulanmıyor" durumunda yok döndürür. Ölçüm kontrolü artık pazara göre yapılır (`olculen(parametre, pazar)`). Örneğin YİP ve PÖİP'te (tek fiyat pazarları) devre kesici oranı satırı yoktur; bu pazarlarda hata verilmez, devre kesici uygulanmaz.
 5. **Kapanış toplaması gün sonunda eşleştirilmeyebiliyordu (`motor/gun.py`).** Veride kapanış eşleştirme ve kapanış fiyatından işlemler satırı olmayan pay-günlerde (kapanışta işlem yoksa) toplanan defter gün sonuna kadar eşleştirilmeden kalıyordu. Tekrar oynatmada etkisizdi, ama enjeksiyonla kapanışta işlem doğabilir. Artık gün sonu bölümüne gelince eşleştirilir.
 6. **Defter örnekleme aralığı 10 sn'den 1 sn'ye indi (`motor/gun.py`).** Senaryoların kullandığı en iyi fiyat (yanıltıcı emir katmanları, karşı emir, karşılıklı işlem fiyatı) 10 saniyeye kadar eskiyebiliyordu. `Defter.derinlik` artık bütün fiyat listesini kopyalamaz, dilim alır. Tekrar oynatma doğruluğu değişmedi (THYAO 19.03: müzayedeler %100, sürekli işlem %99,82, bütün gün %99,34).
@@ -767,6 +798,7 @@ Kullanıcının isteğiyle bütün kod ve belgeler satır satır okundu. Şüphe
 11. **Arayüz.** SPK etiketi kutusu eklendi: seçilen pay-gün etiketliyse seviye ve bülten görünür (tasarımda vardı, yapılmamıştı). Uyarı fiyatı pencere uzunluğuna bağlandı (5 dk sabit yazılıydı). Enjeksiyon özetinde "kapanış müzayedesi fiyatı" kapanış anından alınır; önceden kapanışta fiyat oluşmazsa açılış fiyatını gösterebiliyordu. Arayüz bütün senaryolarla uçtan uca sınandı (`hazirla.oynat` ve Streamlit `AppTest`, hata yok).
 
 Doğru bulunan ama sınır olarak not edilenler:
+
 - Bölüm geçişleri payın kendi satırlarından okunur. Çok seyrek işlem gören bir payda sentetik emir, payın o bölümdeki ilk satırına kadar bir önceki bölüme yerleşebilir. Değerlendirmede en az 300 işlemli paylar kullanıldığı için etkisizdir.
 - Kapanış son dakika payı, emir toplamanın değil payın son kapanış olayının son 60 saniyesine göre ölçülür (tanım veride ve motorda aynıdır).
 
@@ -774,38 +806,38 @@ Doğru bulunan ama sınır olarak not edilenler:
 
 5 dakikalık pencere, ×1 (80 enjeksiyon, tohum 11; hücreler ROC-AUC / ilk 3 / kontrol ilk 3):
 
-| Senaryo | Pay-gün | Z-skor | Kurallar | Isolation Forest | Denetimli |
-|---|---|---|---|---|---|
-| Yanıltıcı emir | 19 | 0,94 / %74 / %0 | 0,95 / %89 / %5 | 0,82 / %5 / %0 | 0,95 / %95 / %0 |
-| Karşılıklı işlem | 20 | 0,48 / %0 / %0 | 0,48 / %5 / %5 | 0,49 / %5 / %5 | 0,90 / %80 / %10 |
-| Fiyat yükseltme | 20 | 0,58 / %0 / %0 | 0,60 / %10 / %5 | 0,59 / %5 / %5 | 0,71 / %30 / %5 |
-| Kapanış | 20 | 0,78 / %15 / %0 | 0,77 / %20 / %5 | — | — |
+| Senaryo          | Pay-gün | Z-skor          | Kurallar        | Isolation Forest | Denetimli        |
+| ---------------- | ------- | --------------- | --------------- | ---------------- | ---------------- |
+| Yanıltıcı emir   | 19      | 0,94 / %74 / %0 | 0,95 / %89 / %5 | 0,82 / %5 / %0   | 0,95 / %95 / %0  |
+| Karşılıklı işlem | 20      | 0,48 / %0 / %0  | 0,48 / %5 / %5  | 0,49 / %5 / %5   | 0,90 / %80 / %10 |
+| Fiyat yükseltme  | 20      | 0,58 / %0 / %0  | 0,60 / %10 / %5 | 0,59 / %5 / %5   | 0,71 / %30 / %5  |
+| Kapanış          | 20      | 0,78 / %15 / %0 | 0,77 / %20 / %5 | —                | —                |
 
 Büyüklük duyarlılığı (`olcek_duyarlilik.csv`):
 
-| Senaryo | Ölçek | Kurallar | Denetimli |
-|---|---|---|---|
-| Yanıltıcı emir | ×0,3 | 0,95 / %89 / %5 | 0,94 / %79 / %0 |
-| Karşılıklı işlem | ×0,3 | 0,42 / %5 / %5 | 0,79 / %35 / %15 |
-| Fiyat yükseltme | ×0,3 | 0,56 / %5 / %5 | 0,68 / %25 / %5 |
-| Kapanış | ×0,3 | 0,58 / %5 / %5 | — |
-| Yanıltıcı emir | ×1 | 0,95 / %89 / %5 | 0,95 / %95 / %0 |
-| Karşılıklı işlem | ×1 | 0,48 / %5 / %5 | 0,90 / %80 / %10 |
-| Fiyat yükseltme | ×1 | 0,60 / %10 / %5 | 0,71 / %30 / %5 |
-| Kapanış | ×1 | 0,77 / %20 / %5 | — |
-| Yanıltıcı emir | ×3 | 0,95 / %89 / %5 | 0,95 / %89 / %0 |
-| Karşılıklı işlem | ×3 | 0,54 / %0 / %5 | 0,95 / %95 / %0 |
-| Fiyat yükseltme | ×3 | 0,62 / %10 / %5 | 0,67 / %25 / %0 |
-| Kapanış | ×3 | 0,87 / %45 / %5 | — |
+| Senaryo          | Ölçek | Kurallar        | Denetimli        |
+| ---------------- | ----- | --------------- | ---------------- |
+| Yanıltıcı emir   | ×0,3  | 0,95 / %89 / %5 | 0,94 / %79 / %0  |
+| Karşılıklı işlem | ×0,3  | 0,42 / %5 / %5  | 0,79 / %35 / %15 |
+| Fiyat yükseltme  | ×0,3  | 0,56 / %5 / %5  | 0,68 / %25 / %5  |
+| Kapanış          | ×0,3  | 0,58 / %5 / %5  | —                |
+| Yanıltıcı emir   | ×1    | 0,95 / %89 / %5 | 0,95 / %95 / %0  |
+| Karşılıklı işlem | ×1    | 0,48 / %5 / %5  | 0,90 / %80 / %10 |
+| Fiyat yükseltme  | ×1    | 0,60 / %10 / %5 | 0,71 / %30 / %5  |
+| Kapanış          | ×1    | 0,77 / %20 / %5 | —                |
+| Yanıltıcı emir   | ×3    | 0,95 / %89 / %5 | 0,95 / %89 / %0  |
+| Karşılıklı işlem | ×3    | 0,54 / %0 / %5  | 0,95 / %95 / %0  |
+| Fiyat yükseltme  | ×3    | 0,62 / %10 / %5 | 0,67 / %25 / %0  |
+| Kapanış          | ×3    | 0,87 / %45 / %5 | —                |
 
 15 dakikalık pencere (`pencere_15dk/`):
 
-| Senaryo | Kurallar | Denetimli |
-|---|---|---|
-| Yanıltıcı emir | 0,95 / %95 / %5 | 0,99 / %95 / %26 |
+| Senaryo          | Kurallar        | Denetimli        |
+| ---------------- | --------------- | ---------------- |
+| Yanıltıcı emir   | 0,95 / %95 / %5 | 0,99 / %95 / %26 |
 | Karşılıklı işlem | 0,47 / %5 / %10 | 0,87 / %90 / %10 |
-| Fiyat yükseltme | 0,51 / %10 / %5 | 0,63 / %25 / %15 |
-| Kapanış | 0,74 / %25 / %5 | — |
+| Fiyat yükseltme  | 0,51 / %10 / %5 | 0,63 / %25 / %15 |
+| Kapanış          | 0,74 / %25 / %5 | —                |
 
 - **Yanıltıcı emir:** değişmedi (kurallar 0,95 / %89 / %5, denetimli 0,95 / %95 / %0).
 - **Karşılıklı işlem:** kurallarda yine görünmez (0,48). Denetimli model ×1'de 0,87'den 0,90'a çıktı, ilk 3 %80, kontrol %10. Senaryo artık gerçekten aktörün kendi emirleri arasında işlem ürettiği için hacim izi daha temizdir.
@@ -815,14 +847,14 @@ Büyüklük duyarlılığı (`olcek_duyarlilik.csv`):
 
 Pay-gün sentetik değerlendirmesi (`sentetik/`, 80 seçim, tohum 7): 76 vaka değerlendirildi. 4 vaka temizlik ölçütüyle dışarıda kaldı: 1 yanıltıcı emir (TKFEN 21.03, katmanlardan 72.469 lot işlem gördü) ve 3 karşılıklı işlem (PSGYO 18.03, EGSER 11.03, MRGYO 25.03; aktörün kendi emirleri arasındaki işlem satışının yarısından az). Önceki koşuda dışarıda kalan AVHOL 12.03 artık temizdir (1 sn'lik defter örneğiyle katmanlar doğru yere yerleşti).
 
-| Senaryo | Pay-gün | Z-skor | Kurallar | Isolation Forest | Kesitsel IF |
-|---|---|---|---|---|---|
-| Kapanış | 20 | 0,74 | 0,81 | 0,69 | 0,73 |
-| Yanıltıcı emir | 19 | 0,54 | 0,68 | 0,51 | 0,44 |
-| Fiyat yükseltme | 20 | 0,58 | 0,72 | 0,61 | 0,56 |
-| Karşılıklı işlem | 17 | 0,57 | 0,70 | 0,56 | 0,55 |
-| Hepsi | 76 | 0,61 | 0,73 | 0,59 | 0,57 |
-| Kontrol (enjeksiyonsuz) | 76 | 0,50 | 0,64 | 0,51 | 0,51 |
+| Senaryo                 | Pay-gün | Z-skor | Kurallar | Isolation Forest | Kesitsel IF |
+| ----------------------- | ------- | ------ | -------- | ---------------- | ----------- |
+| Kapanış                 | 20      | 0,74   | 0,81     | 0,69             | 0,73        |
+| Yanıltıcı emir          | 19      | 0,54   | 0,68     | 0,51             | 0,44        |
+| Fiyat yükseltme         | 20      | 0,58   | 0,72     | 0,61             | 0,56        |
+| Karşılıklı işlem        | 17      | 0,57   | 0,70     | 0,56             | 0,55        |
+| Hepsi                   | 76      | 0,61   | 0,73     | 0,59             | 0,57        |
+| Kontrol (enjeksiyonsuz) | 76      | 0,50   | 0,64     | 0,51             | 0,51        |
 
 - Hücreler ROC-AUC'dir. Kurallar kontrolde de 0,64 alır, çünkü seçilen likit pay-günler genel olarak daha yüksek puan alır; enjeksiyonun katkısı ≈ 0,09'dur. Kapanış dışındaki senaryolar gün düzeyinde zayıftır; kısa epizotlar günün toplamında kaybolur.
 - Motorla ve veriyle hesaplanan özellikler birebir aynıdır (fark ortancası 0). Kapanış seansı hacim payındaki en büyük fark 0,093'ten 0,00018'e indi. Önceki fark kapanış penceresi hatasından (madde 1) geliyordu: bir pay-günde açılış müzayedesi kapanış sayılmıştı.
@@ -830,12 +862,12 @@ Pay-gün sentetik değerlendirmesi (`sentetik/`, 80 seçim, tohum 7): 76 vaka de
 
 SPK etiketli günlerde pencere düzeyi (`spk_pencere/`; 76 etiketli, 400 etiketsiz pay-gün, hata 0): sonuç değişmedi. Gün başına uyarı penceresi sayısı A'yı ayırt etmez (ROC-AUC 0,44), B'de zayıf sinyal verir (0,61; a/b uyarıları 0,57). Kapanış bendi (d) uyarıları azaldı (etiketsiz günlerde ortalama 0,07'den 0,04'e), çünkü açılış penceresi artık kapanış sayılmıyor.
 
-| Grup | Uyarı penceresi (ortalama) | a/b | f | d |
-|---|---|---|---|---|
-| A (ALKLC) | 11,9 | 3,4 | 8,6 | 0,00 |
-| B | 19,6 | 12,4 | 8,4 | 0,02 |
-| Aynı payların etiketsiz günleri | 13,6 | 5,9 | 8,3 | 0,04 |
-| Rastgele pay-günler | 16,3 | 10,8 | 7,0 | 0,03 |
+| Grup                            | Uyarı penceresi (ortalama) | a/b  | f   | d    |
+| ------------------------------- | -------------------------- | ---- | --- | ---- |
+| A (ALKLC)                       | 11,9                       | 3,4  | 8,6 | 0,00 |
+| B                               | 19,6                       | 12,4 | 8,4 | 0,02 |
+| Aynı payların etiketsiz günleri | 13,6                       | 5,9  | 8,3 | 0,04 |
+| Rastgele pay-günler             | 16,3                       | 10,8 | 7,0 | 0,03 |
 
 ### 6.3 Testler ve dosyalar
 
@@ -851,3 +883,60 @@ SPK etiketli günlerde pencere düzeyi (`spk_pencere/`; 76 etiketli, 400 etikets
 ### 6.4 Kaldığımız yer
 
 Yapılacaklar listesi 4.7'deki gibidir (`DURUM.md` başı).
+
+## 7. 25.10.2026 — Pencere uzunluğu karşılaştırması (1, 5, 10, 15 dk)
+
+Amaç: 5 dakikalık pencere seçiminin ölçümle gerekçelendirilmesi. Seçim 22.10.2026'da (bölüm 3.9) gerekçesi yazılmadan yapılmıştı; 15 dakika yalnız fiyat yükseltme için denenmişti (4.3, 6.2). Bu bölüm seçimi sonradan sınar; en iyi uzunluk aranarak seçilmiş değildir.
+
+### 7.1 Yöntem
+
+- Kod değiştirilmedi; yalnız `PENCERE_DK` ortam değişkeni 1, 5, 10 ve 15 yapıldı.
+- Her uzunlukta `tespit/pencere_degerlendir.py` (80 seçim, tohum 11) ve ardından `tespit/denetimli.py` çalıştırıldı:
+  `PENCERE_DK=10 python -I tespit/pencere_degerlendir.py veri/gunici-dogrulama/2025-03/tespit/ozellikler.parquet veri/etiketler/vaka_pencere_dogrulama.csv ÇIKTI 80 11`, sonra `python -I tespit/denetimli.py ÇIKTI/pencereler.parquet ÇIKTI`.
+- Dört uzunlukta da aynı 79 temiz pay-gün ve aynı sentetik olaylar kullanıldı. Dışarıda kalan tek vaka VAKBN 21.03 (yanıltıcı emir); bütün sentetik olayları EBDKS durdurmasında reddedildi.
+- 5 ve 15 dakika aynı kodla yeniden koşuldu; sonuçlar kayıtlı çıktılarla (`pencere/`, `pencere_15dk/`, 24.10.2026) birebir aynıdır (fark 0).
+- Ölçütler: ROC-AUC; ilk 3 isabeti (pozitif pencerelerden biri günün en yüksek puanlı 3 penceresinde mi); kontrol ilk 3 (aynı pencerelerin enjeksiyonsuz koşuda ilk 3'e girme oranı, yanlış alarm tabanı).
+- Pencere sayısı uzunlukla değişir; ilk 3'e şansla girme olasılığı da değişir. Bu yüzden ilk 3 isabeti kontrolle birlikte okunur:
+
+| Pencere | Pay-gün başına pencere (ortalama) | Pay-gün başına pozitif pencere (ortalama) | Tek pencerenin ilk 3'e şansla girmesi |
+| ------- | --------------------------------- | ----------------------------------------- | ------------------------------------- |
+| 1 dk    | 489,4                             | 4,18                                      | %0,6                                  |
+| 5 dk    | 100,9                             | 1,66                                      | %3,0                                  |
+| 10 dk   | 50,6                              | 1,35                                      | %5,9                                  |
+| 15 dk   | 34,8                              | 1,16                                      | %8,6                                  |
+
+Son sütun 3 / pencere sayısıdır: puanları rastgele veren bir yöntemin belirli bir pencereyi günün ilk 3'üne koyma olasılığı.
+
+### 7.2 Sonuçlar
+
+Hücreler: ROC-AUC / ilk 3 isabeti / kontrol ilk 3. Senaryo başına 19–20 pay-gün; bir pay-gün ilk 3 oranını %5 değiştirir.
+
+Kurallar (`puan_kural`; "Hepsi" kapanış dahil 79 pay-gün):
+
+| Pencere | Yanıltıcı emir    | Karşılıklı işlem | Fiyat yükseltme  | Kapanış         | Hepsi           |
+| ------- | ----------------- | ---------------- | ---------------- | --------------- | --------------- |
+| 1 dk    | 0,88 / %63 / %0   | 0,47 / %0 / %0   | 0,55 / %0 / %0   | 0,80 / %15 / %0 | 0,55 / %19 / %0 |
+| 5 dk    | 0,95 / %89 / %5   | 0,48 / %5 / %5   | 0,60 / %10 / %5  | 0,77 / %20 / %5 | 0,64 / %30 / %5 |
+| 10 dk   | 0,93 / %100 / %16 | 0,50 / %5 / %5   | 0,49 / %10 / %10 | 0,74 / %25 / %5 | 0,63 / %34 / %9 |
+| 15 dk   | 0,95 / %95 / %5   | 0,47 / %5 / %10  | 0,51 / %10 / %5  | 0,74 / %25 / %5 | 0,63 / %33 / %6 |
+
+Denetimli model (yalnız sürekli işlem pencereleri; kapanış senaryosu modelin dışındadır, "Hepsi" 59 pay-gün):
+
+| Pencere | Yanıltıcı emir   | Karşılıklı işlem | Fiyat yükseltme  | Kapanış | Hepsi            |
+| ------- | ---------------- | ---------------- | ---------------- | ------- | ---------------- |
+| 1 dk    | 0,82 / %47 / %0  | 0,91 / %75 / %5  | 0,78 / %10 / %0  | —       | 0,87 / %44 / %2  |
+| 5 dk    | 0,95 / %95 / %0  | 0,90 / %80 / %10 | 0,71 / %30 / %5  | —       | 0,85 / %68 / %5  |
+| 10 dk   | 0,99 / %100 / %5 | 0,83 / %70 / %10 | 0,70 / %40 / %5  | —       | 0,83 / %69 / %7  |
+| 15 dk   | 0,99 / %95 / %26 | 0,87 / %90 / %10 | 0,63 / %25 / %15 | —       | 0,83 / %69 / %17 |
+
+### 7.3 Yorum
+
+- **1 dk çok kısadır.** Yanıltıcı emirde kuralların ilk 3 isabeti %89'dan %63'e, denetimli modelin genel ilk 3 isabeti %68'den %44'e düşer. Manipülasyon birkaç pencereye bölünür (pay-gün başına pozitif pencere 1,66 yerine 4,18). ROC-AUC'nin bazı satırlarda yüksek olması (kapanış 0,80, denetimli karşılıklı işlem 0,91) bunu telafi etmez; denetçinin göreceği en üst sıralar zayıflar.
+- **10 ve 15 dk yanlış alarmı artırır.** İlk 3 isabeti biraz yükselir, ama pencere sayısı azaldığı için ilk 3'e şansla girmek kolaylaşır. Kontrol ilk 3: kurallarda yanıltıcı emir 10 dk'da %16; denetimli modelde 15 dk'da genel %17, yanıltıcı emirde %26. Fiyat yükseltme kurallarda rastgeleye iner (0,49–0,51); uzun pencerede iz sulanır.
+- **5 dk en dengeli seçenektir.** Her satırda birinci değildir, ama isabeti yüksek, yanlış alarmı düşüktür (kurallar genel %5, denetimli genel %5).
+- 0,02–0,03'lük ROC-AUC farkları ve tek pay-günlük (%5) ilk 3 farkları bu örneklem büyüklüğünde anlamlı değildir. Karşılaştırma 12 aylık veriyle tekrarlanmalıdır.
+
+### 7.4 Dosyalar
+
+- Yeni çıktılar: `veri/gunici-dogrulama/2025-03/tespit/pencere_1dk/` ve `pencere_10dk/` (`pencere_degerlendirme.csv`, `denetimli_degerlendirme.csv`, `denetimli_ozellik_onemi.csv`; `pencereler.parquet` git dışı).
+- Kod değişikliği yok.

@@ -1,0 +1,29 @@
+Deep Learning-Based Stock Price Forecasting and Anomaly Detection: A Data-Driven Approach
+->
+https://ieeexplore.ieee.org/document/11135369
+
+
+Adaptive_Hidden_Markov_Model_With_Anomaly_States_for_Price_Manipulation_Detection
+->
+https://ieeexplore.ieee.org/document/6803980
+
+
+A Clustering-Based Framework for Identifying Suspicious Trading Patterns in Capital Market
+->
+https://ieeexplore.ieee.org/document/11546622
+
+
+Derin Sinir A˘gları ile Borsa Yönü Tahmini
+Stock Market Direction Prediction Using Deep
+Neural Networks
+->
+https://ieeexplore.ieee.org/document/7960512
+
+
+A Machine Learning Approach to Detection of Trade‑Based 
+Manipulations in Borsa Istanbul
+->
+https://link.springer.com/article/10.1007/s10614-021-10131-8
+Künye:
+Uslu, N. C., Akal, F. (2022). A Machine Learning Approach to Detection of Trade-Based Manipulations in Borsa Istanbul. Computational Economics, 60, 25–45. DOI: 10.1007/s10614-021-10131-8
+

@@ -1,8 +1,16 @@
 # Proje durumu ve devam notu (yeni oturum için)
 
-Son güncelleme: 24.10.2026. Bu dosya sohbet geçmişi olmadan çalışmaya devam etmek içindir. Görev tanımı: `gorev-kural-yazimi.md` (kurallar: kaynakta olmayanı ekleme, madde no sona, belirsizlik → "Açık sorular" [DOĞRULA], örnekler → "Test örnekleri", dosya adlarında Türkçe karakter yok, her oturumda tek kural dosyası, bitince [DOĞRULA] listesini göster).
+Son güncelleme: 25.10.2026. Bu dosya sohbet geçmişi olmadan çalışmaya devam etmek içindir. Görev tanımı: `gorev-kural-yazimi.md` (kurallar: kaynakta olmayanı ekleme, madde no sona, belirsizlik → "Açık sorular" [DOĞRULA], örnekler → "Test örnekleri", dosya adlarında Türkçe karakter yok, her oturumda tek kural dosyası, bitince [DOĞRULA] listesini göster).
 
 ## Kaldığımız yer ve yapılacaklar (24.10.2026)
+
+**25.10.2026 eki.**
+- **Öneri formu:** doğru form kökteki `Bitirme_Projesi_Oneri_Formu_Resul_Can_KESKIN.pdf` (eski .docx yanlıştı; ajan simülasyonu, GA/PSO ve Monte Carlo formda yok). `ANLATIM.md` 2.3–2.4 ve `ANLATIM.pdf` doğru forma göre yazıldı. `CLAUDE.md` ("Sistem kapsamı" kararı ve .docx yolu), `TASARIM.md` 1/6.3/6.5, `rapor.md` 3.2–3.3 ve bu dosyadaki öneri formu notları hâlâ eski forma dayanıyor; vize raporundan önce düzeltilecek.
+- **Pencere uzunluğu karşılaştırması** (1, 5, 10, 15 dk): 5 dk en dengeli (`rapor.md` 7).
+- **Literatür:** `Literatür Araştırması/` klasöründe:
+  - `eklenebilecekler.md`: incelenen 5 makale, sisteme eklenebilecekler (E1–E8, hiçbiri uygulanmadı), vize raporuna girecekler (bölüm 6);
+  - `makale.md`: okunacak 10 makale, öncelik sırasıyla.
+  - Makale PDF'leri git dışı.
 
 **Kaldığımız yer (24.10.2026).**
 - 22.10.2026 sonundaki listeden yapılanlar:
@@ -19,7 +27,7 @@ Son güncelleme: 24.10.2026. Bu dosya sohbet geçmişi olmadan çalışmaya deva
 1. **Veri indirme (kullanıcı):** yeni ayların parametreleri ölçülmeden motor çalışmaz (`OlcumEksik`). 2024-06…2025-02 (DataStore gün içi emir, gün içi işlem, gün sonu; ITCH yalnız 2025-01 ve 2025-02). Ardından her ay için parquet dönüşümü, günlük bölümleme, kayıpsızlık kontrolü (`rapor.md` 2.10). Aralık dışı dosyaların (2025-06…09) silinmesi kullanıcıdadır.
 2. **Yeni aylar için tarih parametreleri:** marj, devre kesici yönü/oranı/süreleri, açığa satış kapsamı veriden yeniden ölçülür; Mart doğrulama betikleri yeni aylarda çalıştırılır.
 3. **12 ay ölçeğinde çalıştırma:** toplu oynatma ve özellik hesabı; SPK değerlendirmesinin (gün ve pencere düzeyi) 12 ayla tekrarı; denetimli modelin SPK etiketleriyle sınanması. Uzun işler parça parça çalıştırılmalı.
-4. **Vize raporu:** literatür bölümü; öneri formu farklar tablosunda `[kullanıcı]` gerekçeleri; bölüm 3 ve 4'ün vize metnine dönüştürülmesi.
+4. **Vize raporu:** literatür bölümü (`Literatür Araştırması/eklenebilecekler.md` bölüm 6 ve `makale.md`); öneri formu farkları doğru forma göre (`ANLATIM.md` 2.4); bölüm 3 ve 4'ün vize metnine dönüştürülmesi.
 5. **Kural dosyalarının kullanıcı onayı** (veriyle birlikte).
 6. **Tespit iyileştirmeleri (isteğe bağlı):** fiyat yükseltme senaryosunun daha büyük ve uzun hâliyle sınanması; defter göstergelerinin daha derin seviyelerle ve olay anında örneklenmesi.
 7. **Özsermaye günleri:** düzeltilmiş baz fiyat kaynağı.
