@@ -52,6 +52,8 @@ for (t, kod, M), g in a.groupby(["tarih", "islem_kodu", "M"]):
     d["yon_karisik_istisna"] = int(not (d["uyar_baz"] or d["uyar_son"]))
     satir.append(d)
 T = pd.DataFrame(satir)
+if T.empty:   # o ayda karisik yonlu muzayede yok (or. 2024-08)
+    T = pd.DataFrame(columns=["tarih", "islem_kodu", "M", "yon_karisik_istisna"])
 T.to_csv(out, index=False, encoding="utf-8")
 pd.set_option("display.width", 250)
 print(T.to_string())

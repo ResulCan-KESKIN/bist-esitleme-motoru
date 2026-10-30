@@ -1,0 +1,2 @@
+tarih,islem_kodu,sinif,M,gercek_fiyat,baz,son_islem,aday_alt,aday_ust,n_aday,alis_fazlali_seviye,satis_fazlali_seviye,fiyat_baz,karar_baz,uyar_baz,fiyat_son,karar_son,uyar_son,donus_seviyeleri,yon_karisik_istisna
+2024-03-05,DOCO.E,acilis,2024-03-05 09:55:15.145231,5070000.0,5080000.0,,5065000,5075000,5,2,3,5075000,en_yakin,False,5075000,en_yakin,False,5067500/5070000,1

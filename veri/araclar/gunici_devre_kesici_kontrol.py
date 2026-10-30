@@ -39,7 +39,7 @@ for gun in sorted(D.tarih.unique()):
     df = df.sort_values(["islem_kodu", "zaman", "ortak_sozlesme_no"])
     g = gs[gs.tarih == d].set_index("islem_kodu")
     for kod, x in df.groupby("islem_kodu", sort=False):
-        if kod not in g.index or g.loc[kod, "previous_last_price"] <= 0 or g.loc[kod, "corporate_action"] == g.loc[kod, "corporate_action"]:
+        if kod not in g.index or g.loc[kod, "previous_last_price"] <= 0 or pd.notna(g.loc[kod, "corporate_action"]):
             continue
         baz = g.loc[kod, "previous_last_price"]
         muz = x.seans.isin(MUZ).to_numpy()

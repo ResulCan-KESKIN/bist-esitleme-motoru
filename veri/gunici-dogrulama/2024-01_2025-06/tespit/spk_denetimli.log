@@ -1,0 +1,87 @@
+pay-gun 211,071, pozitif 675 (A 93, B 582), pozitif pay 34, girdi 74 + endeks 6
+etiket                         puan  pay_gun  pozitif  roc_auc  ort_kesinlik  taban_oran  ust_dilim  ust_dilim_duyarlilik  ust_dilim_kesinlik
+   A+B           puan_spk_denetimli   211071      675   0.7095        0.0091      0.0032       2111                0.0533              0.0171
+   A+B puan_spk_denetimli_endekssiz   211071      675   0.7098        0.0088      0.0032       2111                0.0563              0.0180
+   A+B                   puan_zskor   207700      657   0.5779        0.0042      0.0032       2077                0.0122              0.0039
+   A+B                   puan_kural   211071      675   0.5653        0.0042      0.0032       2111                0.0133              0.0043
+   A+B                 puan_iforest   207700      657   0.5939        0.0050      0.0032       2077                0.0335              0.0106
+   A+B                puan_kesit_uc   211071      675   0.6538        0.0054      0.0032       2111                0.0104              0.0033
+   A+B           puan_kesit_iforest   211071      675   0.6651        0.0056      0.0032       2111                0.0163              0.0052
+     A           puan_spk_denetimli   210489       93   0.8351        0.0016      0.0004       2105                0.0538              0.0024
+     A puan_spk_denetimli_endekssiz   210489       93   0.8349        0.0017      0.0004       2105                0.0430              0.0019
+     A                   puan_zskor   207136       93   0.4719        0.0006      0.0004       2071                0.0108              0.0005
+     A                   puan_kural   210489       93   0.4797        0.0004      0.0004       2105                0.0000              0.0000
+     A                 puan_iforest   207136       93   0.5023        0.0005      0.0004       2071                0.0000              0.0000
+     A                puan_kesit_uc   210489       93   0.7461        0.0012      0.0004       2105                0.0000              0.0000
+     A           puan_kesit_iforest   210489       93   0.7426        0.0013      0.0004       2105                0.0000              0.0000
+     B           puan_spk_denetimli   210978      582   0.6895        0.0077      0.0028       2110                0.0533              0.0147
+     B puan_spk_denetimli_endekssiz   210978      582   0.6898        0.0073      0.0028       2110                0.0584              0.0161
+     B                   puan_zskor   207607      564   0.5953        0.0038      0.0027       2076                0.0124              0.0034
+     B                   puan_kural   210978      582   0.5790        0.0039      0.0028       2110                0.0155              0.0043
+     B                 puan_iforest   207607      564   0.6090        0.0048      0.0027       2076                0.0390              0.0106
+     B                puan_kesit_uc   210978      582   0.6391        0.0043      0.0028       2110                0.0120              0.0033
+     B           puan_kesit_iforest   210978      582   0.6527        0.0045      0.0028       2110                0.0189              0.0052
+    surum  kat  test_pozitif  test_pozitif_pay  roc_auc
+ endeksli    0           137                 7    0.732
+ endeksli    1           138                 6    0.689
+ endeksli    2           136                 6    0.658
+ endeksli    3           131                 8    0.688
+ endeksli    4           133                 7    0.801
+endekssiz    0           137                 7    0.737
+endekssiz    1           138                 6    0.694
+endekssiz    2           136                 6    0.646
+endekssiz    3           131                 8    0.693
+endekssiz    4           133                 7    0.797
+                   gun  sira_puan_spk_denetimli  sira_puan_spk_denetimli_endekssiz  sira_puan_zskor  sira_puan_kural  sira_puan_iforest  sira_puan_kesit_uc  sira_puan_kesit_iforest
+islem_kodu seviye                                                                                                                                                                   
+AKYHO.E    B        20                    0.544                              0.562            0.362            0.379              0.541               0.911                    0.912
+ALKLC.E    A        31                    0.725                              0.712            0.458            0.456              0.479               0.814                    0.811
+AVGYO.E    B        20                    0.776                              0.778            0.570            0.571              0.489               0.628                    0.604
+AVHOL.E    B        20                    0.344                              0.325            0.511            0.500              0.407               0.387                    0.340
+BAKAB.E    B        20                    0.500                              0.514            0.547            0.557              0.470               0.606                    0.603
+BEGYO.E    B        20                    0.891                              0.889            0.717            0.722              0.859               0.900                    0.892
+BJKAS.E    B        20                    0.655                              0.667            0.534            0.524              0.511               0.794                    0.806
+CEOEM.E    B        20                    0.711                              0.742            0.607            0.597              0.680               0.576                    0.568
+CVKMD.E    B        20                    0.373                              0.420            0.541            0.555              0.666               0.536                    0.527
+DZGYO.E    B         3                    0.796                              0.745            0.641            0.630              0.101               0.197                    0.181
+EKSUN.E    B        20                    0.769                              0.737            0.683            0.666              0.744               0.750                    0.735
+ENSRI.E    B        55                    0.837                              0.819            0.625            0.603              0.533               0.692                    0.700
+EUREN.E    A         6                    0.769                              0.769            0.850            0.841              0.938               0.961                    0.947
+HATEK.E    B        30                    0.927                              0.933            0.689            0.675              0.772               0.586                    0.629
+HEDEF.E    B        20                    0.701                              0.709            0.756            0.783              0.611               0.582                    0.569
+IPEKE.E    B         3                    0.446                              0.369            0.720            0.704              0.752               0.355                    0.399
+ISYAT.E    B        20                    0.363                              0.433            0.407            0.419              0.387               0.673                    0.681
+KRGYO.E    A        33                    0.853                              0.852            0.457            0.486              0.524               0.569                    0.533
+           B        20                    0.772                              0.760            0.474            0.471              0.486               0.532                    0.535
+KUYAS.E    B        20                    0.514                              0.479            0.456            0.454              0.474               0.736                    0.770
+NTHOL.E    B        20                    0.695                              0.675            0.595            0.619              0.652               0.531                    0.662
+OZATD.E    B        20                    0.944                              0.936            0.651            0.650              0.590               0.764                    0.745
+PEGYO.E    B         7                    0.951                              0.926            0.479            0.606              0.240               0.935                    0.915
+PEHOL.E    B        19                    0.746                              0.759            0.720            0.696              0.714               0.634                    0.688
+SEGMN.E    B        19                    0.597                              0.574            0.498            0.500              0.523               0.469                    0.476
+SEYKM.E    B        20                    0.775                              0.782            0.711            0.701              0.753               0.597                    0.512
+SMRTG.E    B        20                    0.487                              0.452            0.708            0.703              0.835               0.783                    0.806
+SONME.E    B        20                    0.837                              0.868            0.520            0.505              0.640               0.718                    0.817
+TATEN.E    B        20                    0.803                              0.797            0.710            0.691              0.667               0.725                    0.685
+TDGYO.E    A        23                    0.877                              0.900            0.460            0.461              0.712               0.857                    0.899
+TMSN.E     B         3                    0.729                              0.748            0.915            0.883              0.817               0.435                    0.363
+TUCLK.E    B         3                    0.897                              0.903            0.659            0.645              0.537               0.190                    0.198
+TUREX.E    B        20                    0.270                              0.239            0.587            0.588              0.540               0.790                    0.827
+VKFYO.E    B        20                    0.641                              0.674            0.569            0.567              0.642               0.389                    0.479
+YAYLA.E    B        20                    0.594                              0.605            0.668            0.628              0.718               0.431                    0.489
+                                onem
+k_hacim_tl                    0.0025
+k_getiri_5g                   0.0018
+afk_payi                      0.0013
+k_kapanis_seansi_payi         0.0011
+z_iptal_orani                 0.0008
+k_makas                       0.0008
+z_piyasa_payi                 0.0006
+kapanis_degisiklik_yogunlugu  0.0006
+k_aktif_dengesizlik           0.0006
+aktif_dengesizlik             0.0004
+getiri_5g                     0.0004
+k_kapanis_aof_sapma           0.0003
+kapanis_aof_sapma             0.0003
+z_kisa_omurlu_uzak_pay        0.0003
+kisa_omurlu_uzak_pay          0.0003

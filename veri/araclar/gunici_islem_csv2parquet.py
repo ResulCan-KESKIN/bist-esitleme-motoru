@@ -1,8 +1,9 @@
 """PP_GUNICIISLEM CSV -> Parquet (akis, kayipsiz tip donusumu).
 
-Kullanim: python -I csv2parquet.py GIRIS.csv CIKIS.parquet [max_blok]
+Kullanim: python -I gunici_islem_csv2parquet.py GIRIS.csv|GIRIS.zip CIKIS.parquet [max_blok]
 """
 import sys
+import zipfile
 import pyarrow as pa
 import pyarrow.csv as pc
 import pyarrow.parquet as pq
@@ -46,8 +47,17 @@ dict_cols = [
     "islem_durumu", "takas_tarihi", "aktif_pasif", "giveup_flag", "guncelleme_no",
 ]
 
+if src.lower().endswith(".zip"):
+    # CSV'yi diske acmadan zip icinden akis olarak oku (tek CSV beklenir)
+    zf = zipfile.ZipFile(src)
+    members = [i.filename for i in zf.infolist() if i.filename.lower().endswith(".csv")]
+    assert len(members) == 1, members
+    src_stream = zf.open(members[0])
+else:
+    src_stream = src
+
 reader = pc.open_csv(
-    src,
+    src_stream,
     read_options=pc.ReadOptions(column_names=names, skip_rows=2, block_size=64 << 20),
     parse_options=pc.ParseOptions(delimiter=";"),
     convert_options=pc.ConvertOptions(

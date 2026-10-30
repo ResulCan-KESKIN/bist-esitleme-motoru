@@ -1,6 +1,6 @@
 # Literatürden eklenebilecekler
 
-İncelenen makalelerden sisteme eklenebilecek fikirler ve makalelerin kaynak olarak kullanılacağı yerler. **Buradakiler henüz uygulanmadı** (25.10.2026: şimdilik projeye uygulanmayacak, not olarak tutuluyor).
+İncelenen makalelerden sisteme eklenebilecek fikirler ve makalelerin kaynak olarak kullanılacağı yerler. **Buradakiler henüz uygulanmadı** (25.10.2026: şimdilik projeye uygulanmayacak, not olarak tutuluyor; 26.10.2026'da yinelendi: önce sistem hâkimiyeti, eklemeler sonra).
 
 | No | Makale | Değerlendirme |
 |---|---|---|
@@ -9,8 +9,9 @@
 | M3 | Gündüz vd. (2017), IEEE (Türkçe bildiri) | Yalnız bağlam kaynağı: literatürdeki eksikliği göstermek için anılır (bölüm 3) |
 | M4 | Uslu ve Akal (2022), Computational Economics | Çekirdek kaynak: Borsa İstanbul ve SPK vakalarıyla en yakın hakemli öncül; bulgusu iyimser (bölüm 4) |
 | M5 | Zaman vd. (2026), IEEE QPAIN | Zayıf; karşı örnek olarak anılır, birleşik uyarı fikri alınabilir (bölüm 5) |
+| M6 | Do ve Putniņš (2023), SSRN ön baskısı / doktora tezi bölümü | Çekirdek kaynak: kovuşturulmuş gerçek vakalarla sınanmış yanıltıcı emir göstergeleri; hakemsiz (bölüm 6) |
 
-Vize raporuna girecekler bütün makalelerden toplanarak bölüm 6'dadır.
+Vize raporuna girecekler bütün makalelerden toplanarak bölüm 7'dedir.
 
 ## Özet: sisteme eklenebilecekler
 
@@ -26,6 +27,9 @@ Ayrıntı ilgili makalenin bölümünde. Hiçbiri uygulanmadı; kullanıcıyla y
 | E6 | Fiyat yönüne göre işlem payı (artıran, azaltan, değiştirmeyen) | Bent f (fiyat yükseltme), en zayıf senaryomuz | Şimdi | Düşük | M4 |
 | E7 | Birleşik uyarı seviyesi: kural ve model birlikte, seviyeler eşiğe bağlı | Öneri formu adım 11, henüz yapılmadı | Şimdi tasarlanabilir | Yüksek | M5 |
 | E8 | Pay düzeyinde şüphe puanı (sıklık + şiddet) ve en şüpheli paylar listesi | Uzun süreli (B) vakalar; arayüz | 12 aylık veriyle | Orta | M5 |
+| E9 | Do-Putniņš yanıltıcı emir göstergeleri, olay düzeyinde: derinlik ve iptal dengesizliği, dengesizliğin ters tarafında işlem, döngü sayısı | En iyi fiyattaki sahte emirde mevcut yöntemler rastgeleye iniyor (ölçüldü, `rapor.md` 8); göstergeler gerçek vakalarla sınanmış | Şimdi (Mart verisi) | Yüksek | M6 |
+| E10 | Döngüsel yanıltıcı emir senaryosu: iki taraflı, en iyi fiyata yakın, gerçekleşme yaklaşınca iptal edip yeniden giren, tekrarlı | Gerçek vakaların tipik kalıbı; en iyi fiyattaki katmanlar bugün vakaların yarısında doluyor | E9 ile birlikte | Orta | M6 |
+| E11 | Yanıltıcı emir senaryosunda karışık katman uzaklığı; sonuçların uzaklığa göre ayrı raporlanması (kullanıcı önerisi) | Sabit 4–6 adım sonucu şişiriyor; SPK vakalarında sahte emir yeri tek yönlü değil (`rapor.md` 9) | Şimdi | Yüksek | M6, kullanıcı |
 
 ## 1. Cao vd. (2015): aykırı durumlu uyarlamalı gizli Markov modeli
 
@@ -306,33 +310,168 @@ Uslu'nun Hacettepe'deki doktorasından; Uslu SPK Strateji Geliştirme Dairesi'nd
 - Rizvi, B., Belatreche, A., Bouridane, A., Watson, I. (2020). Detection of stock price manipulation using kernel-based principal component analysis and multivariate density estimation. *IEEE Access*, 8, 135989–136003.
 - Fabre, T., Toke, I. M. (2025). High-frequency market manipulation detection with a Markov-modulated Hawkes process. arXiv:2502.04027.
 
-## 6. Rapora eklenecekler (vize raporu)
+## 6. Do ve Putniņš (2023): yanıltıcı emir ve katmanlı emir tespiti
+
+**Künye:** Do, B. L., Putniņš, T. J. (2023). Detecting Layering and Spoofing in Markets. SSRN 4525036. DOI: 10.2139/ssrn.4525036
+
+**Okunan metin:** Do, B. L. (2023). *Machines in markets: The impacts of technology on stock valuation and trading*. Doktora tezi, University of Technology Sydney, 4. bölüm (s. 93–147). Tezin önsözüne göre bölüm, makalenin kendisidir. Klasördeki dosya: `Do_Putnins_2023_Detecting_Layering_and_Spoofing_in_Markets_tez_s118-146.pdf` (tez s. 118–146). Aşağıdaki sayfa numaraları tezin sayfalarıdır.
+
+**Kısaca:**
+- 2010–2020 arasında kovuşturulmuş 25 yanıltıcı emir vakası: ABD, İngiltere, Kanada, Japonya; çoğu vadeli işlem (Tablo 4.1).
+- Vakalardan 14 ortak özellik çıkarılmış (s. 118–123). Bunların 8'i hesap kimliği olmadan, yalnız piyasa verisiyle hesaplanabiliyor; bu 8'i gösterge yapılmış (s. 126–130).
+- Göstergeler defterin ilk 5 seviyesinden **her defter olayında** hesaplanıyor. Ardından 1 sn ya da 1 gün içindeki **en büyük** değer alınıyor.
+- Etiket: vakalardan elle çıkarılmış 151 manipüle pay-gün ve 1.282 manipüle pay-saniye (s. 126).
+- Negatif örnekler:
+  - gün içinde: manipülasyon günlerindeki manipülasyonsuz saniyeler;
+  - günlükte: aynı borsadaki diğer menkuller, manipülasyon günlerinde.
+- Sonuçlar (örneklem dışı ROC-AUC; Tablo 4.6–4.8, Şekil 4.7–4.11):
+
+| Düzey | Lojistik regresyon | Rastgele orman | Boosted tree | Özellik önemi (rastgele orman) |
+|---|---|---|---|---|
+| Gün içi (1 sn) | 0,77 | 0,81 | 0,82 | HQ 0,33, UQ 0,32, AC 0,31; diğerleri ≤ 0,015 |
+| Günlük | 0,93 | 0,96 | 0,97 | TOCQ 0,42, CPDC 0,25, UQ 0,14, AC 0,13, HQ 0,06 |
+| Da Vinci vakası, eğitimde yok (gün içi) | 0,85 | 0,92 | 0,92 | 0,5 eşiğinde duyarlılık 0,08 / 0,07 / 0,45 |
+
+**Göstergeler.** Hepsi bir olay anında hesaplanıyor. A ve S, o andaki ilk 5 satış ve ilk 5 alış seviyesindeki toplam miktar. Giriş, A'nın ya da S'nin artışı; iptal, azalışı.
+
+| Kısaltma | Ad | Tanım (aralıktaki en büyük değer) | Bizdeki karşılığı |
+|---|---|---|---|
+| UQ | Dengesiz kotasyon | \|A − S\| / (A + S) | `derinlik_dengesizlik`: 1 sn'lik defter örneklerinde (A − S)/(A + S) ortalaması (`tespit/pencere.py`) |
+| HQ | Yoğun kotasyon | \|giriş_A − giriş_S\| / (A + S) | Yok. `yeni` emir sayısı var; taraf ayrımı ve derinliğe oran yok |
+| AC | Olağan dışı iptal | \|iptal_A − iptal_S\| / (A + S) | `iptal_orani` = iptal sayısı / yeni emir sayısı; taraf ayrımı yok |
+| LE | Düşük gerçekleşme olasılığı | 2–5. seviyelerde \|A − S\| / (A + S) | Yok. UQ ile korelasyonu 0,95; makalede de modelden çıkarılmış |
+| TOQ | İşlem, kotasyonun tersinde | Önceki saniyede (A − S)/(A + S) > %10 ve bu saniyede "alış tarafında" işlem; ya da tersi | Yok |
+| COT | İptal, işlemin tersinde | Önceki saniyede (iptal_A − iptal_S)/(A + S) > %10 ve bu saniyede "alış tarafında" işlem; ya da tersi | Yok |
+| CPD | Derinlikte döngü | (A − S)/(A + S)'nin +%10'un üstünden −%10'un altına (ya da tersi) geçme sayısı | Yok |
+| CPC | İptalde döngü | Aynısı, iptal dengesizliği için | Yok |
+
+Günlük modelde iki çift toplanıyor: CPDC = CPD + CPC (korelasyon 0,80) ve TOCQ = TOQ + COT (korelasyon 0,95).
+
+**Bizden farkı:**
+- **Etiket:** onlarınki kovuşturulmuş gerçek vakalar. Bizimki motorda sentetik enjeksiyon ve SPK bültenleri.
+- **Ortak yanı:** göstergeler piyasa düzeyinde, hesap kimliği yok. Bizim DataStore verimizde de yatırımcı kimliği yok (bölüm 4.2), bu yüzden kurgu doğrudan aktarılabilir.
+
+### 6.1 Sisteme eklenebilecekler
+
+#### E9. Do ve Putniņš göstergeleri, olay düzeyinde (öncelik: yüksek)
+
+- **Ne:** LE dışındaki 7 gösterge iki düzeyde hesaplanır:
+  - 5 dk pencere: `tespit/pencere.py`;
+  - pay-gün: `tespit/ozellikler.py`, sentetik emirler için `tespit/motor_ozellikleri.py`. Pay-günde makaledeki birleşik hâller (CPDC, TOCQ) de eklenir.
+- **Neden:**
+  - **Kör nokta ölçüldü (26.10.2026, `rapor.md` 8).** Senaryodaki katmanlar en iyi fiyata konunca (adım 0) bütün yöntemler rastgeleye iniyor. Aynı 9 pay-günde kurallar 0,98 / %100'den 0,55 / %11'e düşüyor. Nedeni, `uzak_kisa_pay`'ın en az 3 adım uzaktaki emirleri sayması; en iyi fiyata yakın yanıltıcı emri gören bir göstergemiz yok.
+  - Kovuşturulmuş gerçek vakalarla sınanmış bir gösterge setidir; günlük AUC 0,93–0,97.
+  - Bizim defter göstergelerimiz katkı vermemişti (`rapor.md` 4.5). Makale aynı büyüklüğü (ilk 5 seviyede dengesizlik) farklı ölçüyor: olay anında ve aralıktaki en büyük değer. Ortalama almak, 30 sn süren bir yanıltıcı emri 5 dk'lık pencerede sulandırır.
+  - Günlük düzeyde en önemli iki gösterge (TOCQ, CPDC) bizde hiç yok.
+- **Veri:**
+  - Enjeksiyonlu oynatmada motorun defteri her olayda elimizde (`motor/gun.py`, `Defter.derinlik(…, 5)`). Şu an yalnız 1 sn'de bir örnekleniyor (`DEFTER_ORNEK_US`).
+  - Makale giriş ve iptali derinliğin artışından ve azalışından çıkarıyor; işlemle azalan derinliği de "iptal" sayıyor. Bizde olay türü belli olduğu için gerçek iptal miktarı kullanılabilir. Bu, makaleden bilinçli bir sapma olarak yazılır.
+- **Uygularken karar verilecek ya da doğrulanacaklar:**
+  - **"Alış tarafında işlem" makalede tanımlanmamış.** İki okuma var: pasif alış emri doluyor (işlemi satıcı başlatıyor) ya da işlemi alıcı başlatıyor. Da Vinci anlatımında manipülatörün gerçek alışları "bid tarafında" gerçekleşiyor (s. 113). Bizim senaryoda karşı emir agresif (piyasadan limite, KIE; `motor/senaryolar.py` `yaniltici_emir`, `karsi_agresif`). İki tanım da hesaplanıp denenir. [DOĞRULA]
+  - **COT'ta sıra ters görünüyor.** 7. özellikte iptal işlemden sonra geliyor (s. 121). Formülde (44) ise iptal önceki saniyede, işlem bu saniyede. İki sıra da denenebilir.
+  - **İlk 5 seviye yetmeyebilir.** Senaryomuzun katmanları en iyi fiyatın 4–6 adım gerisinde (`tespit/sentetik_degerlendir.py` `YANILTICI_ADIM`). Dolu bir defterde 6. adım 5. seviyenin dışında kalabilir. Seviye sayısı parametre olmalı.
+  - **Maliyet.** Her olayda ilk 5 seviyeyi toplamak motoru yavaşlatabilir; bir gün zaten 17–30 dk sürüyor (`rapor.md` 3.13). Toplamlar artımlı tutulabilir.
+  - **%10 eşikleri** makaleden alınır; duyarlılığa bakılır.
+- **Gerçek veride yanlış alarm riski (26.10.2026 notu):**
+  - E9 gerçek verideki tespiti değiştirir; normal işlemi işaretleme riski gerçektir.
+  - "En iyi fiyata yakın girilip hızla iptal edilen emir" tek başına ölçüt olamaz. 10.03.2025'te piyasada hızlı iptal edilen emir miktarının %76'sı en iyi fiyattaydı. En iyi fiyata girilen miktarın %14'ü 60 sn içinde işlem görmeden iptal ediliyordu (`rapor.md` 9). Bu yüzden `uzak_kisa_pay` sınırı (3 adım) 0'a indirilmez.
+  - E9 tek bir işarete değil sıraya dayanır: bir taraf şişer, karşı tarafta işlem olur, şişen taraf söner. Bu sıra payın kendi normaline göre (z-skor) ölçülür.
+  - **Kabul ölçütü:** "kontrol ilk 3", yani sahte emir eklenmemiş gerçek pay-günlerin pencerelerinin günün ilk 3'üne girme oranı. Gerçek veride yanlış alarm ölçüsü budur. Bugün kurallarda ve denetimli modelde ~%5. Yakalama artsa bile bu oran belirgin yükselirse E9 alınmaz; "belirgin" eşiği kullanıcıyla belirlenecek.
+  - Katmanları en iyi fiyata konmuş senaryoyla eğitilen denetimli modelde bu oran değişmedi (59'da 3, 58'de 4, 49'da 3 pay-gün; `rapor.md` 8). Bunun nedeni, bugünkü özelliklerin bu türü hiç görmemesi; E9 özellikleri eklenince yeniden ölçülür.
+  - Gerçek verideki ikinci sınama: SPK etiketli günlerin üst sıralara çıkıp çıkmadığı (`tespit/spk_pencere.py`, 12 aylık veriyle).
+
+#### E10. Döngüsel yanıltıcı emir senaryosu, Da Vinci kalıbı (öncelik: orta)
+
+- **Makaledeki vaka:** FCA v. Da Vinci Invest; Admiral Group, LSE, 18.03.2011, 14:35–15:08 (s. 108–117; klasördeki PDF'te bu sayfalar yok).
+  - **Alış aşaması:** en iyi satışta 79 lot varken o fiyata 14.520 lot sahte satış giriliyor, 3 sn sonra 17.500 lot daha. Başkaları önüne geçtikçe sahte emirler 2. seviyeye itiliyor.
+  - Fiyat düşüyor. Manipülatörün gerçek alışı 21 sn sonra gerçekleşiyor. Sahte emirlerin bir kısmı iptal edilip yeniden giriliyor. Aşama yaklaşık 80 sn sürüyor.
+  - **Satış aşaması:** birkaç dakika sonra (metne göre ~5 dk) aynı kalıp alış tarafında kuruluyor ve biriken pay satılıyor.
+  - Döngü gün içinde birçok kez tekrarlanıyor ("testere dişi"); bazı vakalarda bir dakikadan kısa sürüyor (s. 105).
+- **Bizde neden yok:**
+  - Yanıltıcı emir senaryomuz tek taraflı ve tek seferlik: en iyi fiyatın 4–6 adım gerisinde 3 katman, 30 sn, arada küçük agresif karşı emir (`motor/senaryolar.py` `yaniltici_emir`, `tespit/sentetik_degerlendir.py`).
+  - Makaleye göre sahte emirler çoğunlukla en iyi fiyatta ya da hemen gerisinde, sıranın arkasında duruyor ve gerçekleşme yaklaşınca iptal edilip yeniden giriliyor (s. 100).
+  - Günlük düzeyde en güçlü iki gösterge (TOCQ, CPDC) döngüye dayanıyor. E9'u adil sınamak için bu senaryo gerekir.
+  - Ölçümde (`rapor.md` 8) katmanlar en iyi fiyata konunca 20 vakanın 10'unda katmanlar doldu ve vaka dışarıda kaldı. Gerçekleşme yaklaşınca iptal edip yeniden girme olmadan en iyi fiyattaki sahte emir sınanamıyor.
+- **Eklenecek:**
+  - `motor/senaryolar.py`'ye `dongusel_yaniltici`: K döngü, her döngüde yön değişir.
+  - Her aşamada en iyi fiyata ya da bir adım gerisine büyük sahte emir; karşı tarafta pasif gerçek emir. Gerçek emir dolunca ya da süre bitince sahte emirler iptal edilir.
+  - Parametreler: döngü sayısı, aşama süresi, aşamalar arası bekleme, sahte miktarın en iyi seviyedeki miktara oranı.
+- **E1 ile ilişkisi:** E1 tek seferlik ve hızlı, E10 tekrarlı. E1'in "en iyi fiyata büyük miktar" çeşidi E10'un tek bir aşamasıdır; ikisi aynı fonksiyonla kurulabilir.
+
+#### E11. Karışık katman uzaklığı (öncelik: yüksek; kullanıcı önerisi, 26.10.2026)
+
+- **Ne:** yanıltıcı emir senaryosunda katman uzaklığı (`YANILTICI_ADIM`) sabit 4 yerine her vakada rastgele seçilir, örneğin 0–6 adım. Sonuçlar tek sayı olarak değil, uzaklık bandına göre ayrı raporlanır (0–2 ve 3+).
+- **Neden:**
+  - Sabit 4–6 adım, senaryoyu göstergenin (`uzak_kisa_pay`, 3+ adım) tam baktığı yere koyuyor ve başarıyı şişiriyor (`rapor.md` 8).
+  - Kullanıcının gözlemi: Borsa İstanbul'da tahtacılar sahte emri genelde ilk kademelere koymaz. Yabancı vakalarda ise en iyi fiyatta ya da hemen gerisinde (M6).
+  - SPK vakalarında ölçüldü (`rapor.md` 9); veri tek yönü desteklemiyor. ENSRI'de büyük kısa ömürlü emirlerde uzak kademede zayıf artış var; VKFYO'da hem yakın hem uzak kademede artış var. İki vaka da B seviyesinde.
+- **Uzaklık dağılımı:** veriden kesin bir dağılım çıkmadı. Başlangıç için 0–6 arasında eşit dağılım alınıp kararı kullanıcı verir. KRGYO ve TDGYO (A) verisi gelince yeniden ölçülür.
+- **Gerçek veride tespiti değiştirmez.** Yalnız sentetik değerlendirmedeki sahte emrin yerini değiştirir; tespit kuralları ve model girdileri aynı kalır. Etkisi ölçümün dürüstleşmesidir: yakın bandın başarısı düşük çıkacaktır (`rapor.md` 8: en iyi fiyatta ROC-AUC 0,52–0,57). Bu yüzden riski yoktur. Yakın bandı yakalamak E9'a bağlıdır; yanlış alarm riski oradadır.
+- **Dikkat:** en iyi fiyata yakın katmanlar sık doluyor (adım 0'da 20 vakanın 10'u). E10'daki "iptal edip yeniden girme" olmadan yakın bant az vakayla ölçülür.
+- **İş:** `tespit/sentetik_degerlendir.py` `senaryo_olaylari` (uzaklığın vaka başına seçimi), değerlendirme çıktısına uzaklık sütunu; `pencere_degerlendir.py` ve `denetimli.py` sonuçlarında bant kırılımı.
+
+### 6.2 Eklenmeyecekler ve nedeni
+
+- **Hesap kimliği gerektiren özellikler:** envanter dönüşü (5), gizli ve görünür emir dengesizliği (8), envanter ve işlem niyeti (9, 10), envanterde döngü (13). DataStore'da yatırımcı ya da hesap kimliği yok (bölüm 4.2). Makale de bunları hesaplayamamış (s. 126).
+- **Orta fiyatta döngü (14):** makale de gösterge yapmamış. Fiyat tarafındaki karşılığı E2'dir.
+
+### 6.3 Kaynak olarak kullanılacağı yerler
+
+| Konu | Tezdeki yer | Kullanılacağı yer |
+|---|---|---|
+| Yanıltıcı emir ve katmanlı emir tanımı; Dodd-Frank 747, AB MAR md. 12 | 4.2 (s. 98–100) | ANLATIM 1.9; vize raporu literatür (manipülasyon türleri) |
+| Sahte emirler en iyi fiyatta ya da hemen gerisinde, sıranın arkasında durur; gerçekleşme yaklaşınca iptal edilir ya da yeniden girilir | s. 100 | Yanıltıcı emir senaryosunun gerekçesi; E10 |
+| Kovuşturulmuş 25 vaka ve 14 ortak özellik | Tablo 4.1, 4.2 (s. 102–103, 124–125) | Vize raporu literatür; VI-104.1 bent b göstergelerinin gerekçesi |
+| Yalnız piyasa verisiyle 8 gösterge; günlük AUC 0,93–0,97 | 4.4–4.5 (s. 126–146) | Vize raporu literatür (emir düzeyinde tespit); E9 |
+| Yüksek frekanslı işlemcilerin iptal oranı meşru nedenlerle de yüksektir; günlük iptal göstergesi diğerlerinin üstüne katkı vermiyor | s. 137 (Khomyn ve Putniņš 2021'e atıfla) | İptal oranı kuralının (bent a/b) yanlış alarm kaynağı; sınırlar |
+
+### 6.4 Atıf yaparken dikkat
+
+- **Hakemsiz.** SSRN ön baskısı ve doktora tezi bölümü; dergide yayımlanmış bir sürümü bulunamadı (26.10.2026).
+- **Gün içi kanıt vadeli işlem ağırlıklı.** Gün içi örneklemde yalnız CBOE, COMEX, IOM ve NYMEX var (Tablo 4.4). Pay piyasası (LSE) yalnız günlük örneklemde.
+- **Doğruluk yanıltıcı.** Da Vinci sınamasında doğruluk %97–98, ama 0,5 eşiğinde manipüle saniyelerin yalnız %7–45'i yakalanıyor (Tablo 4.8). Bunun nedeni sınıf dengesizliği. Aktarılacaksa AUC ve duyarlılık birlikte verilir.
+- **Sayılar tutarsız.**
+  - Metinde 151 pay-gün ve 1.282 pay-saniye var. Tablo 4.3'te 167, Tablo 4.4'te 1.959 manipüle gözlem.
+  - Metin gün içi ağaç modellerinin AUC'sini ters sırayla veriyor. Şekil 4.7'de rastgele orman 0,81, boosted tree 0,82.
+- **Doğrulama yöntemleri farklı.** Metne göre lojistik regresyon birini dışarıda bırakarak, ağaç modelleri 3 katlı çapraz doğrulamayla ölçülmüş. Şekiller ise üçü için de k katlı diyor.
+
+### 6.5 Kaynakçasından okunacaklar
+
+| Künye | Kullanım |
+|---|---|
+| Khomyn, M., Putniņš, T. J. (2021). Algos gone wild: What drives the extreme order cancellation rates in modern markets? *Journal of Banking and Finance*, 129. | İptal oranının meşru nedenleri; iptal oranı göstergemizin yanlış alarmları |
+| Cartea, Á., Jaimungal, S., Wang, Y. (2020). Spoofing and price manipulation in order-driven markets. *Applied Mathematical Finance*, 27, 67–98. | Yanıltıcı emrin kuramsal modeli; senaryo parametreleri |
+| Williams, B., Skrzypacz, A. (2021). Spoofing in equilibrium. SSRN 3742327. | Yanıltıcı emir en çok orta likiditeli piyasalarda; pay seçimi |
+| Wang, Y.-Y. (2019). Strategic spoofing order trading by different types of investors in the futures markets. *Journal of Financial Studies*, 27, 65–103. | Tayvan vadeli işlem piyasasında yanıltıcı emrin etkileri |
+| Lee, E. J., Eom, K. S., Park, K. S. (2013). Bölüm 1.4'te. | Kore borsasında yanıltıcı emir |
+
+## 7. Rapora eklenecekler (vize raporu)
 
 İncelenen makalelerden vize raporuna girecekler. Rapor henüz yazılmadı; sıra ve metin kullanıcıyla yeniden değerlendirilecek. "Okunacak" işaretli kaynaklar, asılları okunmadan rapora girmez.
 
-### 6.1 Literatür bölümünün yapısı
+### 7.1 Literatür bölümünün yapısı
 
 | Alt başlık | Söylenecek | Kaynaklar | Durum |
 |---|---|---|---|
 | Manipülasyonun tanımı ve türleri | Bilgiye, eyleme ve işleme dayalı manipülasyon; işleme dayalı türler: yanıltıcı emir (spoofing, layering), fiyat yükseltme (ramping), kapanışı etkileme, karşılıklı işlem | Allen ve Gale 1992; Putniņš 2012; Cao vd. 2015 | Cao okundu; diğerleri okunacak |
 | Günlük veriyle tespit | Getiri, hacim ve oynaklık sapmalarından tespit. Sınırı: meşru olaylar da sapma yaratır; emir düzeyindeki manipülasyon görünmez | Öğüt vd. 2009; Diaz vd. 2011; Uslu ve Akal 2022; Zaman vd. 2026 (karşı örnek) | Uslu-Akal, Zaman okundu; Öğüt, Diaz okunacak |
-| Fiyat ve emir düzeyinde tespit | Fiyat serisindeki kısa süreli şekiller; emir defteri verisiyle denetimsiz ve derin öğrenme | Cao vd. 2015; Leangarun vd. 2021; Do ve Putniņš 2023 | Cao okundu; diğerleri okunacak |
+| Fiyat ve emir düzeyinde tespit | Fiyat serisindeki kısa süreli şekiller; emir defteri verisiyle denetimsiz ve derin öğrenme | Cao vd. 2015; Leangarun vd. 2021; Do ve Putniņš 2023 | Cao, Do-Putniņš okundu; Leangarun okunacak |
 | Etiket sorunu ve sentetik enjeksiyon | Gerçek etiket az; değerlendirme yapay kalıp ekleyerek yapılıyor | Cao vd. 2015; Golmohammadi ve Zaiane 2015; Solak vd. 2026 | Cao okundu; diğerleri okunacak |
 | Kapanış manipülasyonu | Kapanış fiyatlarının yaklaşık %1'i manipüle, çok azı yakalanıyor (özetten); gözetim kuralı: kapanış − 15 dk, %99 dilim | Comerton-Forde ve Putniņš 2014; Aitken vd. 2009 (Cao vd. 2015 üzerinden) | Okunacak |
 | Borsa İstanbul | Makine öğrenmesi çalışmalarının çoğu fiyat ya da yön tahmini; manipülasyon tespiti az ve günlük veriyle | Kara vd. 2011; Gündüz vd. 2017; Öğüt vd. 2009; Aktaş ve Doğanay 2006; Uslu ve Akal 2022 | Gündüz, Uslu-Akal okundu; diğerleri okunacak |
 | Tekrar oynatma ve simülasyon | Tekrar oynatmada piyasa sentetik emirlere tepki vermez; limit emrin fiyat etkisi | Balch vd. 2019; Hautsch ve Huang 2012 | Okunacak |
 
-### 6.2 Taslak paragraf: literatürdeki boşluk ve katkı
+### 7.2 Taslak paragraf: literatürdeki boşluk ve katkı
 
 > Borsa İstanbul verisiyle yapılan makine öğrenmesi çalışmalarının büyük kısmı fiyat ya da yön tahminine yöneliktir (Kara vd., 2011; Gündüz vd., 2017). Manipülasyon tespitine yönelik çalışmalar ise SPK'nın tespit ettiği vakaları gün sonu verisiyle incelemektedir (Öğüt vd., 2009; Uslu ve Akal, 2022). Gerçek etiketlerin az olması nedeniyle uluslararası çalışmalarda değerlendirme çoğunlukla fiyat serisine eklenen yapay kalıplarla yapılmaktadır (Cao vd., 2015; Golmohammadi ve Zaiane, 2015). Cao vd. (2015), gelecek çalışma olarak fiyat serisinin emir bilgisiyle birlikte modellenmesini önermektedir. Bu çalışma, Borsa İstanbul gün içi emir verisini Pay Piyasası kurallarına uygun bir eşleştirme motorunda tekrar oynatmakta, sentetik manipülasyonu emir düzeyinde enjekte etmekte ve tespiti hem bu sentetik vakalarla hem SPK vakalarıyla değerlendirmektedir. İncelenen çalışmalar arasında bu yaklaşımı izleyen bir çalışmaya rastlanmamıştır.
 
-### 6.3 Yöntem bölümüne eklenecek gerekçeler
+### 7.3 Yöntem bölümüne eklenecek gerekçeler
 
 | Kararımız | Gerekçe | Kaynak |
 |---|---|---|
 | Sentetik enjeksiyonla değerlendirme | Gerçek etiket az; endüstride kabul gören yol | Cao vd. 2015 (V-A); Golmohammadi ve Zaiane 2015 (okunacak) |
 | Enjeksiyonun emir düzeyinde ve motorda yapılması | Fiyat serisine kalıp çizmek emir defterini ve eşleştirmeyi yok sayar | Cao vd. 2015 ile karşıtlık (bölüm 1.2) |
-| Emir verisi kullanımı | Yanıltıcı emir iptal edilen emirle yapılır; günlük veride görünmez | Cao vd. 2015 (gelecek iş); Leangarun vd. 2016 (okunacak); Zaman vd. 2026 (karşı örnek) |
+| Emir verisi kullanımı | Yanıltıcı emir iptal edilen emirle yapılır; günlük veride görünmez | Cao vd. 2015 (gelecek iş); Do ve Putniņš 2023 (gerçek vakalarda bütün göstergeler emir defterinden); Leangarun vd. 2016 (okunacak); Zaman vd. 2026 (karşı örnek) |
 | Kesitsel karşılaştırma | Meşru olaylar (haber, endeks hareketi) da günlük sapma yaratır; pay benzerleriyle karşılaştırılmalı | Cao vd. 2015 (II-B); Kim ve Sohn 2012 (okunacak) |
 | \|z\| ≥ 3 eşiği | Endüstride uçtaki %1 aykırı sayılıyor | Cao vd. 2015 (IV); Aitken vd. 2009 |
 | Kapanış göstergesi (`kapanis_oncesi_getiri`) | Gözetimde kullanılan kapanış kuralıyla aynı fikir | Aitken vd. 2009 (Cao vd. 2015 üzerinden) |
@@ -340,18 +479,21 @@ Uslu'nun Hacettepe'deki doktorasından; Uslu SPK Strateji Geliştirme Dairesi'nd
 | Negatif örnek: bütün diğer pay-günler | Aynı payın öncesi ve sonrasıyla karşılaştırmak işi kolaylaştırır, piyasa genelini ölçmez | Uslu ve Akal 2022 ile karşıtlık (bölüm 4.4) |
 | Özsermaye günleri dışarıda; yalnız pay pazarları | Bölünme, bedelsiz ve hisse dışı araçlar yanlış alarm üretir | Zaman vd. 2026 (karşı örnek) |
 
-### 6.4 Sınırlar bölümüne eklenecekler
+### 7.4 Sınırlar bölümüne eklenecekler
 
 - **Gerçek akış dışsaldır** (ANLATIM 5.1): sentetik emir başkalarını etkilemez. En iyi alışın 5 bp üstüne konan bir emir en iyi alışı ortalama 5,95 bp daha yükseltiyor (Hautsch ve Huang 2012, Cao vd. üzerinden). Tekrar oynatma ile etkileşimli simülasyon ayrımı için Balch vd. 2019 (okunacak).
 - **Etiketsiz gün negatif değildir** (ANLATIM 6.14): Cao vd. 2015'in "temiz" test verisinde bile şüpheli salınım var (Şekil 13). Comerton-Forde ve Putniņš 2014'e göre kapanışların yaklaşık %1'i manipüle ve çok azı yakalanıyor (özetten; okunacak).
 - **Hızlı yanıltıcı emir türü kapsanmıyor:** en iyi fiyatı iyileştirip milisaniyelerde iptal edilen emir. E1 yapılmazsa bu sınır olarak yazılır.
+- **En iyi fiyata yakın yanıltıcı emir yakalanmıyor (ölçüldü):** sahte emirler en iyi fiyattayken yöntemler rastgeleye iniyor (ROC-AUC 0,52–0,57; `rapor.md` 8). Raporlanan 0,95 yalnız derin katmanlı tür içindir. E9 yapılmazsa bu sınır olarak yazılır.
+- **Döngüsel yanıltıcı emir kapsanmıyor:** Do ve Putniņš 2023'ün Tablo 4.2'sindeki 25 vakanın 13'ünde kalıp gün içinde iki taraflı olarak tekrarlanıyor; kalanında bilgi yok. Senaryomuz tek seferlik; E10 yapılmazsa bu sınır olarak yazılır.
+- **Hesap kimliği yok:** yanıltıcı emir özelliklerinin bir kısmı (envanter, işlem niyeti) hesap düzeyinde veri ister. Göstergelerimiz piyasa düzeyindedir. Do ve Putniņš 2023 de aynı sınırla çalışıyor (tez s. 126).
 
-### 6.5 Sonuçlar bölümü için
+### 7.5 Sonuçlar bölümü için
 
 - Uslu ve Akal'ın %91 F1'i bizim AUC değerlerimizle doğrudan karşılaştırılmaz: kurguları aynı payın öncesi ve sonrasıyla karşılaştırmaya ve test kümesinde model seçimine dayanır. E4 yapılırsa iki kurgu yan yana verilir.
 - E5 yapılırsa vaka zaman çizelgesi şekli sonuçlara girer.
 
-### 6.6 Sunumda sorulabilecek sorular (ANLATIM 12'ye eklenebilir)
+### 7.6 Sunumda sorulabilecek sorular (ANLATIM 12'ye eklenebilir)
 
 | Soru | Cevabın özü |
 |---|---|
@@ -360,17 +502,18 @@ Uslu'nun Hacettepe'deki doktorasından; Uslu SPK Strateji Geliştirme Dairesi'nd
 | Neden günlük veri yetmez? | Yanıltıcı emir, girilip iptal edilen emirlerle yapılır; günlük özette iz bırakmaz. Günlük veriyle "spoofing" bulduğunu söyleyen çalışmalar aslında yalnız hacim artışını ölçüyor (Zaman vd. 2026) |
 | Neden fiyat serisine kalıp eklemediniz? | Fiyat çizgisine çizilen kalıp emir defterini, eşleştirmeyi ve borsa kurallarını yok sayar. Bizde sentetik emirler kurallarla doğrulanıp gerçek emirlerle eşleşir; iz motorun çıktısından ölçülür |
 
-### 6.7 Rapora girmeden önce yapılacaklar
+### 7.7 Rapora girmeden önce yapılacaklar
 
 1. **Okunacaklar (öncelik sırasıyla):**
    1. Solak vd. 2026 (E7 ve enjeksiyon);
-   2. Do ve Putniņš 2023 (E1);
-   3. Comerton-Forde ve Putniņš 2014;
-   4. Kim ve Sohn 2012;
-   5. Öğüt vd. 2009;
-   6. Golmohammadi ve Zaiane 2015;
-   7. Balch vd. 2019;
-   8. Aktaş ve Doğanay 2006.
+   2. Comerton-Forde ve Putniņš 2014;
+   3. Kim ve Sohn 2012;
+   4. Öğüt vd. 2009;
+   5. Golmohammadi ve Zaiane 2015;
+   6. Balch vd. 2019;
+   7. Aktaş ve Doğanay 2006.
+
+   Do ve Putniņš 2023 okundu (bölüm 6).
 2. **İkincil aktarılan sayılar asıllarından doğrulanacak:** Hautsch ve Huang 5,95 bp; Smarts %99 kuralı; Leangarun 2016 spoofing sonucu.
 3. **Açık `[DOĞRULA]`:** Gündüz vd. 2017 kurultay adı, sayfa ve DOI (bölüm 3).
 4. **Öneri formuyla ilgili:** `rapor.md` 3.2–3.3 hâlâ yanlış öneri formunu anlatıyor; vize raporu yazılmadan önce düzeltilmeli.

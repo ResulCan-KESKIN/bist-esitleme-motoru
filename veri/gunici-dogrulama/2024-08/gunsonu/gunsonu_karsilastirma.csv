@@ -1,0 +1,21 @@
+kontrol,pay_gun,uyan,uymayan
+toplam sozlesme = normal islem adedi,59958,59927,31
+toplam miktar = normal islem miktari,59958,59927,31
+"toplam hacim = sum(islem_hacmi) (0,01)",59958,59927,31
+en dusuk fiyat,59958,59958,0
+en yuksek fiyat,59958,59958,0
+acilis fiyati = ilk islem,59958,59958,0
+kapanis fiyati = son islem (tumu),59958,59958,0
+kapanis fiyati = son islem (kapanis fiyatindan haric),59958,59958,0
+"AOF = hacim/miktar (3 hane, 0,0005)",59958,59782,176
+acilis seansi fiyati,59958,59956,2
+acilis seansi sozlesme,59958,59956,2
+acilis seansi miktar,59958,59956,2
+"acilis seansi hacim (0,01)",59958,59956,2
+kapanis seansi fiyati,59958,59958,0
+kapanis seansi sozlesme,59958,59958,0
+kapanis seansi miktar,59958,59958,0
+kapanis fiyatindan sozlesme,59958,59958,0
+kapanis fiyatindan miktar,59958,59958,0
+ozel islem bildirimi sayisi,59958,59956,2
+ozel islem bildirimi miktari,59958,59956,2

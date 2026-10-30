@@ -53,6 +53,22 @@ def test_zskor_yalniz_gecmis():
     assert d1["z_getiri"].iloc[:y.GECMIS_EN_AZ].isna().all()
 
 
+def test_spk_denetimli_ek_z_k():
+    """Endeks gostergelerinin z'si yalniz payin gecmisini kullanir; k ayni gun ayni pazardaki paylar icinde siradir."""
+    import spk_denetimli as sd
+    gun = pd.bdate_range("2025-03-03", periods=10)
+    rows = [dict(islem_kodu=k, tarih=t, pazar="Z", fazla_getiri=0.01 * i + (0.5 if k == "Y.E" else 0))
+            for i, t in enumerate(gun) for k in ("X.E", "Y.E")]
+    d0 = sd.ek_z_k(pd.DataFrame(rows), ["fazla_getiri"])
+    rows[-2]["fazla_getiri"] = 9.0                                    # X.E son gun
+    d1 = sd.ek_z_k(pd.DataFrame(rows), ["fazla_getiri"])
+    x0, x1 = d0[d0["islem_kodu"] == "X.E"], d1[d1["islem_kodu"] == "X.E"]
+    assert np.allclose(x0["z_fazla_getiri"].iloc[:-1].fillna(0), x1["z_fazla_getiri"].iloc[:-1].fillna(0))
+    assert x1["z_fazla_getiri"].iloc[-1] > 100
+    son = d1[d1["tarih"] == gun[-1]].set_index("islem_kodu")["k_fazla_getiri"]
+    assert son["X.E"] == 1.0 and son["Y.E"] == 0.5
+
+
 def test_kisa_omurlu_uzak():
     """Satis: en iyi satis 10,00, adim 0,01; 10,03 (3 adim) 30 sn sonra iptal -> sayilir; 10,02 (2 adim) sayilmaz;
     10,05 (5 adim) dolar -> sayilmaz."""
@@ -69,6 +85,22 @@ def test_kisa_omurlu_uzak():
     x = uzak_kisa_omurlu(pd.DataFrame(r)).loc["X.E"]
     assert x["uzak_kisa"] == 100 and x["surekli_yeni_miktar"] == 300
     assert abs(fiyat_adimi(10.00) - 0.01) < 1e-12 and abs(fiyat_adimi(32.14) - 0.02) < 1e-12
+
+
+def test_pay_profili_satirlar():
+    """Profil: alis 9,97 (en iyi alis 9,99, adim 0,01) 2 adim; satis 10,00 en iyi fiyatta 0; en iyi satisin altindaki
+    agresif satis -1; islem boyu alis tarafi islem satirindan; kapanis emir toplamadaki yeni emir ayri sayilir."""
+    import pay_profili as pp
+    tab = []
+    for alis, p, seb, seans, q, isl in [(True, 9.97, 6, "P_SUREKLI_ISLEM", 100, 0), (False, 10.00, 6, "P_SUREKLI_ISLEM", 200, 0),
+                                        (False, 9.99, 6, "P_SUREKLI_ISLEM", 300, 0), (True, 10.00, 3, "P_SUREKLI_ISLEM", 50, 7),
+                                        (False, 10.00, 3, "P_SUREKLI_ISLEM", 50, 7), (True, 10.10, 6, "P_KAPANIS_EMIR_TPL", 500, 0)]:
+        tab.append(dict(seans=seans, kapsam=True, degisiklik_sebebi=seb, emir_fiyat_turu=1, alis=alis, fiyat=p,
+                        emir_miktari=q, en_iyi_alis_fiyati=9.99, en_iyi_satis_fiyati=10.00, zaman=0, islem_numarasi=isl,
+                        eslesen_miktar=q if isl else 0))
+    boy, uz, isl, kap = pp.satirlar(pd.DataFrame(tab))
+    assert list(boy) == [100, 200, 300] and list(uz) == [2, 0, -1]
+    assert list(isl) == [50] and kap == 500
 
 
 def test_net_agresif_adim():

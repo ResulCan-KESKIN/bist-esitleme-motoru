@@ -8,25 +8,27 @@ Başarı bilgileri makalelerin özetlerinden alındı; tam metin indirilince ayr
 
 ## Özet
 
-| Öncelik | Makale | Ne için | Erişim | Durum |
-|---|---|---|---|---|
-| 1 | Do ve Putniņš (2023), SSRN | Yeni yanıltıcı emir göstergeleri; gerçek spoofing vakaları | Ücretsiz | indirilmedi |
-| 2 | Leangarun vd. (2021), IEEE Access | Otokodlayıcı adımı (form adım 8); karar eşiği | Açık erişim | indirilmedi |
-| 3 | Poutré vd. (2024), J. Finance and Data Science | Otokodlayıcı; gerçek vakalardan senaryo üretme | Açık erişim | indirilmedi |
-| 4 | Wang vd. (2019), Neurocomputing | Şirket özellikleri model girdisi; gün içi dizi modeli | Okul erişimi | indirilmedi |
-| 5 | Ye vd. (2026), SSRN | XGBoost adımı (form adım 10); gün içi değişkenler | Ücretsiz | indirilmedi |
-| 6 | Comerton-Forde ve Putniņš (2011), JFI | Kapanış göstergeleri | SSRN sürümü ücretsiz | indirilmedi |
-| 7 | Kadıoğlu vd. (2015), Borsa Istanbul Review | Borsa İstanbul'da kapanış manipülasyonu ölçümü | Açık erişim | indirilmedi |
-| 8 | Martínez-Miranda vd. (2019), High Frequency | İptal tahmini; "beklenen iptale göre sapma" | Wiley | indirilmedi |
-| 9 | Zhai vd. (2018), RQFA | Emir özelliklerini durağanlaştırma; HMM | Springer | indirilmedi |
-| 10 | Tiwari vd. (2021), IEEE Access | Derleme: hangi yöntem neyle başarılı | Açık erişim | indirilmedi |
+| Öncelik | Makale                                         | Ne için                                                    | Erişim                     | Durum                                |
+| ------- | ---------------------------------------------- | ---------------------------------------------------------- | -------------------------- | ------------------------------------ |
+| 1       | Do ve Putniņš (2023), SSRN                     | Yeni yanıltıcı emir göstergeleri; gerçek spoofing vakaları | Açık erişim (tez 4. bölüm) | incelendi (`eklenebilecekler.md` M6) |
+| 2       | Leangarun vd. (2021), IEEE Access              | Otokodlayıcı adımı (form adım 8); karar eşiği              | Açık erişim                | indirildi                            |
+| 3       | Poutré vd. (2024), J. Finance and Data Science | Otokodlayıcı; gerçek vakalardan senaryo üretme             | Açık erişim                | indirilmedi                          |
+| 4       | Wang vd. (2019), Neurocomputing                | Şirket özellikleri model girdisi; gün içi dizi modeli      | Okul erişimi               | indirilmedi                          |
+| 5       | Ye vd. (2026), SSRN                            | XGBoost adımı (form adım 10); gün içi değişkenler          | Ücretsiz                   | indirilmedi                          |
+| 6       | Comerton-Forde ve Putniņš (2011), JFI          | Kapanış göstergeleri                                       | SSRN sürümü ücretsiz       | indirilmedi                          |
+| 7       | Kadıoğlu vd. (2015), Borsa Istanbul Review     | Borsa İstanbul'da kapanış manipülasyonu ölçümü             | Açık erişim                | indirilmedi                          |
+| 8       | Martínez-Miranda vd. (2019), High Frequency    | İptal tahmini; "beklenen iptale göre sapma"                | Wiley                      | indirilmedi                          |
+| 9       | Zhai vd. (2018), RQFA                          | Emir özelliklerini durağanlaştırma; HMM                    | Springer                   | indirilmedi                          |
+| 10      | Tiwari vd. (2021), IEEE Access                 | Derleme: hangi yöntem neyle başarılı                       | Açık erişim                | indirilmedi                          |
 
 ## Birinci sıra
 
 ### 1. Do ve Putniņš (2023): yanıltıcı emir ve katmanlı emir tespiti
 
 - **Künye:** Do, B. L., Putniņš, T. J. (2023). Detecting Layering and Spoofing in Markets. SSRN 4525036. 58 sayfa.
-- **Bağlantı:** https://ssrn.com/abstract=4525036
+- **Bağlantı (tam metin):** https://opus.lib.uts.edu.au/bitstream/10453/177933/1/thesis.pdf
+  - Bao Linh Do'nun UTS doktora tezi (2023, açık erişim, 170 s.). Makale tezin **4. bölümüdür** ("Detecting layering and spoofing in markets", tez s. 93–147, PDF s. 106–160). Tezin kayıt sayfası: https://opus.lib.uts.edu.au/handle/10453/177933
+  - SSRN kaydı: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4525036 (26.10.2026'da açılmadı, 503; DOI https://doi.org/10.2139/ssrn.4525036 de oraya yönlenir).
 - **Neyi başarmış:** dünya genelinde kovuşturulmuş gerçek spoofing vakaları; örneklem dışı çapraz doğrulama. Göstergeler makine öğrenmesiyle birleştirilince yüksek tespit doğruluğu.
 - **Özette en iyi göstergeler:**
   - alış ve satış derinliği arasındaki dengesizlik;
@@ -38,10 +40,18 @@ Başarı bilgileri makalelerin özetlerinden alındı; tam metin indirilince ayr
   - Daha önce denediğimiz defter göstergeleri katkı vermemişti (`rapor.md` 4.5). Bu makale hangi biçimde ölçüldüğünde işe yaradığını gösterir.
   - E1 (hızlı yanıltıcı emir) için de kaynak.
 - **Okurken bak:** göstergelerin tam tanımı ve pencere uzunluğu; hangi model; doğruluk ve yanlış alarm oranları; vaka listesi (hangi borsalar).
+- **Klasördeki dosya:** `Do_Putnins_2023_Detecting_Layering_and_Spoofing_in_Markets_tez_s118-146.pdf` (aşağıdaki PDF s. 131–159).
+- **Okunacak sayfalar (tam tezin PDF sayfa no; tez sayfa no = PDF − 13):**
+  - 139–143: veri ve 8 göstergenin formülleri (en önemlisi);
+  - 131–136: göstergelerin dayandığı 14 özellik;
+  - 147–151: lojistik regresyon (gün içi AUC 0,77, günlük 0,93);
+  - 152, 155, 158–159: rastgele orman ve boosted tree, Da Vinci vakasıyla sınama;
+  - isteğe bağlı, senaryo için: 121–130, Da Vinci vakasının saniye saniye anatomisi.
+  - 1–105 (1–3. bölümler) ve 109–120 (hukuki tanımlar, vaka öyküleri) gerekmez.
 
 ### 2. Leangarun, Tangamchit, Thajchayapong (2021): Tayland borsasında derin denetimsiz öğrenme
 
-- **Künye:** Leangarun, T., Tangamchit, P., Thajchayapong, S. (2021). Stock price manipulation detection using deep unsupervised learning: The case of Thailand. *IEEE Access*.
+- **Künye:** Leangarun, T., Tangamchit, P., Thajchayapong, S. (2021). Stock price manipulation detection using deep unsupervised learning: The case of Thailand. _IEEE Access_.
 - **Bağlantı:** https://scholar.google.com/scholar?q=%22Stock+price+manipulation+detection+using+deep+unsupervised+learning%3A+The+case+of+Thailand%22
 - **Neyi başarmış:** emir defteri verisiyle otokodlayıcı ve GAN. Model yalnız normal işlemle eğitiliyor; ondan sapan davranış manipülasyon sayılıyor. Tayland borsasında kovuşturulmuş 6 gerçek vakanın 5'ini düşük yanlış alarmla yakalıyor.
 - **Sistemimize ne ekler:**
@@ -51,7 +61,7 @@ Başarı bilgileri makalelerin özetlerinden alındı; tam metin indirilince ayr
 
 ### 3. Poutré, Chételat, Morales (2024): yüksek frekanslı piyasalarda derin denetimsiz aykırılık tespiti
 
-- **Künye:** Poutré, C., Chételat, D., Morales, M. (2024). Deep unsupervised anomaly detection in high-frequency markets. *The Journal of Finance and Data Science*.
+- **Künye:** Poutré, C., Chételat, D., Morales, M. (2024). Deep unsupervised anomaly detection in high-frequency markets. _The Journal of Finance and Data Science_.
 - **Bağlantı:** https://scholar.google.com/scholar?q=%22Deep+unsupervised+anomaly+detection+in+high-frequency+markets%22
 - **Neyi başarmış:**
   - Emir defteri için transformer tabanlı otokodlayıcı.
@@ -66,7 +76,7 @@ Başarı bilgileri makalelerin özetlerinden alındı; tam metin indirilince ayr
 
 ### 4. Wang, Xu, Huang, Yang (2019): RNN topluluğuyla gün içi manipülasyon tespiti
 
-- **Künye:** Wang, Q., Xu, W., Huang, X., Yang, K. (2019). Enhancing intraday stock price manipulation detection by leveraging recurrent neural networks with ensemble learning. *Neurocomputing*, 347, 46–58.
+- **Künye:** Wang, Q., Xu, W., Huang, X., Yang, K. (2019). Enhancing intraday stock price manipulation detection by leveraging recurrent neural networks with ensemble learning. _Neurocomputing_, 347, 46–58.
 - **Bağlantı:** https://scholar.google.com/scholar?q=%22Enhancing+intraday+stock+price+manipulation+detection+by+leveraging+recurrent+neural+networks%22
 - **Neyi başarmış:** Çin'de kovuşturulmuş gerçek vakalar (CSRC). Gün içi işlem özellikleri ile şirket özellikleri birlikte kullanılıyor. Önceki yöntemlere göre AUC'de ortalama %29,8 iyileşme. 111 atıf.
 - **Sistemimize ne ekler:**
@@ -89,7 +99,7 @@ Başarı bilgileri makalelerin özetlerinden alındı; tam metin indirilince ayr
 
 ### 6. Comerton-Forde ve Putniņš (2011): kapanış fiyatı manipülasyonunu ölçmek
 
-- **Künye:** Comerton-Forde, C., Putniņš, T. J. (2011). Measuring closing price manipulation. *Journal of Financial Intermediation*.
+- **Künye:** Comerton-Forde, C., Putniņš, T. J. (2011). Measuring closing price manipulation. _Journal of Financial Intermediation_.
 - **Bağlantı:** https://scholar.google.com/scholar?q=%22Measuring+closing+price+manipulation%22
 - **Neyi başarmış:** kovuşturulmuş gerçek kapanış manipülasyonu vakalarıyla bir kapanış manipülasyonu ölçüsü kuruyor. 259 atıf.
 - **Sistemimize ne ekler:** kapanış etkilemesi en zayıf senaryomuz (×1'de AUC 0,80). Makaledeki göstergeler kapanış göstergelerimize (`tespit/kapanis_ozellikleri.py`) eklenebilir.
@@ -97,7 +107,7 @@ Başarı bilgileri makalelerin özetlerinden alındı; tam metin indirilince ayr
 
 ### 7. Kadıoğlu, Küçükkocaoğlu, Kılıç (2015): Borsa İstanbul'da kapanış manipülasyonu
 
-- **Künye:** Kadıoğlu, E., Küçükkocaoğlu, G., Kılıç, S. (2015). Closing price manipulation in Borsa Istanbul and the impact of call auction sessions. *Borsa Istanbul Review*, 15(3), 213–221.
+- **Künye:** Kadıoğlu, E., Küçükkocaoğlu, G., Kılıç, S. (2015). Closing price manipulation in Borsa Istanbul and the impact of call auction sessions. _Borsa Istanbul Review_, 15(3), 213–221.
 - **Bağlantı:** https://scholar.google.com/scholar?q=%22Closing+price+manipulation+in+Borsa+Istanbul+and+the+impact+of+call+auction+sessions%22
 - **Neyi başarmış:** Borsa İstanbul'da 102 pay, 2006–2012. Kapanış müzayedesi (02.03.2012) gelmeden önce yukarı yönlü kapanış manipülasyonu bulunuyor. Makine öğrenmesi değil, ölçüm yöntemi.
 - **Sistemimize ne ekler:** Borsa İstanbul'a özgü kapanış manipülasyonu ölçümü; bent d ve kapanış senaryomuz için.
@@ -107,19 +117,19 @@ Başarı bilgileri makalelerin özetlerinden alındı; tam metin indirilince ayr
 
 ### 8. Martínez-Miranda, Phelps, Howard (2019): emir iptalini tahmin etmek
 
-- **Künye:** Martínez-Miranda, E., Phelps, S., Howard, M. J. (2019). Order flow dynamics for prediction of order cancelation and applications to detect market manipulation. *High Frequency*.
+- **Künye:** Martínez-Miranda, E., Phelps, S., Howard, M. J. (2019). Order flow dynamics for prediction of order cancelation and applications to detect market manipulation. _High Frequency_.
 - **Bağlantı:** https://scholar.google.com/scholar?q=%22Order+flow+dynamics+for+prediction+of+order+cancelation%22
 - **Sistemimize ne ekler:** iptal oranı göstergemizi "beklenen iptale göre sapma" biçimine çevirmek için fikir. Olağan iptali model tahmin eder, fazlası şüpheli sayılır.
 
 ### 9. Zhai, Cao, Ding (2018): borsada manipülasyon tespitine veri analitiği yaklaşımı
 
-- **Künye:** Zhai, J., Cao, Y., Ding, X. (2018). Data analytic approach for manipulation detection in stock market. *Review of Quantitative Finance and Accounting*.
+- **Künye:** Zhai, J., Cao, Y., Ding, X. (2018). Data analytic approach for manipulation detection in stock market. _Review of Quantitative Finance and Accounting_.
 - **Bağlantı:** https://scholar.google.com/scholar?q=%22Data+analytic+approach+for+manipulation+detection+in+stock+market%22
 - **Sistemimize ne ekler:** limit emirlerini durağanlığı azaltan bir dönüşümden geçirip kullanıyor; statik model ve HMM ile gerçek işlem verisinde sınanmış. Emir özelliklerimizi günler ve paylar arasında karşılaştırılabilir yapmak için fikir.
 
 ### 10. Tiwari, Ramampiaro, Langseth (2021): finansal piyasa gözetiminde makine öğrenmesi derlemesi
 
-- **Künye:** Tiwari, S., Ramampiaro, H., Langseth, H. (2021). Machine learning in financial market surveillance: A survey. *IEEE Access*.
+- **Künye:** Tiwari, S., Ramampiaro, H., Langseth, H. (2021). Machine learning in financial market surveillance: A survey. _IEEE Access_.
 - **Bağlantı:** https://scholar.google.com/scholar?q=%22Machine+learning+in+financial+market+surveillance%3A+A+survey%22
 - **Sistemimize ne ekler:** hangi yöntemin hangi veriyle başarılı olduğunu toplayan yol haritası; yeni makale bulmak için.
 

@@ -2,8 +2,9 @@
 puanlanir (pencere.py; kapanis penceresi gecmis kapanislara gore); pencere uyarilarindan gun puanlari uretilir ve SPK
 etiketleriyle karsilastirilir.
 
-- Pay-gunler: Mart 2025'te SPK etiketli (A, B; belirsiz gunler haric), ayni paylarin etiketsiz gunleri ve rastgele
-  RASTGELE pay-gun (surekli islemde en az 300 islem). Ozsermaye gunleri haric.
+- Pay-gunler: OZELLIKLER'deki gunlerde SPK etiketli (A, B; belirsiz gunler haric), ayni paylarin etiketsiz gunleri
+  (en cok AYNI_EN_COK, fazlasi rastgele secilir) ve rastgele RASTGELE pay-gun (surekli islemde en az 300 islem).
+  Ozsermaye gunleri haric.
 - Gun puanlari: uyari penceresi sayisi (en az bir kural), bent bazinda uyari sayilari (a/b, d, f), en yuksek pencere
   Z-skor puani.
 - Kaldigi yerden devam eder: sonuclar CIKTI_KLASORU/spk_pencere_gun.csv dosyasina pay-gun basina eklenir; bir
@@ -25,6 +26,7 @@ from motor.gun import Gun
 from ozellikler import gunsonu_ozellikleri
 
 RASTGELE = 300
+AYNI_EN_COK = 300   # cok ayda etiketli paylarin etiketsiz gunleri binleri bulur (8 ay: ~2.450)
 ALANLAR = ["gun", "kod", "grup", "seviye", "pencere", "uyari", "uyari_ab", "uyari_d", "uyari_f", "en_yuksek_z", "hata"]
 
 
@@ -35,6 +37,8 @@ def secim(T, e):
     m = m[[(k, t) not in bel for k, t in zip(m["islem_kodu"], m["tarih"])]]
     etiketli = m[m["seviye"].notna()].assign(grup="etiketli")
     ayni = m[m["seviye"].isna() & m["islem_kodu"].isin(etiketli["islem_kodu"])].assign(grup="ayni_pay_etiketsiz")
+    if len(ayni) > AYNI_EN_COK:
+        ayni = ayni.sample(n=AYNI_EN_COK, random_state=0)
     diger = m[m["seviye"].isna() & ~m["islem_kodu"].isin(etiketli["islem_kodu"]) & (m["islem_sayisi"] >= sd.ISLEM_EN_AZ)]
     diger = diger.sample(n=min(RASTGELE, len(diger)), random_state=0).assign(grup="rastgele")
     return pd.concat([etiketli, ayni, diger], ignore_index=True)

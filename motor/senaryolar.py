@@ -9,7 +9,7 @@ import bisect
 
 from tek_fiyat_algoritma import adim, yukari_adim, asagi_adim
 
-from .emir import YeniEmir, Iptal, LIMIT, PIYASADAN_LIMITE, KIE
+from .emir import YeniEmir, Iptal, LIMIT, PIYASA, PIYASADAN_LIMITE, KIE
 
 US = 1_000_000
 
@@ -116,6 +116,68 @@ def karsilikli_islem(t, tablo, ref, tekrar=5, aralik_sn=60, miktar=2000, defter=
         tz, p = ici if ici else (tz, ref + adim(ref, tablo))
         out.append(YeniEmir(tz, _no("karsilikli", 2 * k + 1), False, p, miktar, LIMIT))
         out.append(YeniEmir(tz + 1, _no("karsilikli", 2 * k + 2), True, p, miktar, LIMIT))
+    return out
+
+
+# --- Hisseye gore ayarli senaryolar (senaryo-tasarimi.md): olay ureticileri. Parametreler tespit/ayarli_senaryo.py'de
+# payin profilinden cekilir; burada yalniz olay listesi kurulur.
+
+def katman_fiyatlari(en_iyi, tablo, alis, uzaklik, katman):
+    """Ayni tarafin en iyi fiyatindan uzaklik, uzaklik+1, ... adim geride katman sayida ardisik kademe."""
+    a = adim(en_iyi, tablo)
+    return [en_iyi - (uzaklik + k) * a if alis else en_iyi + (uzaklik + k) * a for k in range(katman)]
+
+
+def plan_olaylari(bolumler, karsilar, senaryo="yaniltici"):
+    """Plan bolumlerinden olay listesi. bolumler: (no, alis, fiyat, miktar, bas, bit) defterde kalan katman parcalari
+    (bit'te iptal); karsilar: (no, zaman, alis, miktar) karsi taraftaki piyasadan limite KIE emirler."""
+    out = []
+    for no, alis, p, q, bas, bit in bolumler:
+        out += [YeniEmir(bas, no, alis, p, q, LIMIT), Iptal(bit, no)]
+    out += [YeniEmir(z, no, alis, 0, q, PIYASADAN_LIMITE, KIE) for no, z, alis, q in karsilar]
+    return sorted(out, key=lambda o: o.zaman)
+
+
+def bolum_bol(bolumler, dolum, tepki_us, bekleme_us, yeni_fiyat, sonraki_no):
+    """Islem goren katman parcalarini dolumdan tepki_us once iptal edilecek sekilde kisaltir ve bekleme_us sonra yeniden
+    girer (Do ve Putnins 2023: gerceklesme yaklasinca iptal, yeniden giris).
+
+    dolum: {no: ilk islem ani}; yeni_fiyat(eski_no, alis, zaman, eski_fiyat): yeniden giris fiyati (katman kendi
+    uzakligini korur); sonraki_no(eski_no): yeni emir no. Kisaltilan parca bas'tan once biterse hic girilmez; yeniden
+    giris parcanin eski bitisinden once degilse yapilmaz."""
+    out = []
+    for no, alis, p, q, bas, bit in bolumler:
+        z = dolum.get(no)
+        if z is None:
+            out.append((no, alis, p, q, bas, bit))
+            continue
+        if z - tepki_us > bas:
+            out.append((no, alis, p, q, bas, z - tepki_us))
+        yb = z + bekleme_us
+        if yb < bit:
+            out.append((sonraki_no(no), alis, yeni_fiyat(no, alis, yb, p), q, yb, bit))
+    return out
+
+
+def fiyat_yukseltme_ayarli(zamanlar, miktarlar, alis=True, fiyat_turu=PIYASA):
+    """Adim adim fiyat yukseltme, degisken aralik ve boyla: zamanlar[k]'da miktarlar[k] lot, KIE. Piyasa emri karsi
+    taraftaki kademeleri miktari bitene kadar supurur (piyasadan limite emir yalniz en iyi kademede islem gorur);
+    enjeksiyonlu defterin o anki haline gore islem gordugu icin onceden fiyat planlamak gerekmez."""
+    return [YeniEmir(z, _no("yukseltme", k + 1), alis, 0, q, fiyat_turu, KIE)
+            for k, (z, q) in enumerate(zip(zamanlar, miktarlar))]
+
+
+def karsilikli_islem_ayarli(zamanlar, miktarlar, refler, tablo, defter=None):
+    """Karsilikli islem, degisken aralik ve boyla. Tekrar k, [zamanlar[k], zamanlar[k+1]) icinde makasin en az iki adim
+    acik oldugu ilk anda makasin icinden (karsilikli_islem ile ayni kural); yoksa aralik basinda refler[k]'nin bir adim
+    ustu. Son tekrarin araligi 60 sn."""
+    out = []
+    for k, (tz, q, ref) in enumerate(zip(zamanlar, miktarlar, refler)):
+        son = zamanlar[k + 1] if k + 1 < len(zamanlar) else tz + 60 * US
+        ici = makas_ici(defter, tz, son, tablo) if defter else None
+        tz, p = ici if ici else (tz, ref + adim(ref, tablo))
+        out.append(YeniEmir(tz, _no("karsilikli", 2 * k + 1), False, p, q, LIMIT))
+        out.append(YeniEmir(tz + 1, _no("karsilikli", 2 * k + 2), True, p, q, LIMIT))
     return out
 
 

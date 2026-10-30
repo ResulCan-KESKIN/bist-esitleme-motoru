@@ -1,0 +1,13 @@
+kume,senaryo,puan,pay_gun,roc_auc,ilk3_isabet
+enjeksiyonlu,hepsi,puan_zskor,38,0.6540505390098577,0.21052631578947367
+enjeksiyonlu,hepsi,puan_kural,38,0.6697785946274959,0.2631578947368421
+enjeksiyonlu,hepsi,puan_iforest,38,0.590889229277006,0.05263157894736842
+enjeksiyonlu,yaniltici,puan_zskor,38,0.6540505390098577,0.21052631578947367
+enjeksiyonlu,yaniltici,puan_kural,38,0.6697785946274959,0.2631578947368421
+enjeksiyonlu,yaniltici,puan_iforest,38,0.590889229277006,0.05263157894736842
+kontrol,hepsi,puan_zskor,38,0.42457612074921314,0.0
+kontrol,hepsi,puan_kural,38,0.42403397750825206,0.0
+kontrol,hepsi,puan_iforest,38,0.4370615649949616,0.0
+kontrol,yaniltici,puan_zskor,38,0.42457612074921314,0.0
+kontrol,yaniltici,puan_kural,38,0.42403397750825206,0.0
+kontrol,yaniltici,puan_iforest,38,0.4370615649949616,0.0

@@ -12,7 +12,7 @@ devre kesici iki yonde) dusmez. Pazara hic uygulanmayan parametrede (or. YIP'te 
 import csv, datetime, os, re
 
 DOSYA = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tarih_parametreleri.csv")
-VERI_DONEMI = (datetime.date(2024, 6, 1), datetime.date(2025, 5, 31))   # DataStore gun ici verisi (CLAUDE.md)
+VERI_DONEMI = (datetime.date(2024, 1, 1), datetime.date(2025, 6, 30))   # DataStore gun ici verisi (CLAUDE.md; 2025-06 27.10.2026'da, 2024-01..05 30.10.2026'da eklendi)
 _satirlar = None
 
 

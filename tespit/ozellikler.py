@@ -18,7 +18,7 @@ Aktor gerektiren bentler (c: yon degistiren emir; c-trencli bent: kendinden kend
 veride olculemez (uye/hesap yok).
 
 Kullanim: python -I tespit/ozellikler.py GUNLUK_EMIR_KLASORU ISLEM.parquet GUNSONU.parquet CIKTI.parquet [GUN ...]
-          (gun verilmezse klasordeki butun gunler; gun basina ara dosyalar CIKTI_gunluk/ altinda, var olan gun atlanir;
+          (gun verilmezse GUNSONU ayindaki butun gunler; gun basina ara dosyalar CIKTI_gunluk/ altinda, var olan gun atlanir;
           CIKTI o ana kadar hesaplanan butun gunlerin birlesimidir)
 """
 import datetime, glob, os, sys, time
@@ -30,6 +30,7 @@ import pyarrow.compute as pc
 import pyarrow.parquet as pq
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "veri", "araclar"))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))   # kapanis_ozellikleri (python -I betik klasorunu eklemez)
 
 PAY_PAZARLARI = ("Z", "N", "T", "W", "S")
 ACILIS_TOPLAMA = ("P_ACILIS_EMIR_TPL", "P_ACS_EMR_TP2_PY")          # 09:40-09:50 (son 5 dk haric)
@@ -158,7 +159,7 @@ def gunsonu_ozellikleri(gunsonu, gun):
         "pazar": t["market_segment"], "bist100": t["bist_100_index"], "piyasa_yapici": t["market_maker"],
         "brut_takas": t["gross_settlement"], "ozsermaye": t["corporate_action"],
         "baz": b, "kapanis": t["closing_price"],
-        "getiri": t["closing_price"] / b - 1,
+        "getiri": t["closing_price"].where(t["closing_price"] > 0) / b - 1,   # islem yoksa kapanis 0 yazilir; getiri yok
         "aralik": (t["highest_price"] - t["lowest_price"]) / b,
         "hacim_tl": t["total_traded_value"],
         "kapanis_aof_sapma": t["closing_price"] / t["vwap"].where(t["vwap"] > 0) - 1,
@@ -181,7 +182,9 @@ def gun_ozellikleri(gunluk, islem_parquet, gunsonu, gun):
 
 if __name__ == "__main__":
     gunluk, islem_parquet, gunsonu, cikti = sys.argv[1:5]
-    gunler = sys.argv[5:] or sorted(os.path.basename(p) for p in glob.glob(os.path.join(gunluk, "20*")))
+    # gun verilmezse GUNSONU dosyasinin ayindaki gunler (ISLEM ve GUNSONU aylik dosyalardir)
+    ay = str(pq.read_table(gunsonu, columns=["trade_date"])["trade_date"][0])[:7]
+    gunler = sys.argv[5:] or sorted(os.path.basename(p) for p in glob.glob(os.path.join(gunluk, ay + "-*")))
     # gun basina ara dosya (kaldigi yerden devam): CIKTI'nin yanindaki <ad>_gunluk/ klasoru
     ara = os.path.splitext(os.path.abspath(cikti))[0] + "_gunluk"
     os.makedirs(ara, exist_ok=True)

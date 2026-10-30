@@ -1,0 +1,3 @@
+tarih,islem_kodu,sinif,M,gercek_fiyat,baz,son_islem,aday_alt,aday_ust,n_aday,alis_fazlali_seviye,satis_fazlali_seviye,fiyat_baz,karar_baz,uyar_baz,fiyat_son,karar_son,uyar_son,donus_seviyeleri,yon_karisik_istisna
+2024-01-17,Z30EA.F,acilis,2024-01-17 09:56:28.144826,108250.0,108750,,107150,111300,84,22,62,108750,en_yakin,False,108750,en_yakin,False,108200/108250,1
+2024-01-18,ISBTR.E,tek_fiyat_gun_ici,2024-01-18 12:55:17.144661,509997500.0,499005000,,509997500,544997500,14001,1,14000,509997500,en_yakin,True,509997500,en_yakin,True,509997500/510000000,0

@@ -7,7 +7,9 @@ ciktisi pencereler.parquet) uzerinde gradyan artirmali karar agaci.
   ogrenir. Kapanis penceresi pencere.kapanis_gecmisi ile (payin gecmis kapanislarina gore) puanlanir; kapanis
   senaryosunun pay-gunleri (pozitif penceresi yalniz kapanis penceresidir) modelin disindadir.
 - Dogrulama: pay-gune gore gruplu 5 katli capraz dogrulama (ayni pay-gunun pencereleri egitim ve testte bir arada
-  olmaz). Katin modeli, test pay-gunlerinin enjeksiyonsuz (kontrol) pencerelerini de puanlar.
+  olmaz). GRUP=pay ortam degiskeniyle paya gore gruplanir (ayni payin butun gunleri ayni katta; hisseye gore ayarli
+  senaryolarda profil paya ozgudur, senaryo-tasarimi.md 7). Katin modeli, test gruplarinin enjeksiyonsuz (kontrol)
+  pencerelerini de puanlar. Pencere puanlari denetimli_puanlar.parquet'e yazilir (kor_nokta.py).
 - Olcutler: ROC-AUC, ortalama kesinlik; gun icinde pozitif pencerelerden biri ilk 3'te mi; kontrolde ayni pencerelerin
   ilk 3'e girme orani (yanlis alarm tabani). Senaryo basina ayrica.
 Kullanim: python -I tespit/denetimli.py PENCERELER.parquet CIKTI_KLASORU
@@ -41,7 +43,7 @@ if __name__ == "__main__":
     src, out = sys.argv[1:3]
     os.makedirs(out, exist_ok=True)
     A = pd.read_parquet(src)
-    A["grup"] = A["gun"].astype(str) + "|" + A["kod"]
+    A["grup"] = A["kod"] if os.environ.get("GRUP", "pay_gun") == "pay" else A["gun"].astype(str) + "|" + A["kod"]
     A = A[~A["kapanis_muzayedesi"] & (A["senaryo"] != "kapanis")]
     E, K = A[A["kume"] == "enjeksiyonlu"].copy(), A[A["kume"] == "kontrol"].copy()
     E["puan_denetimli"], K["puan_denetimli"] = np.nan, np.nan
@@ -59,11 +61,13 @@ if __name__ == "__main__":
         e = E if senaryo is None else E[E["senaryo"] == senaryo]
         k = K if senaryo is None else K[K["senaryo"] == senaryo]
         for p in ["puan_zskor", "puan_kural", "puan_iforest", "puan_denetimli"]:
-            R.append(dict(senaryo=senaryo or "hepsi", puan=p, pay_gun=e["grup"].nunique(),
+            R.append(dict(senaryo=senaryo or "hepsi", puan=p, pay_gun=e.groupby(["gun", "kod"]).ngroups,
                           roc_auc=roc_auc_score(e["poz"], e[p]), ort_kesinlik=average_precision_score(e["poz"], e[p]),
                           taban_oran=e["poz"].mean(), ilk3_isabet=ilk3(e, p), kontrol_ilk3=ilk3(k, p)))
     R = pd.DataFrame(R)
     R.to_csv(os.path.join(out, "denetimli_degerlendirme.csv"), index=False, encoding="utf-8")
+    pd.concat([E, K])[["gun", "kod", "senaryo", "pencere", "kume", "poz", "puan_denetimli"]].to_parquet(
+        os.path.join(out, "denetimli_puanlar.parquet"))
     m = HistGradientBoostingClassifier(max_iter=300, learning_rate=0.05, random_state=0).fit(XE, E["poz"])
     from sklearn.inspection import permutation_importance
     imp = permutation_importance(m, XE, E["poz"], scoring="average_precision", n_repeats=5, random_state=0)

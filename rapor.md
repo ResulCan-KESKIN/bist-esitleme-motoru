@@ -1,6 +1,6 @@
 # Çalışma raporu
 
-Bu dosya, bitirme projesi vize raporunun yazılacağı kaynak kayıttır. Önce 21.10.2026'ya kadar yapılanlar özetlenir, sonra oturumlar tarih başlığı altında ayrıntılı kaydedilir (bölüm 2: 21.10.2026, bölüm 3: 22.10.2026, bölüm 4: 23.10.2026, bölüm 5 ve 6: 24.10.2026, bölüm 7: 25.10.2026). Ayrıntılı teknik sonuçlar ilgili dosyalardadır; bu raporda yalnız özetleri ve sayıları vardır.
+Bu dosya, bitirme projesi vize raporunun yazılacağı kaynak kayıttır. Önce 21.10.2026'ya kadar yapılanlar özetlenir, sonra oturumlar tarih başlığı altında ayrıntılı kaydedilir (bölüm 2: 21.10.2026, bölüm 3: 22.10.2026, bölüm 4: 23.10.2026, bölüm 5 ve 6: 24.10.2026, bölüm 7: 25.10.2026, bölüm 8 ve 9: 26.10.2026, bölüm 10: 27.10.2026, bölüm 11 ve 12: 28.10.2026, bölüm 13 ve 14: 29.10.2026, bölüm 15 ve 16: 30.10.2026). Ayrıntılı teknik sonuçlar ilgili dosyalardadır; bu raporda yalnız özetleri ve sayıları vardır.
 
 **Proje:** "Borsa İstanbul Pay Piyasası Kurallarına Uygun Eşleştirme Motoru ve Makine Öğrenmesi Destekli Piyasa Manipülasyonu Tespit Sistemi" (bilgisayar mühendisliği bitirme projesi, tek kişilik).
 
@@ -940,3 +940,910 @@ Denetimli model (yalnız sürekli işlem pencereleri; kapanış senaryosu modeli
 
 - Yeni çıktılar: `veri/gunici-dogrulama/2025-03/tespit/pencere_1dk/` ve `pencere_10dk/` (`pencere_degerlendirme.csv`, `denetimli_degerlendirme.csv`, `denetimli_ozellik_onemi.csv`; `pencereler.parquet` git dışı).
 - Kod değişikliği yok.
+
+## 8. 26.10.2026 — Yanıltıcı emir: katman uzaklığı duyarlılığı
+
+Amaç: Do ve Putniņš (2023) kovuşturulmuş 25 vakayı inceliyor. Gerçek vakalarda sahte emirler en iyi fiyatta ya da hemen gerisinde, sıranın arkasında duruyor (tez s. 100). Bizim senaryomuz ise katmanları 4–6 adım geriye koyuyor; ana gösterge `uzak_kisa_pay` de en iyi fiyattan en az 3 adım uzaktaki emirleri sayıyor. Senaryo göstergeye uygun kurulduğu için 0,95'lik başarının gerçekçi bir yanıltıcı emirde geçerli olup olmadığı bilinmiyordu (`Literatür Araştırması/eklenebilecekler.md` M6).
+
+### 8.1 Yöntem
+
+- Kod değiştirilmedi. `sentetik_degerlendir.YANILTICI_ADIM` (4) çalışma anında 1 ve 0 yapıldı. Bunun için bir sarmalayıcı (`veri/araclar/yaniltici_adim.py`) modülü içe aktarıp sabiti değiştirdi ve `pencere_degerlendir.py`'yi `runpy` ile çalıştırdı. Ardından `denetimli.py` koşuldu. Karşılaştırma: `veri/araclar/yaniltici_karsilastir.py`.
+- Diğer her şey 5 dk temel koşuyla (`pencere/`) aynıdır: 80 seçim, tohum 11, `vaka_pencere_dogrulama.csv`. Pay-günler ve enjeksiyon zamanları da aynıdır; değişen yalnız katman fiyatıdır.
+- Katmanların en iyi fiyata uzaklığı:
+  - adım 4: 4, 5, 6 adım geride (temel);
+  - adım 1: 1, 2, 3 adım geride;
+  - adım 0: en iyi fiyatta, 1 ve 2 adım geride.
+- `uzak_kisa_pay` 3 adım ve ötesini sayar. Adım 1'de bir katman bu göstergeye girer, adım 0'da hiçbiri girmez.
+
+### 8.2 Sonuçlar
+
+Yanıltıcı emir senaryosu; hücreler ROC-AUC / ilk 3 isabeti / kontrol ilk 3:
+
+| Katman uzaklığı | Temiz pay-gün | Z-skor          | Kurallar        | Isolation Forest | Denetimli       |
+| --------------- | ------------- | --------------- | --------------- | ---------------- | --------------- |
+| 4 adım (temel)  | 19            | 0,94 / %74 / %0 | 0,95 / %89 / %5 | 0,82 / %5 / %0   | 0,95 / %95 / %0 |
+| 1 adım          | 18            | 0,93 / %61 / %0 | 0,94 / %61 / %6 | 0,80 / %6 / %0   | 0,91 / %61 / %0 |
+| 0 adım          | 9             | 0,54 / %11 / %0 | 0,55 / %11 / %0 | 0,57 / %11 / %0  | 0,52 / %0 / %0  |
+
+Üç koşuda da temiz kalan aynı 9 pay-gün (ROC-AUC / ilk 3):
+
+| Katman uzaklığı | Z-skor     | Kurallar    |
+| --------------- | ---------- | ----------- |
+| 4 adım (temel)  | 0,96 / %67 | 0,98 / %100 |
+| 1 adım          | 0,95 / %67 | 0,97 / %78  |
+| 0 adım          | 0,54 / %11 | 0,55 / %11  |
+
+Pozitif pencerelerde göstergeler (pay-gün başına en büyük değer, ortalama):
+
+| Katman uzaklığı | `uzak_kisa_pay` | z(iptal oranı) | \|z(derinlik dengesizliği)\| | Bent a/b işaretli pay-gün |
+| --------------- | --------------- | -------------- | ---------------------------- | ------------------------- |
+| 4 adım (temel)  | 0,75            | 1,04           | 0,58                         | %100                      |
+| 1 adım          | 0,25            | 1,10           | 0,57                         | %100                      |
+| 0 adım          | 0,00            | 1,28           | 0,47                         | %11                       |
+
+### 8.3 Yorum
+
+- **Kör nokta doğrulandı.** Sahte emir en iyi fiyattayken bütün yöntemler rastgeleye iner (ROC-AUC 0,52–0,57). Aynı 9 pay-günde kurallar 0,98 / %100'den 0,55 / %11'e düşer.
+- **Neden:**
+  - Bent a/b, z(iptal oranı) ya da z(`uzak_kisa_pay`) ≥ 3 olunca işaretlenir. Adım 0'da ikisi de eşiğin altındadır.
+  - `uzak_kisa_pay` sıfırdır. Senaryonun 3 iptali, pencerede ortanca 21–35 yeni emir varken iptal oranını eşiğe taşımaz (z ≈ 1,3).
+  - Derinlik dengesizliğinin z'si 0,5 civarındadır. 5 dk'lık ortalama, 30 sn'lik dengesizliği sulandırır. Do ve Putniņš'in olay anında en büyük değeri alan ölçüsü bu yüzden önemlidir.
+  - Denetimli model de öğrenemez (0,52), çünkü özelliklerde sinyal yoktur.
+- **Adım 0'da 20 vakanın 11'i dışarıda kaldı.**
+  - 10'unda katmanlar doldu (temizlik ölçütü), 1'i VAKBN (EBDKS).
+  - Neden: senaryo, gerçekleşme yaklaşınca sahte emri iptal edip yeniden girmiyor. Gerçek vakalarda bu yapılıyor (tez s. 100). En iyi fiyattaki katman 30 sn boyunca dolmaya açık kalıyor.
+  - Kalan 9 pay-gün daha durgundur (pencere başına yeni emir ortancası 21; temel koşuda 35). Örneklem küçüktür.
+- **Adım 1'de düşüş sınırlıdır.** Kuralların ilk 3 isabeti %89'dan %61'e iner; tek uzak katman göstergeyi hâlâ tetikler.
+- **Sonuç:**
+  - Raporlanan yanıltıcı emir başarısı (0,95) yalnız derin katmanlı tür için geçerlidir. Bu, sınırlar bölümüne yazılır.
+  - Gidermek için iki iş var (`Literatür Araştırması/eklenebilecekler.md`):
+    - göstergede E9: olay anında derinlik dengesizliği, dengesizliğin ters tarafında işlem;
+    - senaryoda E10: iptal edip yeniden girme ve döngü.
+
+### 8.4 Dosyalar
+
+- Yeni çıktılar: `veri/gunici-dogrulama/2025-03/tespit/pencere_yaniltici_adim0/` ve `pencere_yaniltici_adim1/` (`pencere_degerlendirme.csv`, `denetimli_degerlendirme.csv`, `denetimli_ozellik_onemi.csv`, `kosu.log`; `pencereler.parquet` git dışı).
+- Kod değişikliği yok.
+
+## 9. 26.10.2026 — SPK vakalarında kısa ömürlü emirlerin en iyi fiyata uzaklığı
+
+Amaç: kullanıcının gözlemi, Borsa İstanbul'da tahtacıların sahte emri genelde ilk kademelere değil daha geriye koyduğu yönünde. Do ve Putniņš'in yabancı vakalarında ise sahte emirler en iyi fiyatta ya da hemen gerisinde (bölüm 8). Senaryodaki katman uzaklığını varsayımla değil veriyle seçmek için SPK vakalarında ölçüldü.
+
+### 9.1 Yöntem
+
+- **Emir:** sürekli işlemde girilen yeni limit emir. Uzaklık, aynı taraftaki en iyi fiyattan fiyat adımı cinsinden (veri satırındaki en iyi fiyat; 7 ve ötesi bir kova).
+- **Kısa ömürlü:** 60 sn içinde hiç işlem görmeden iptal edilen emir; `uzak_kisa_pay` ile aynı tanım.
+- **Büyük:** pay-günün yeni limit emirlerinin en büyük %1'i. "Günlük işlem miktarının %1'i" eşiği denendi; ALKLC'de en büyük emir günlük hacmin %0,4'ü olduğu için hiç tutmadı.
+- **Vakalar:**
+  - ALKLC (A; dönem 04.02–18.03.2025, SPKn 107/1 işlem bazlı): verideki 12 dönem günü ile 19.03–30.06 arasındaki 67 gün.
+  - ENSRI ve VKFYO (B; VI-104.1 md 5/1-b "farklı fiyat kademelerine emir iletilmesi", `kademe_emri`; tedbir 16.04 ve 29.04.2025): 20 günlük B penceresi ile verideki diğer 57 gün. Tedbirden önceki 2 belirsiz gün dışarıda.
+- **Piyasa tabanı:** yalnız 10.03.2025, diğer `.E` paylar. Mart'ın tamamı için başlatılan koşu, sistem belleği azaldığı için 20 günün 13'ünde durduruldu (ALKLC kısmı tamamlanmıştı).
+- **Betikler:** `veri/araclar/yaniltici_yerlesim.py`, `alklc_cozumle.py`, `vaka_yerlesim.py`, `vaka_cozumle.py`.
+
+### 9.2 Sonuçlar
+
+Günlük paylar: kısa ömürlü emir miktarının günün bütün yeni limit emir miktarına oranı (%). Hücreler: dönem ya da etiket ortalaması / diğer günler ortalaması. p: Mann–Whitney, dönem > diğer.
+
+| Gösterge | ALKLC (A, 107/1) | ENSRI (B, kademe emri) | VKFYO (B, kademe emri) |
+| --- | --- | --- | --- |
+| Kısa ömürlü, 3+ kademe (`uzak_kisa_pay` karşılığı) | 6,39 / 8,19 (p = 0,99) | 1,43 / 2,99 (p = 1,00) | 0,91 / 0,17 (p = 0,005) |
+| Kısa ömürlü, 0–2 kademe | 10,28 / 14,37 (p = 1,00) | 9,94 / 9,81 (p = 0,64) | 2,56 / 1,06 (p = 0,005) |
+| Kısa ömürlü ve büyük, 3+ kademe | 0,12 / 0,31 (p = 0,38) | 0,34 / 0,17 (p = 0,07) | 0,23 / 0,07 (p = 0,22) |
+| Kısa ömürlü ve büyük, 0–2 kademe | 0,24 / 0,55 (p = 0,99) | 0,44 / 0,50 (p = 0,70) | 1,19 / 0,28 (p = 0,01) |
+
+Kısa ömürlü büyük emirlerin uzaklık dağılımı (miktar %; adet parantez içinde):
+
+| Grup | 0 | 1–2 | 3–6 | 7+ |
+| --- | --- | --- | --- | --- |
+| ALKLC dönem (89) | 49,4 | 15,0 | 18,4 | 17,2 |
+| ALKLC sonra (665) | 56,0 | 13,8 | 8,7 | 21,5 |
+| ENSRI etiket (78) | 46,4 | 11,5 | 7,8 | 34,4 |
+| ENSRI diğer (131) | 56,3 | 18,4 | 5,9 | 19,4 |
+| VKFYO etiket (7) | 79,9 | 0,0 | 0,0 | 20,1 |
+| VKFYO diğer (4) | 0,0 | 87,1 | 0,0 | 12,9 |
+| Piyasa, 10.03 (3.650) | 77,6 | 14,2 | 4,0 | 4,3 |
+
+### 9.3 Yorum
+
+- **Veri, sahte emrin hangi kademeye konduğunu tek yönde göstermiyor.**
+  - ALKLC'de dönemde hiçbir uzaklıkta artış yok. Vaka işlem bazlıdır (107/1); emir bazlı bir iz beklenmez, yerleşim sorusu için bilgi vermez.
+  - ENSRI'de genel artış yok. Yalnız büyük kısa ömürlü emirlerde uzak kademede (özellikle 7+) zayıf bir artış var (p = 0,07).
+  - VKFYO'da hem yakın (0–2) hem uzak (3+) kademede artış var. Az sayıdaki büyük emir çoğunlukla en iyi fiyatta (7 emir).
+  - İki kademe emri vakası B seviyesidir; 20 günlük pencere varsayımdır, gerçek dönem bilinmiyor.
+- **ALKLC'de `uzak_kisa_pay` yüksekliği paya özgü.** `TASARIM.md` 6'daki "ALKLC'nin manipülasyon günlerinde %7'nin üstünde" değeri dönem sonrasında da aynı düzeydedir (ortanca dönem 6,9, sonra 7,6). Piyasa ortancası %1,2 olduğu için bu pay her gün yüksek görünür; dönemi ayırt etmez.
+- **Senaryo büyüklüğü gerçekçi.** Senaryo her katmanı günlük hacmin %2'si yapıyor. 10.03'te en az 300 yeni limit emirli 548 pay-günde en büyük tek emrin günlük hacme oranının ortancası %2,9; pay-günlerin %68'inde %2'yi aşıyor. ALKLC gibi çok işlem gören paylar istisnadır.
+- **Sonuç:** katman uzaklığını tek bir değere (4–6 ya da 0) sabitlemenin veride dayanağı yok. Senaryoda uzaklık vakadan vakaya değişmeli ve sonuçlar uzaklığa göre ayrı raporlanmalı (kullanıcı önerisi; `Literatür Araştırması/eklenebilecekler.md` E11). KRGYO ve TDGYO (A, md 104) 2025-01/02 verisi gelince aynı ölçüm tekrarlanır.
+
+### 9.4 Dosyalar
+
+- Çıktılar: `veri/gunici-dogrulama/2025-03/tespit/yaniltici_yerlesim/` (`alklc_emirler.parquet`, `kademe_vakalari_emirler.parquet`, `piyasa_ozet_2025-03-10.parquet`, `pay_gun_boyut_2025-03-10.parquet`; hepsi git dışı; `kosu.log`).
+- Kod değişikliği yok.
+
+## 10. 27.10.2026 — Yeni aylar için tarih parametrelerinin ölçümü
+
+Amaç: motoru ve tespit değerlendirmesini Mart 2025 dışındaki aylarla da çalıştırmak (önce 2025-01, 02, 04, 05; sonra 2024-10…12). Bunun ön koşulu, her ayda geçerli olan borsa kurallarının o ayın verisinden ölçülmesidir.
+
+### 10.1 Neden ölçüyoruz
+
+- **Kurallar zamanla değişir ve uygulanan değer her zaman metinde yazmaz.** Mart 2025'te uygulanan değerler yürürlükteki Prosedür metninden farklıdır:
+  - fiyat marjı tüm pay pazarlarında ±%10 (metin: Yıldız ±%20, Ana ±%15);
+  - pay bazında devre kesici yalnız düşüşte, %5 eşik, 15 dk emir toplama (metin: iki yönde, pazara göre %5–10, 10 dk);
+  - açığa satış 24.03.2025'ten itibaren yasak.
+  Bu farklar Tablo-4 dipnotundaki geçici duyurulardan gelir (bölüm 2.4, `TASARIM.md` 3.6). Duyuruların her biri elimizde değildir; başlangıç ve bitiş tarihleri de bilinmez. Bu yüzden değer, verinin kendisinden ölçülür: piyasada fiilen ne uygulanmışsa iz veride vardır.
+- **Bir ayın değeri başka aya taşınamaz.** Mart'ta ölçülen değerin Ocak'ta da geçerli olduğu varsayılamaz; geçici uygulamalar ay ortasında başlayıp bitebilir (açığa satış yasağının 24.03'te başlaması gibi).
+
+### 10.2 Ne işe yarar
+
+Motor her emri ve her işlemi bu parametrelere göre işler. Parametre yanlışsa motor gerçek piyasayı tekrar üretemez; üzerine kurulan her ölçüm de yanlış zeminde durur.
+
+| Parametre | Motorda neyi belirler | Yanlış olursa |
+|---|---|---|
+| Fiyat marjı | Günün tavan ve taban fiyatı; hangi emrin kabul, hangisinin red edileceği | Marj ±%20 sanılırsa +%15'lik sentetik emir kabul edilir; gerçek piyasada reddedilirdi |
+| Devre kesici yönü, oranı | Sürekli işlemin ne zaman durup müzayedeye geçeceği | Yükselişte de devre kesici çalıştırılırsa gerçekte kesintisiz süren işlemler durdurulur |
+| Devre kesici emir toplama süresi, rastlantısal pencere, kapanışa taşma saati | Devre kesici müzayedesinin ne kadar süreceği, ne zaman eşleşeceği, geç tetiklenen kesicinin kapanışa aktarılıp aktarılmayacağı | Müzayede yanlış anda eşleşir; sonraki bütün işlemlerin sırası kayar |
+| Tek fiyat Adım 4 referansı | Birden çok aday fiyat kaldığında müzayede fiyatının seçimi | Açılış ve kapanış fiyatları yanlış çıkar; kapanış etkileme senaryosu yanlış ölçülür |
+| Açığa satış kapsamı | Hangi paylarda açığa satış emrine izin verildiği | Yasak dönemde sentetik açığa satış kabul edilir |
+
+- **Doğruluk ölçütü:** doğru parametrelerle motor Mart'ta gerçek işlemlerin %99,85'ini (03.03) ve %99,91'ini (19.03) birebir tekrar üretti (bölüm 3.10). Yeni aylarda da her aydan bir gün aynı ölçümle sınanır; oran düşerse önce parametreye bakılır.
+- **Tespit değerlendirmesine etkisi:** sentetik manipülasyonun fiyata etkisi (ör. kapanış etkileme emrinin kapanış fiyatını ne kadar oynattığı) motorun bu kurallarla çalışmasına bağlıdır. Yanlış kurallı bir motorda ölçülen ROC-AUC, gerçek piyasadaki yakalama gücünü göstermez.
+- **Ölçüm ay başına bir kez yapılır.** Sonuç `motor/tarih_parametreleri.csv`'ye geçerlilik aralığı ve kaynağıyla yazılır (ör. "fiyat marjı 0,10, 02.01.2025–28.02.2025, veri"). Motor her çalıştırmada değeri bu tablodan okur. Veri dönemindeki bir gün için ölçüm satırı yoksa `OlcumEksik` ile durur (bölüm 5.1); yürürlükteki metne sessizce geri düşmez. Yeniden ölçüm yalnız yeni ay eklendiğinde, bir ayın verisi değiştiğinde ya da ölçüm yöntemi değiştiğinde gerekir.
+
+### 10.3 Nasıl ölçülür
+
+Mart 2025'te kullanılan doğrulama betikleri (bölüm 2.4) her ay için aynı sırayla çalıştırılır. Çıktılar `veri/gunici-dogrulama/YYYY-AA/` altındadır.
+
+| Parametre | Betik | Veride neye bakılır |
+|---|---|---|
+| Fiyat marjı | `gunici_islem_gunsonu_karsilastir.py`, `gunici_marj_kontrol.py` | Her sıra-günde en yüksek ve en düşük işlem fiyatı, baz fiyata göre aday marjlarla (0,10 / 0,15 / 0,20) karşılaştırılır. Doğru marjda sınırı aşan yalnız özsermaye ve rüçhan sıraları kalır; tavana ya da tabana tam eşit işlem gören sıra-günler yalnız doğru marjda görülür. |
+| Devre kesici yönü ve oranı | `gunici_seans_akis_kontrol.py`, `gunici_devre_kesici_kontrol.py` | Devre kesicinin tetiklendiği andaki fiyatın referansa (son müzayede fiyatı, yoksa baz) göre değişimi; ayrıca sürekli işlemde gün içindeki en büyük yükseliş ve düşüş. Yükselişte hiç kesici yoksa ve fiyat eşiği aşmışsa kesici yalnız düşüşte çalışıyordur. |
+| Devre kesici süreleri, rastlantısal pencere, kapanışa taşma | `gunici_seans_akis_kontrol.py` (devre kesici olayları) | İlk devre kesici satırından ilk eşleştirme satırına geçen süre, eşleştirme anının dağılımı, kendi müzayedesi yerine kapanışa aktarılan tetiklemelerin saati. |
+| Adım 4 referansı | `gunici_tek_fiyat_kontrol.py`, `gunici_tek_fiyat_ozet.py` | Her müzayedenin defteri emir verisinden yeniden kurulur; denge fiyatı iki referansla (baz fiyat, son işlem fiyatı) hesaplanır. Gerçekleşen fiyatı hangi referansın tuttuğuna bakılır. |
+| Açığa satış kapsamı | gün sonu dosyası | Açığa satış işlemi görülen paylar (yalnız BIST 50 mi, hiç yok mu). |
+
+### 10.4 Süre
+
+Ocak 2025 verisiyle ölçüldü (betik başına; 15.01 tek gün ve bütün ay):
+
+| Adım | Ölçülen | Ay başına (22 gün) |
+|---|---|---|
+| İşlem–gün sonu karşılaştırması | 455 sn (bütün ay) | ≈ 7,5 dk |
+| Marj | 5 sn (bütün ay) | — |
+| Seans akışı | 31 sn / gün | ≈ 11 dk |
+| Devre kesici | 26 sn / gün | ≈ 8 dk |
+| Tek fiyat | 87 sn / gün | ≈ 32 dk |
+| Toplam | | ≈ 1 saat |
+
+Nisan ve Mayıs'ta günlük emir sayısı yaklaşık %30 fazladır; bu aylar 70–75 dk sürer. Dört ay iki pencerede yaklaşık 2 saat 15 dakikada ölçülür.
+
+### 10.5 Sonuçlar: Ocak–Mayıs 2025
+
+Bütün parametreler beş ayda aynı çıktı. `motor/tarih_parametreleri.csv`'de ölçüm satırlarının aralığı 2025-03-03…28'den 2025-01-02…2025-05-30'a genişletildi (yeni satır açılmadı; açığa satış Mart'taki gibi iki dönem). Değerler `gunici-dogrulama/2025-0N/` çıktılarından, Mart'taki ölçütlerle (`gunici-veri-dogrulama.md` 4, 10, 11, 13) hesaplandı.
+
+| Ölçüm | Ocak | Şubat | Mart | Nisan | Mayıs |
+|---|---|---|---|---|---|
+| Fiyat marjı | ±%10 | ±%10 | ±%10 | ±%10 | ±%10 |
+| ±%10'u aşan sıra-gün (özsermaye + `.R`/`.BE`) | 14 (6 + 8) | 18 (12 + 6) | 20 (15 + 5) | 30 (12 + 18) | 22 (8 + 14) |
+| Tavana / tabana tam eşit (±%10 sınırı) | 222 / 76 | 270 / 101 | 495 / 786 | 529 / 138 | 489 / 196 |
+| Devre kesici olayı (Ana / Yıldız / Alt) | 441 (226 / 133 / 82) | 553 (290 / 177 / 86) | 1.195 (610 / 423 / 162) | 860 (482 / 215 / 163) | 854 (487 / 221 / 146) |
+| Yükseliş yönlü devre kesici | 0 | 0 | 0 | 0 | 0 |
+| Sürekli işlemde en büyük düşüş / yükseliş | −%5,00 / %19,9 | −%5,00 / %18,9 | −%5,00 / %22 | −%5,00 / %21,8 | −%5,00 / %22,2 |
+| Tetiklemeden eşleştirmeye | 899–929 sn | 899–929 sn | 899–929 sn | 899–929 sn | 899–929 sn |
+| Tetiklemeden sürekli işleme dönüş | 1.019–1.020 sn | 1.019–1.020 sn | 17 dk | 1.019–1.020 sn | 1.019–1.020 sn |
+| Kapanışa taşma: en geç ayrı eşleştirmeli / en erken taşan | 17:39:41 / 17:42:23 | 17:39:35 / 17:40:33 | 17:39 / 17:40:59 | 17:39:33 / 17:40:16 | 17:39:03 / 17:40:08 |
+| Adım 4: baz ile / son işlemle tutan (toplam) | 191 / 149 (192) | 187 / 148 (188) | 144 / 113 (146) | 165 / 126 (167) | 143 / 109 (144) |
+| Temiz müzayedelerde fiyat uyumu | %99,97 (28.916 / 28.926) | %99,94 (26.685 / 26.702) | %99,96 (29.621 / 29.633) | %99,97 (27.182 / 27.189) | %99,98 (27.356 / 27.362) |
+| Açıklanmayan uyumsuz müzayede | 10 | 17 | 12 | 7 | 6 |
+| Karışık yön (kurala uyan / istisna) | 2 / 0 | 0 / 1 | 2 / 2 | 1 / 2 | 1 / 0 |
+| Açığa satış işlemi görülen pay | her gün aynı 50 pay, hepsi BIST 100 içinde | aynı | 03–21.03 aynı; 24.03'ten 0 | 0 | 0 |
+| Varant salt kotasyon başlangıcı | 10:00:00 | 10:00:00 | 07.03'ten 10:00:10 | 10:00:10 | 10:00:10 |
+| EBDKS | yok | yok | 19.03 ve 21.03 | yok | yok |
+
+- **Fiyat marjı:** ±%10'u aşan sıra-günlerin hepsi özsermaye günü ya da `.R`/`.BE` sırasıdır (açıklanamayan yok). Nisan'da ±%15/±%20 sınırına tam eşit birkaç sıra-gün de bunlardandır.
+- **Emtia sertifikası (E):** Nisan'da en büyük sapma +%4,99 / −%5,00, Mayıs'ta −%4,99; ±%5 doğrulanır. Ocak–Şubat'ta sınıra ulaşan yok (%3,4).
+- **Kapanışa taşma eşiğinde bir istisna** `[BİLGİ]`: GOLTS.E 21.02'de devre kesici 17:40:01'de tetiklendi. Kapanışa aktarılmadı; emir toplama 18:00'e kadar sürdü, 18:00'de eşleşti, kapanış emir toplaması 18:01'de başladı. Beş ayda en erken kapanışa taşan olay 17:40:08'dedir (Mayıs). Yani eşik 17:40:01 ile 17:40:08 arasındadır. Motor 17:40 kullanır; bu tek olay motorda farklı modellenir.
+- **Tetikleme oranı ölçümünün sınırı** `[BİLGİ]`: oran, tetiklemeden önceki son sürekli işlem fiyatıyla ölçülür. Kesici ise eşiğin ötesinde işlem görecek emirle çalışır. Bu yüzden her ayda birkaç olayda oran −%5'ten uzaktır. Örnek: ZRGYO.E 14.05, sürekli işlemin ilk anında (10:00:00) tetiklendi. Son işlem açılış fiyatındaydı (29,50, oran %0); tetikleyen emrin fiyatı 26,90 (−%8,8). Yön her olayda düşüştür.
+- **Müzayedesinde işlem olmayan devre kesici:** GLBMD.E 07.05'te ilk devre kesici müzayedesinde işlem olmadı. Eşleştirme satırı yazılmadı, sürekli işleme yine T + 17 dk'da dönüldü.
+- **Motorla sınama:**
+  - KRGYO.E 15.01.2025 (A vakası dönemi): 12.956 gerçek işlemin tamamı birebir (sürekli işlem 12.802, müzayede 153, kapanış fiyatından 1); 14.590 emrin gerçekleşen miktarı aynı; 5,5 sn.
+  - EUREN.E 15.04.2025 (A vakası dönemi): 41.794 gerçek işlemin tamamı birebir; 45.239 emrin gerçekleşen miktarı aynı; 9,5 sn.
+- **Test:** `motor/testler/test_senaryolar.py` ölçümsüz gün örneği olarak 2025-04-15 yerine 2024-07-10'u kullanır (Nisan artık ölçülü; Temmuz 2024 veri döneminde ama verisi indirilmedi).
+
+### 10.6 Birden çok ay için kod değişiklikleri
+
+Komutlar Mart için yazılmıştı; birden çok ayı doğru işlemesi için:
+
+- `gunici_seans_akis_kontrol.py` ay (YYYY-MM) da alır. `gunici_tek_fiyat_kontrol.py` yalnız gün sonu dosyasının ayını işler; önceden klasördeki bütün ayları dolaşıyordu. Marjı da Mart'a sabit olmaktan çıkıp argüman olarak alıyor.
+- `tespit/ozellikler.py` gün verilmezse yalnız gün sonu dosyasının ayındaki günleri hesaplar. Önceden klasördeki bütün günleri tek aylık işlem dosyasıyla hesaplayıp boş ara dosyalar bırakırdı; bu dosyalar "hesaplandı" sayıldığı için sonraki doğru çalıştırmada atlanırdı.
+- `tespit/sentetik_degerlendir.py` ve `tespit/pencere_degerlendir.py`: enjeksiyon adayları sabit "2025-03-10" yerine verinin 6. işlem gününden başlar. Z-skor her payın önceki günleriyle kıyas yapar ve en az 5 günlük geçmiş ister (`GECMIS_EN_AZ = 5`); ilk 5 günde kıyas yapılamaz. Mart'ta yine 10.03'tür; Ocak–Mart'ta 09.01, Ekim–Mayıs'ta 08.10.
+- `tespit/spk_pencere.py`: etiketli payların etiketsiz günlerinden en çok 300'ü oynatılır. 8 ayda bu küme yaklaşık 2.450 pay-gündür ve tek başına 6,5 saat sürerdi. Mart'ta 100 olduğu için seçim değişmez.
+- `tespit/ozellik_birlestir.py` (yeni): aylık özellik dosyalarını birleştirir; özsermaye sütununu gün sonu dosyalarından yeniden okur. Aylar tek tabloda olunca Z-skor geçmişi ay sınırında kesilmez: Ocak'taki bir gün Ekim–Aralık geçmişiyle karşılaştırılır.
+- Gün sonu dosyaları aynı gün 2024-09…2025-06 için tek sabit şemayla yeniden yazıldı (`veri/README.md`). Önceden özsermaye sütunu bazı aylarda sayı, bazılarında metindi; aylar birleştirilince hata veriyordu. 2025-06…08'de boşlar "" kaldığı için `tespit` her pay-günü özsermaye günü sayıyordu.
+- 35 test geçer. Mart'ta ay seçimi, 6. gün kuralı, birleştirme ve SPK seçimi önceki koşularla birebir aynı sonucu verir.
+- `tespit/ozellikler.py` `python -I` ile çalışırken kapanış göstergelerini içe aktaramıyordu (`-I` betik klasörünü arama yoluna eklemez; Mart'ta bu göstergeler ayrı betikle sonradan eklendiği için görülmemişti). Betik klasörü yola eklendi.
+- **Getiri düzeltmesi:** işlem görmeyen pay-günlerde gün sonu kapanış fiyatı 0 yazılır; `getiri` bu günlerde −%100 çıkıyordu (ayda 72–87 pay-gün, Mart dâhil). İşlem olmayan gün düşüş değildir; `getiri` artık bu günlerde boştur. Var olan özellik dosyalarında yalnız bu hücreler boşaltıldı (beş ayda 399; diğer hücreler değişmedi, kontrol edildi). Mart pay-gün değerlendirmesine etkisi en çok 0,002 ROC-AUC (`gunici-dogrulama/2025-03/tespit/getiri_duzeltme/`); Mart'ın kayıtlı sonuçları yeniden yazılmadı.
+
+### 10.7 Pay-gün SPK değerlendirmesi: Ocak–Mayıs 2025
+
+Beş ayın özellikleri (`ozellikler.py`, ay başına 20–22 gün, gün başına ≈ 160 sn) `ozellik_birlestir.py` ile birleştirildi: 59.895 pay-gün, 102 gün. `degerlendir.py` (32 sn). Çıktılar `gunici-dogrulama/2025-01_2025-05/tespit/`.
+
+Bu beş ay, etiket dosyasındaki A seviyeli pay-günlerin hepsini (93; KRGYO, TDGYO, ALKLC, EUREN) ve 200 B pay-gününü içerir. Mart'ta bu sayılar 12 (yalnız ALKLC) ve 64'tü.
+
+ROC-AUC (0,5 rastgele):
+
+| Etiket | Puan | Mart (pozitif) | Mart | 5 ay (pozitif) | 5 ay |
+|---|---|---|---|---|---|
+| A | Z-skor | 7 | 0,63 | 93 | 0,49 |
+| A | İktisadi kurallar | 12 | 0,46 | 93 | 0,53 |
+| A | Isolation Forest | 7 | 0,56 | 93 | 0,51 |
+| A | Kesitsel uç | 12 | 0,87 | 93 | 0,75 |
+| A | Kesitsel Isolation Forest | 12 | 0,90 | 93 | 0,75 |
+| B | Z-skor | 57 | 0,52 | 192 | 0,56 |
+| B | İktisadi kurallar | 64 | 0,59 | 200 | 0,55 |
+| B | Kesitsel uç | 64 | 0,51 | 200 | 0,60 |
+| B | Kesitsel Isolation Forest | 64 | 0,52 | 200 | 0,61 |
+| A+B | Kesitsel Isolation Forest | 76 | 0,58 | 293 | 0,65 |
+
+Vaka bazında kesitsel Isolation Forest sıra puanı (1 = günün en uç payı): EUREN 0,91, TDGYO 0,88, ALKLC 0,82, KRGYO 0,56 (A); B'de 0,45 (EKSUN) ile 0,80 (OZATD) arası.
+
+Yorum:
+
+- **Mart'taki A sonucu (0,90) iyimserdi.** Tek vakanın (ALKLC) 12 gününe dayanıyordu. Dört vakayla 0,75'tir. Vakalar arasında fark büyüktür: EUREN, TDGYO ve ALKLC belirgin uçtur; KRGYO neredeyse rastgeledir.
+- **B daha iyi görünüyor (0,52 → 0,61).** Etiket sayısı üç katına çıktı; tahmin daha güvenilirdir. B pencereleri varsayım olduğundan (tedbirden önceki 20 iş günü) A'dan zayıf kalması beklenir.
+- **Z-skor ve kurallar A'da rastgele düzeyde.** Z-skor payı kendi geçmişiyle kıyaslar. A dönemleri uzundur (KRGYO 10.01–25.02, ALKLC 04.02–18.03); dönemin ilk günlerinden sonra payın "geçmişi" de manipülasyon günleridir, kıyas kirlenir. Kesitsel karşılaştırma aynı günün öbür paylarına baktığı için bundan etkilenmez (`yontemler.py`). Beş ayda en iyi pay-gün yöntemi kesitsel karşılaştırmadır.
+### 10.8 Sentetik enjeksiyon, 5 dk pencere ve denetimli model: Ocak–Mayıs 2025
+
+Aynı birleşik dosyayla, Mart'taki ayarlarla (ölçek ×1, katmanlar en iyi fiyatın 4–6 adım gerisinde, tohumlar 7 ve 11), ay başına 40 enjeksiyon: 200 seçim. Mart'ta 80 seçim vardı. Temizlik ölçütüyle dışarıda kalanlardan sonra pay-gün düzeyinde 198, pencere düzeyinde 192 vaka değerlendirildi (senaryo başına 43–50; Mart'ta 17–20). Süre: sentetik 13 dk, pencere 15 dk, denetimli 1 dk. Çıktılar `gunici-dogrulama/2025-01_2025-05/tespit/sentetik/` ve `pencere/`.
+
+**5 dakikalık pencere** (ROC-AUC / ilk 3 isabeti; kontrol: aynı pencerelerin enjeksiyonsuz koşuda ilk 3'e girme oranı):
+
+| Senaryo | Yöntem | Mart | 5 ay | 5 ay kontrol ilk 3 |
+|---|---|---|---|---|
+| Yanıltıcı emir | Kurallar | 0,95 / %89 | 0,91 / %78 | %0 |
+| Yanıltıcı emir | Denetimli | 0,95 / %95 | 0,91 / %92 | %0 |
+| Karşılıklı işlem | Kurallar | 0,48 / %5 | 0,48 / %7 | %12 |
+| Karşılıklı işlem | Denetimli | 0,90 / %80 | 0,93 / %91 | %9 |
+| Fiyat yükseltme | Kurallar | 0,60 / %10 | 0,54 / %6 | %8 |
+| Fiyat yükseltme | Denetimli | 0,71 / %30 | 0,79 / %38 | %4 |
+| Kapanış etkileme | Z-skor | 0,78 / %15 | 0,69 / %8 | %2 |
+| Kapanış etkileme | Kurallar | 0,77 / %20 | 0,67 / %6 | %2 |
+| Kapanış hariç hepsi | Denetimli | 0,85 / %68 | 0,88 / %73 | %4 |
+
+**Pay-gün düzeyi** (ROC-AUC; kontrol: enjeksiyonsuz motor koşusu):
+
+| Senaryo | Yöntem | Mart | 5 ay |
+|---|---|---|---|
+| Kapanış etkileme | Kurallar | 0,81 | 0,74 |
+| Kapanış etkileme | Z-skor | 0,74 | 0,73 |
+| Yanıltıcı emir | Kurallar | 0,68 | 0,55 |
+| Fiyat yükseltme | Kurallar | 0,72 | 0,53 |
+| Karşılıklı işlem | Kurallar | 0,70 | 0,55 |
+| Hepsi | Kurallar | 0,73 | 0,59 |
+| Kontrol (enjeksiyonsuz) | Kurallar | 0,64 | 0,55 |
+
+Yorum:
+
+- **Sonuçların ana yapısı değişmedi.** Yanıltıcı emir pencere düzeyinde kurallarla da modelle de yakalanır (0,91; yanlış alarm yok). Karşılıklı işlem ve fiyat yükseltme yalnız denetimli modelle ayırt edilir. Denetimli model kapanış hariç bütün senaryolarda en iyi yöntemdir (0,88; ilk 3 %73, yanlış alarm %4).
+- **Denetimli model daha çok örnekle güçlendi.** Eğitim pay-günü 59'dan 143'e çıktı. Karşılıklı işlem 0,90'dan 0,93'e, fiyat yükseltme 0,71'den 0,79'a yükseldi.
+- **Kapanış etkileme pencere düzeyinde zayıfladı** (0,78 → 0,69; ilk 3 %15 → %8). Mart'taki 20 vaka iyimser kalmış olabilir. Olası bir neden (sınanmadı): kapanış penceresi payın geçmiş kapanışlarıyla kıyaslanıyor; beş ayda geçmiş uzadıkça olağan kapanış oynaklığı da daha iyi temsil ediliyor ve sentetik emir daha az uç görünüyor. Pay-gün düzeyinde ise kapanış etkileme hâlâ en iyi yakalanan senaryodur (0,73–0,74).
+- **Mart'ın pay-gün sonuçları büyük ölçüde iyimserdi.** Kontrol koşusu (hiç enjeksiyon yokken motor çıktısının veriyle kıyası) Mart'ta kurallarla 0,64 veriyordu; yani 0,73'ün büyük kısmı motor ile veri arasındaki farktan geliyordu. 5 ayda kontrol 0,55, enjeksiyonlu 0,59'dur. Kapanış dışındaki senaryolar pay-gün düzeyinde rastgeleye yakındır. Manipülasyon dakikalar içinde olduğu için gün düzeyinde seyreliyor; bu sonuç pencere düzeyini gerekçelendirir.
+
+### 10.9 SPK etiketli günlerde pencere düzeyi: Ocak–Mayıs 2025
+
+`spk_pencere.py`, birleşik dosyayla: 293 etiketli pay-gün (A 93, B 200), aynı payların etiketsiz günlerinden 300 ve rastgele 300 pay-gün motorla oynatıldı (893 pay-gün, hata 0, 34 dk; pay-gün başına ≈ 2,3 sn). Gün puanı: uyarı veren 5 dk pencere sayısı, bent bazında uyarı sayısı ve en yüksek pencere Z-skoru. Çıktılar `gunici-dogrulama/2025-01_2025-05/tespit/spk_pencere/`.
+
+ROC-AUC (negatif: etiketsiz 600 pay-gün):
+
+| Gün puanı | A, Mart (12) | A, 5 ay (93) | B, Mart (64) | B, 5 ay (200) |
+|---|---|---|---|---|
+| Uyarı penceresi sayısı | 0,44 | 0,55 | 0,61 | 0,54 |
+| Bent a/b (emir bazlı) uyarıları | 0,28 | 0,43 | 0,57 | 0,50 |
+| Bent d (kapanış) uyarıları | 0,48 | 0,49 | 0,49 | 0,50 |
+| Bent f (fiyat yükseltme/düşürme) uyarıları | 0,60 | 0,65 | 0,56 | 0,56 |
+| En yüksek pencere Z-skoru | 0,49 | 0,59 | 0,55 | 0,57 |
+
+Yorum:
+
+- **Gerçek vakalarda pencere uyarıları zayıf ayırt ediyor.** En iyisi A'da bent f (0,65). Emir bazlı uyarılar (a/b) A günlerinde etiketsiz günlerden daha seyrektir (0,43). A vakaları uzun süreli ve işlem bazlıdır (ör. ALKLC 107/1); dakikalık sahte emir izi beklenmez.
+- **Gerçek vakada en iyi yöntem pay-gün düzeyinde kesitsel karşılaştırmadır** (A 0,75, B 0,61; 10.7). Pencere düzeyi ise sentetik kısa epizotlarda (yanıltıcı emir 0,91, denetimli model 0,88; 10.8) güçlüdür. İki düzey farklı manipülasyon türlerini yakalar: haftalara yayılan işlem bazlı manipülasyon günlük kıyasla, dakikalık emir bazlı manipülasyon pencereyle.
+- **"En yüksek pencere Z-skoru" ortalamaları çok büyük** (KRGYO A günlerinde ortalama 20.625). Az işlem gören paylarda pencereler arası yayılım sıfıra yakın olduğundan robust z patlıyor. ROC-AUC sıralamaya dayandığı için etkilenmez, ama bu puanın ortalaması yorumlanamaz.
+
+### 10.10 Tarih parametreleri: Ekim–Aralık 2024 ve Haziran 2025
+
+Kullanıcı kararı (27.10.2026): 2025-06 da analize alınır. `motor/parametreler.py`'deki veri dönemi (`VERI_DONEMI`) 2025-05-31'den 2025-06-30'a uzatıldı; aksi hâlde motor Haziran'da ölçüm istemeden yürürlükteki metne (±%20 marj, iki yönlü devre kesici) düşüyordu (denendi). 2024-09'un işlem dosyası yoktur (zip harici diskte de yok); ölçülemedi, motor Eylül'de `OlcumEksik` ile durur.
+
+Ölçümler 10.3'teki betiklerle, aynı ölçütlerle. Bütün parametreler Mart'la aynı çıktı; `tarih_parametreleri.csv`'de ölçüm satırlarının aralığı 2024-10-01…2025-06-30'a genişletildi. 2024-09…12 için "açığa satış yok" satırı eklendi (gün sonu dosyalarında açığa satış işlemi 0).
+
+| Ölçüm | Ekim 2024 | Kasım 2024 | Aralık 2024 | Haziran 2025 |
+|---|---|---|---|---|
+| Fiyat marjı | ±%10 | ±%10 | ±%10 | ±%10 |
+| ±%10'u aşan sıra-gün (özsermaye + `.R`/`.BE`) | 6 (4 + 2) | 14 (14 + 0) | 36 (19 + 15 + 2 GSF) | 22 (11 + 11) |
+| Tavana / tabana tam eşit (±%10 sınırı) | 349 / 139 | 323 / 87 | 379 / 119 | 405 / 177 |
+| Devre kesici olayı (Ana / Yıldız / Alt) | 1.145 (569 / 520 / 56) | 521 (274 / 217 / 30) | 540 (298 / 209 / 33) | 722 (411 / 181 / 130) |
+| Yükseliş yönlü devre kesici | 0 | 0 | 0 | 0 |
+| Sürekli işlemde en büyük düşüş / yükseliş | −%5,00 / %18,8 | −%5,00 / %15,4 | −%5,00 / %22,0 | −%5,00 / %22,2 |
+| Tetiklemeden eşleştirmeye | 899–929 sn | 899–929 sn | 899–929 sn | 899–929 sn |
+| Kapanışa taşma: en geç ayrı eşleştirmeli / en erken taşan | 17:39:57 / 17:40:36 | 17:39:39 / 17:40:04 | 17:39:57 / 17:40:03 | 17:38:27 / 17:40:31 |
+| Adım 4: baz ile / son işlemle tutan (toplam) | 185 / 151 (187) | 170 / 136 (170) | 187 / 148 (187) | 137 / 105 (138) |
+| Temiz müzayedelerde fiyat uyumu | %99,95 (29.236 / 29.252) | %99,97 (27.584 / 27.591) | %99,94 (28.775 / 28.793) | %99,99 (25.796 / 25.798) |
+| Açıklanmayan uyumsuz müzayede | 16 | 7 | 18 | 2 |
+| Karışık yön (kurala uyan / istisna) | 0 / 1 | 0 / 0 | 2 / 0 | 1 / 0 |
+| Açığa satış işlemi | 0 | 0 | 0 | 0 |
+| Varant salt kotasyon başlangıcı | 10:00:00 | 10:00:00 | 10:00:00 | 10:00:10 |
+| EBDKS | yok | yok | yok | yok |
+
+Bilgi notları `[BİLGİ]`:
+
+- **Gayrimenkul sertifikası (GSF) istisnası:** RPSTP.F2 27.12.2024'te +%27, RPTEK.F2 30.12.2024'te +%22 işlem gördü; özsermaye kaydı yok ve ertesi günler de yükseliş sürdü. Paylarda ±%10 hiç aşılmadı. Neden bilinmiyor (farklı kural ya da duyurulmamış fiyat düzeltmesi). Motor pay sıralarını oynattığından etkisi yok.
+- **Kapanışa taşma eşiği:** AVTUR.E 10.10.2024 (T 17:40:00) ve GOLTS.E 21.02.2025 (T 17:40:01) kapanışa aktarılmadı; emir toplama 18:00'e kadar sürdü. En erken aktarılan olay 17:40:03'tür (Aralık 2024). Eşik 17:40:01 ile 17:40:03 arasındadır. Motor 17:40 kullanır; bu iki olay motorda farklı modellenir.
+- **Tek fiyat Adım 5 (referans yok), ilk vaka:** LYDYE.E 01.10.2024 açılışında baz fiyat yok (gün sonu `previous_last_price` boş). Üç aday fiyat kaldı; algoritma ortadakini (9.605) seçti, gerçekleşen en düşük aday (9.602,5). `03-tek-fiyat.md` Açık sorular'da "Adım 5 veride hiç oluşmadı" yazıyordu; tek vaka kural için yeterli değildir.
+- **Geç dönen devre kesici:** IDGYO.E 14.10.2024'te eşleştirme T + 15:28'de, sürekli işleme dönüş T + 17:22'de (normali 17:00). Tek vaka.
+- **Pozitif oranlı devre kesici (KRONT.E 05.06.2025):** sürekli işlemin ilk yarım saniyesinde 2.000 lotluk piyasa satış emri geldi; kesici, emrin alışları referansın %5 altına süpüreceği için tetiklendi. Devre kesici müzayedesi 17,71'de (referans 18,00) eşleşti. Ölçülen +%0,2, tetiklemeden önceki son işlemin (18,04) referansın üstünde olmasındandır (10.5'teki ölçüm sınırı). Yön düşüştür.
+- **Motorla sınama:** KRONT.E 05.06.2025 (devre kesicili gün) 2.085 işlemin tamamı birebir; ASELS.E 15.11.2024 43.901 işlemin %99,87'si, müzayede işlemlerinin %98,9'u birebir, 45.482 emrin 45.480'inde gerçekleşen miktar aynı.
+
+### 10.11 Pay-gün SPK değerlendirmesi: Ekim 2024–Haziran 2025 (9 ay)
+
+Dokuz ayın özellikleri birleştirildi: 108.495 pay-gün, 186 gün (`gunici-dogrulama/2024-10_2025-06/tespit/`). Yeni dört ayın özellikleri getiri düzeltmesiyle hesaplandı (10.6). A pay-günleri aynıdır (93); B 200'den 291'e çıktı (AVHOL, BEGYO, DZGYO, IPEKE, TMSN, TUCLK eklendi).
+
+| Etiket | Puan | 5 ay | 9 ay |
+|---|---|---|---|
+| A | Z-skor | 0,49 | 0,49 |
+| A | Kesitsel Isolation Forest | 0,75 | 0,76 |
+| B | Z-skor | 0,56 | 0,60 |
+| B | İktisadi kurallar | 0,55 | 0,61 |
+| B | Isolation Forest | 0,50 | 0,60 |
+| B | Kesitsel Isolation Forest | 0,61 | 0,63 |
+| A+B | Kesitsel Isolation Forest | 0,65 | 0,66 |
+
+Yorum:
+
+- **A değişmedi, B belirgin iyileşti.** A pay-günleri aynı olduğundan kesitsel sonuç sabit kaldı (TDGYO 0,88 → 0,90). B'de Z-skor, kurallar ve Isolation Forest 0,04–0,09 yükseldi. Ocak'taki B vakalarının geçmişi artık Ekim–Aralık'ı da kapsıyor. Olası açıklama (sınanmadı): Z-skor için geçmişin uzunluğu önemlidir.
+- **Z-skor ve kesitsel karşılaştırma birbirini tamamlıyor.** TMSN (B) Z-skorla 0,89, kesitsel 0,35; TUCLK Z 0,71, kesitsel 0,20. Tersi ALKLC ve TDGYO'da (kesitsel 0,81–0,90, Z 0,52–0,64). Bazı vakalar payın kendi geçmişine göre, bazıları aynı günün öbür paylarına göre uçtur.
+
+## 11. 28.10.2026 — Ay eklendikçe sonuçlar: Mart → 5 ay → 9 ay
+
+Yöntemler ve ayarlar üç adımda da aynıdır; yalnız veri büyür. Her adım bir öncekine ay eklenerek kuruldu:
+
+1. **Mart 2025** (1 ay): ilk değerlendirme (bölüm 2–9).
+2. **5 ay, Ocak–Mayıs 2025**: Ocak, Şubat, Nisan ve Mayıs eklendi (10.7–10.9).
+3. **9 ay, Ekim 2024–Haziran 2025**: Ekim, Kasım, Aralık 2024 ve Haziran 2025 eklendi (10.11 ve bu bölüm).
+
+Değerler ROC-AUC'tur (0,5 rastgele, 1 kusursuz). 2024-09 işlem dosyası olmadığı için eklenemedi (10.10).
+
+### 11.1 Veri hacmi
+
+| | Mart | 5 ay | 9 ay |
+|---|---|---|---|
+| İşlem günü | 20 | 102 | 186 |
+| Pay-gün | 11.800 | 59.895 | 108.495 |
+| SPK A pay-günü | 12 (ALKLC) | 93 (KRGYO, TDGYO, ALKLC, EUREN) | 93 (aynı) |
+| SPK B pay-günü | 64 | 200 | 291 |
+| Sentetik enjeksiyon seçimi (ay başına 40) | 80 | 200 | 360 |
+| Değerlendirilen enjeksiyon: pay-gün / pencere | 76 / 79 | 198 / 192 | 347 / 346 |
+| Denetimli model pay-günü (kapanış hariç) | 59 | 143 | 260 |
+| SPK pencere: oynatılan pay-gün (etiketsiz negatif) | 476 (400) | 893 (600) | 984 (600) |
+
+### 11.2 Pay-gün düzeyinde SPK vakaları
+
+| Etiket | Puan | Mart | 5 ay | 9 ay |
+|---|---|---|---|---|
+| A | Z-skor | 0,63 | 0,49 | 0,49 |
+| A | İktisadi kurallar | 0,46 | 0,53 | 0,50 |
+| A | Isolation Forest | 0,56 | 0,51 | 0,52 |
+| A | Kesitsel uç | 0,87 | 0,75 | 0,75 |
+| A | Kesitsel Isolation Forest | 0,90 | 0,75 | 0,76 |
+| B | Z-skor | 0,52 | 0,56 | 0,60 |
+| B | İktisadi kurallar | 0,59 | 0,55 | 0,61 |
+| B | Isolation Forest | 0,53 | 0,50 | 0,60 |
+| B | Kesitsel uç | 0,51 | 0,60 | 0,61 |
+| B | Kesitsel Isolation Forest | 0,52 | 0,61 | 0,63 |
+| A+B | Kesitsel Isolation Forest | 0,58 | 0,65 | 0,66 |
+
+Mart'ta Z-skor ve Isolation Forest'ta A pozitifi 7'dir (12 değil): Z-skor için beş günlük geçmiş gerekir; ayın ilk beş günü puanlanmaz.
+
+### 11.3 Sentetik enjeksiyon: 5 dk pencere
+
+ROC-AUC / ilk 3 isabeti (enjeksiyonun pay-günün en yüksek puanlı 3 penceresine girme oranı). 9 ayda süre: sentetik 27 dk, pencere 29 dk, denetimli 20 sn (SPK pencereyle aynı anda, iki pencerede).
+
+| Senaryo | Yöntem | Mart | 5 ay | 9 ay |
+|---|---|---|---|---|
+| Yanıltıcı emir | Kurallar | 0,95 / %89 | 0,91 / %78 | 0,91 / %75 |
+| Yanıltıcı emir | Denetimli | 0,95 / %95 | 0,91 / %92 | 0,94 / %88 |
+| Karşılıklı işlem | Kurallar | 0,48 / %5 | 0,48 / %7 | 0,50 / %6 |
+| Karşılıklı işlem | Denetimli | 0,90 / %80 | 0,93 / %91 | 0,96 / %94 |
+| Fiyat yükseltme | Kurallar | 0,60 / %10 | 0,54 / %6 | 0,56 / %5 |
+| Fiyat yükseltme | Denetimli | 0,71 / %30 | 0,79 / %38 | 0,84 / %56 |
+| Kapanış etkileme | Z-skor | 0,78 / %15 | 0,69 / %8 | 0,65 / %3 |
+| Kapanış etkileme | Kurallar | 0,77 / %20 | 0,67 / %6 | 0,63 / %3 |
+| Kapanış hariç hepsi | Denetimli | 0,85 / %68 | 0,88 / %73 | 0,92 / %79 |
+| Kapanış hariç hepsi, kontrol (yanlış alarm) | Denetimli, ilk 3 | %5 | %4 | %7 |
+
+### 11.4 Sentetik enjeksiyon: pay-gün düzeyi
+
+| Senaryo | Yöntem | Mart | 5 ay | 9 ay |
+|---|---|---|---|---|
+| Kapanış etkileme | Kurallar | 0,81 | 0,74 | 0,71 |
+| Kapanış etkileme | Z-skor | 0,74 | 0,73 | 0,71 |
+| Yanıltıcı emir | Kurallar | 0,68 | 0,55 | 0,56 |
+| Fiyat yükseltme | Kurallar | 0,72 | 0,53 | 0,50 |
+| Karşılıklı işlem | Kurallar | 0,70 | 0,55 | 0,54 |
+| Hepsi | Kurallar | 0,73 | 0,59 | 0,58 |
+| Kontrol (enjeksiyonsuz) | Kurallar | 0,64 | 0,55 | 0,52 |
+
+### 11.5 SPK etiketli günlerde pencere düzeyi
+
+Negatif: etiketsiz pay-günler (aynı payların etiketsiz günleri + rastgele 300; Mart 400, 5 ve 9 ay 600). 9 ayda 984 pay-gün, hata 0, 44 dk.
+
+| Gün puanı | A, Mart | A, 5 ay | A, 9 ay | B, Mart | B, 5 ay | B, 9 ay |
+|---|---|---|---|---|---|---|
+| Uyarı penceresi sayısı | 0,44 | 0,55 | 0,60 | 0,61 | 0,54 | 0,53 |
+| Bent a/b (emir bazlı) uyarıları | 0,28 | 0,43 | 0,46 | 0,57 | 0,50 | 0,51 |
+| Bent d (kapanış) uyarıları | 0,48 | 0,49 | 0,49 | 0,49 | 0,50 | 0,50 |
+| Bent f (fiyat yükseltme/düşürme) uyarıları | 0,60 | 0,65 | 0,68 | 0,56 | 0,56 | 0,54 |
+| En yüksek pencere Z-skoru | 0,49 | 0,59 | 0,63 | 0,55 | 0,57 | 0,57 |
+
+### 11.6 Her adımda ne değişti
+
+**Mart → 5 ay:**
+
+- **A'daki yüksek değer tek vakadan geliyordu.** Mart'ta A yalnız ALKLC'nin 12 günüydü; kesitsel 0,90 bu vakaya özgüydü. Dört vakayla 0,75'e indi.
+- **B yükseldi** (kesitsel 0,52 → 0,61). Etiket sayısı üç katına çıktı.
+- **Sentetik pay-gün sonuçları iyimserdi.** Mart'ta enjeksiyonsuz kontrol bile 0,64 veriyordu (motor ile veri arasındaki fark); 5 ayda kontrol 0,55'e, enjeksiyonlu "hepsi" 0,73'ten 0,59'a indi.
+- **Pencere düzeyinin yapısı korundu.** Yanıltıcı emir 0,95 → 0,91, denetimli model 0,85 → 0,88 (eğitim pay-günü 59 → 143). Kapanış etkileme pencerede zayıfladı (0,78 → 0,69).
+
+**5 ay → 9 ay:**
+
+- **A değişmedi** (0,75 → 0,76). A vakalarının hepsi zaten 5 aydaydı; yeni aylar yalnız negatif günleri ve geçmişi büyüttü.
+- **B'de geçmişe dayalı yöntemler yükseldi.** Z-skor 0,56 → 0,60, kurallar 0,55 → 0,61, Isolation Forest 0,50 → 0,60. Altı yeni B vakası geldi (AVHOL, BEGYO, DZGYO, IPEKE, TMSN, TUCLK). Ocak vakalarının geçmişi de artık Ekim–Aralık'ı kapsıyor.
+- **Denetimli model yine güçlendi** (eğitim pay-günü 143 → 260). Kapanış hariç hepsi 0,88 → 0,92 (ilk 3 %73 → %79); fiyat yükseltme 0,79 → 0,84 (ilk 3 %38 → %56); karşılıklı işlem 0,93 → 0,96; yanıltıcı emir 0,91 → 0,94. Yanlış alarm biraz arttı (kontrol ilk 3 %4 → %7; karşılıklı işlemde %9 → %12). En önemli özellikler aynı: hacim Z-skoru, kısa ömürlü uzak emir payı (0,29 → 0,38), aktif taraf dengesizliği.
+- **Kurallar ve Z-skor pencerede yerinde saydı.** Yanıltıcı emir 0,91'de kaldı; karşılıklı işlem ve fiyat yükseltme 0,50–0,56 (rastgeleye yakın). Kapanış etkileme düşmeye devam etti (Z-skor 0,69 → 0,65, ilk 3 %8 → %3).
+- **Sentetik pay-gün düzeyi biraz daha düştü** (hepsi 0,59 → 0,58, kapanış 0,74 → 0,71). Enjeksiyonsuz kontrol de 0,55 → 0,52'ye indi; motor ile veri arasındaki farktan gelen yapay ayrım azaldı.
+- **SPK günlerinde pencere düzeyinde A iyileşti:** uyarı sayısı 0,55 → 0,60, bent f 0,65 → 0,68, en yüksek pencere Z-skoru 0,59 → 0,63. A pozitifleri aynıdır. Değişim, 9 aydan yeniden çekilen negatif örneklemden ve kapanış penceresinin kıyaslandığı geçmişin uzamasından gelebilir (ayrılmadı). B 0,50–0,57'de kaldı.
+
+**Genel:**
+
+- Tek ayın sonuçları hem yukarı (A kesitsel 0,90, sentetik pay-gün 0,73, kapanış penceresi 0,78) hem aşağı (B kesitsel 0,52) sapmıştı. Ay eklendikçe değerler oturdu: kesitsel karşılaştırma A'da 0,75–0,76, B'de 0,61–0,63; yanıltıcı emir pencerede 0,91.
+- Veri büyüdükçe sürekli iyileşen tek yöntem denetimli modeldir (0,85 → 0,88 → 0,92). Kural ve Z-skor yöntemleri öğrenmez; onlarda daha çok ay yalnız tahmini daha güvenilir yapar. Denetimli model ise her ayla daha çok örnek görür.
+- Kapanış etkileme her adımda zayıfladı (pencere Z-skoru 0,78 → 0,69 → 0,65). Mart'taki değer iyimserdi; kapanış penceresinin geçmiş kapanışlarla kıyası uzun dönemde sentetik emri daha az uç gösteriyor (olası açıklama, sınanmadı).
+
+## 12. 28.10.2026 — Yeni veriler, Haziran–Eylül 2024 tarih parametreleri ve EBDKS eşiği
+
+### 12.1 Eklenen veriler
+
+Bütün dönüşümler kayıpsızdır: parquet satır sayısı CSV'nin veri satırı sayısıyla birebir tutar ve gün kümeleri ay içinde emir, işlem ve gün sonu dosyalarında aynıdır (ayrıntı `veri/README.md`).
+
+| Veri | Aylar | Not |
+|---|---|---|
+| Gün içi emir | 2024-06 (17 gün, 703.468.955 satır), 2024-07 (22 gün, 820.493.297), 2024-08 (21 gün, 914.468.353) | günlük bölümlendi |
+| Gün içi işlem | 2024-06 (200.100.560), 2024-07 (245.973.362), 2024-08 (239.387.574), 2024-09 (218.040.362) | |
+| Gün sonu fiyat-hacim | 2024-05…08 | sabit şemaya kayıpsız |
+| Gün içi endeks (bütün endeksler, saniyelik) | 2024-05…2025-06 (75–77 endeks) | yeni veri türü; tek kusur 19.07.2024 ve 28.08.2024 açılışında birkaç saniyelik boşluk ve tekrar |
+| Değerleme oranları (aylık) | 2024-05…2025-06 (560–589 pay, 44 sektör) | yeni veri türü; pay bazında piyasa değeri, özsermaye, F/K, PD/DD ve sektör |
+
+Böylece 2024-06…2025-06 arasında emir, işlem ve gün sonu verisi eksiksizdir. İki yeni veri türü henüz tespit yöntemlerinde kullanılmadı. Kullanım alanları:
+
+- endeks: EBDKS eşiğinin sınanması (12.3) ve pencere düzeyinde piyasa ya da sektör hareketinin ayrılması;
+- değerleme: payı sektör endeksine bağlamak ve piyasa değeriyle ölçeklemek.
+
+### 12.2 Tarih parametreleri: Haziran–Eylül 2024
+
+Ölçüm 10.3'teki betiklerle, aynı ölçütlerle yapıldı (ay başına yaklaşık 50–60 dk, tek pencerede sırayla). Bütün parametreler Mart'la aynı çıktı. `tarih_parametreleri.csv`'de ölçüm satırlarının aralığı 2024-06-03…2025-06-30'a, "açığa satış yok" satırı 2024-06-03'e genişletildi. Motor artık veri döneminin bütün işlem günlerinde (2024-06-03…2025-06-30) ölçülmüş parametreyle çalışır.
+
+| Ölçüm | Haziran 2024 | Temmuz 2024 | Ağustos 2024 | Eylül 2024 |
+|---|---|---|---|---|
+| Fiyat marjı | ±%10 | ±%10 | ±%10 | ±%10 |
+| ±%10'u aşan sıra-gün (özsermaye + `.R`/`.BE`) | 4 (3 + 1) | 27 (13 + 14) | 32 (22 + 10) | 40 (16 + 24) |
+| Tavana / tabana tam eşit (±%10 sınırı) | 351 / 125 | 415 / 85 | 414 / 266 | 415 / 127 |
+| Devre kesici olayı (Ana / Yıldız / Alt) | 877 (511 / 308 / 58) | 922 (449 / 402 / 71) | 937 (492 / 376 / 69) | 764 (406 / 308 / 50) |
+| Yükseliş yönlü devre kesici | 0 | 0 | 0 | 0 |
+| Sürekli işlemde en büyük düşüş / yükseliş | −%5,00 / %15,8 | −%5,00 / %22,2 | −%5,00 / %22,1 | −%5,00 / %22,2 |
+| Tetiklemeden eşleştirmeye | 899–929 sn | 899–929 sn | 899–929 sn | 899–929 sn |
+| Kapanışa taşma: en geç ayrı eşleştirmeli / en erken taşan | 17:39:40 / 17:41:15 | 17:39:09 / 17:40:01,6 | 17:39:55 / 17:40:13 | 17:39:14 / 17:40:09 |
+| Adım 4: baz ile / son işlemle tutan (toplam) | 143 / 113 (145) | 170 / 138 (174) | 134 / 109 (135) | 149 / 112 (149) |
+| Temiz müzayedelerde fiyat uyumu | %99,95 (22.398 / 22.409) | %99,97 (28.697 / 28.707) | %99,90 (28.633 / 28.662) | %99,94 (27.750 / 27.767) |
+| Açıklanmayan uyumsuz müzayede | 11 | 10 | 29 (15'i 05.08) | 17 |
+| Karışık yön (kurala uyan / istisna) | 1 / 2 | 3 / 2 | 0 / 0 | 2 / 0 |
+| Açığa satış işlemi | 0 | 0 | 0 | 0 |
+| Varant salt kotasyon başlangıcı | 10:00:00 | 10:00:00 | 10:00:00 | 10:00:00 |
+| EBDKS | yok | yok | 05.08 (iki kez; 1.067 EBDKS müzayedesinin hepsinde fiyat tutar) | yok |
+
+Bilgi notları `[BİLGİ]`:
+
+- **Kapanışa taşma eşiği daraldı:** KRDMA.E 01.07.2024'te T = 17:40:01,649'da tetiklendi ve kapanış emir toplamaya aktarıldı. GOLTS.E 21.02.2025'te T = 17:40:01,0006'da tetiklenmiş, aktarılmamıştı. Eşik bu ikisinin arasındadır (önceki not: 17:40:01–17:40:03). Motor 17:40 kullanır; yeni vaka motorda da aktarılır.
+- **Eşleştirmesiz devre kesici:** IZINV.E 11.06.2024 14:55:01 ve SANEL.E 27.09.2024 16:47:41'de tetiklenen devre kesicilerde eşleştirme satırı yoktur, sıra sürekli işleme dönmüştür. İki olaydır, incelenmedi.
+- **Ağustos'taki uyumsuz müzayedeler:** 29'un 15'i EBDKS günündedir (05.08). Ayrı incelenmedi.
+- **Betik düzeltmesi:** `gunici_tek_fiyat_karisik.py` karışık yönlü müzayedesi olmayan ayda (Ağustos) boş tablo yüzünden duruyordu. Boş durumda 0 yazacak şekilde düzeltildi.
+- **Test:** `test_olcum_kontrolu` ölçümsüz gün örneği olarak 2024-07'yi kullanıyordu. Örnek, veri döneminin ilk günü 2024-06-01 (cumartesi, ölçüm satırlarından önce) yapıldı. Motor 27, tespit 8 test geçer.
+
+### 12.3 EBDKS eşiği: gün içi endeks verisiyle sınama
+
+Önceki bölümlerde EBDKS süreleri ölçülmüştü, eşik ise endeks verisi olmadığından sınanmamıştı (10.10). Saniyelik BIST 100 (XU100) değerleriyle ölçüldü: her EBDKS durdurmasının başladığı anda endeksin önceki gün kapanış değerine (18:10:11 değeri) göre düşüşü hesaplandı ve eşiği ilk aştığı saniyeyle karşılaştırıldı. Tetikleme anı T, `.E` sıralarının tek fiyat emir toplama başlangıcından 20 dk geri sayılarak bulundu; sürekli işleme dönüş her olayda T + 30 dk'dır.
+
+| Gün | Eşik | XU100 eşiği ilk aştığı an (düşüş) | Tek fiyat emir toplama | Eşleştirme | Sürekli işlem |
+|---|---|---|---|---|---|
+| 05.08.2024 | −%5 | 09:55:22, açılış müzayedesi (−%6,72) | 10:20:00 | 10:25:06 | — |
+| 05.08.2024 | −%7 | 10:25:09, EBDKS müzayedesinden sonra (−%7,07) | 10:45:09 | 10:50:17 | 10:55:09 |
+| 19.03.2025 | −%5 | 09:55:19, açılış müzayedesi (−%6,87) | 10:20:00 | 10:25:08 | 10:30:00 |
+| 19.03.2025 | −%7 | 14:08:10 (−%7,02) | 14:28:10 | 14:33:20 | 14:38:10 |
+| 21.03.2025 | −%5 | 10:52:12 | 11:12:12 | 11:17:22 | 11:22:12 |
+| 21.03.2025 | −%7 | 11:27:14 | 11:47:14 | 11:52:24 | 11:57:14 |
+
+- Altı tetiklemenin hepsi, endeksin −%5 ve −%7'yi ilk aştığı saniyededir. Bu, Ek-21 Rev. 51 eski metnindeki iki eşikle aynıdır.
+- 21.03.2025'te endeks −%6'yı 11:22:55'te aştı ve tetikleme olmadı. Yürürlükteki tek %6 eşiği o tarihte geçerli değildir.
+- Eşik açılış müzayedesinin endeks değeriyle aşılırsa durdurma sürekli işlemin başlangıcından (10:00) sayılır. 05.08.2024'te ikinci eşik, birinci EBDKS müzayedesinden hemen sonra hesaplanan endeksle aşıldı; o gün sürekli işlem 10:55'e kadar hiç başlamadı.
+- `tarih_parametreleri.csv` `ebdks_esikleri` satırının "eşik hesabı veride sınanmadı" notu bu sonuçla değiştirildi (`06-devre-kesici.md` Açık sorular, 28.10.2026 notu). Yürürlükteki metin (%6, ikinci kez çalışmaz; 01.09.2025 sonrası) bu veriyle sınanamaz.
+
+## 13. 29.10.2026 — 13 ay: özellikler ve pay-gün SPK değerlendirmesi
+
+### 13.1 Özellikler ve birleştirme
+
+- 2024-06…09 için `tespit/ozellikler.py` iki paralel pencerede çalıştı (81 gün, gün başına 136–245 sn, toplam ≈ 2 saat; dört ayın hepsi ilk denemede hatasız).
+- 13 ay `tespit/ozellik_birlestir.py` ile birleştirildi: 154.490 pay-gün, 267 gün, 2024-06-03…2025-06-30. Çıktı `gunici-dogrulama/2024-06_2025-06/tespit/ozellikler.parquet`.
+- Kontrol: gün başına pay-gün 564–590 (aylar arasında düzgün artış); özsermaye günleri ayda 9–53; yeni dört ayda hiçbir sayısal sütunun boşluk oranı önceki dokuz aydan 0,02'den fazla yüksek değil.
+
+### 13.2 Pay-gün SPK değerlendirmesi (`degerlendir.py`, 44 sn)
+
+ROC-AUC; parantez içinde pozitif pay-gün sayısı. Kesitsel: aynı gün, aynı pazardaki paylar içinde sıra (Isolation Forest).
+
+| Etiket | Puan | 9 ay | 13 ay |
+|---|---|---|---|
+| A | Z-skor | 0,49 (93) | 0,51 (93) |
+| A | İktisadi kurallar | 0,50 | 0,52 |
+| A | Isolation Forest | 0,52 | 0,54 |
+| A | Kesitsel (en uç sıra) | 0,75 | 0,75 |
+| A | Kesitsel (Isolation Forest) | 0,76 | 0,76 |
+| B | Z-skor | 0,60 (291) | 0,59 (430) |
+| B | İktisadi kurallar | 0,61 | 0,60 |
+| B | Isolation Forest | 0,60 | 0,61 |
+| B | Kesitsel (en uç sıra) | 0,61 | 0,63 |
+| B | Kesitsel (Isolation Forest) | 0,63 | 0,64 |
+| A+B | Kesitsel (Isolation Forest) | 0,66 (384) | 0,66 (523) |
+
+- **A değişmedi.** A vakalarının hepsi (KRGYO, TDGYO, ALKLC, EUREN) 2025-01…04'tedir; yeni aylar yalnız negatif günleri ve Z-skor geçmişini büyüttü. Geçmişe dayalı üç yöntem 0,02 yükseldi, hâlâ rastgeleye yakın.
+- **B'ye altı yeni vaka geldi** (CEOEM, CVKMD, KUYAS, NTHOL, PEHOL, TUREX; B pozitif 291 → 430). Kesitsel karşılaştırma 0,63 → 0,64; geçmişe dayalı Z-skor ve kurallar 0,01 düştü. Yeni vakalarda kesitsel sıra 0,51–0,84 (TUREX 0,84, KUYAS 0,78; CVKMD 0,51).
+- **Genel:** 9 aydan 13 aya sonuçlar oturdu. Kesitsel karşılaştırma A'da 0,76, B'de 0,64; payın kendi geçmişine dayalı yöntemler A'da işe yaramıyor (uzun süreli vakada geçmiş de kirli; `rapor.md` 4.4 ile aynı sonuç).
+- Çıktılar `gunici-dogrulama/2024-06_2025-06/tespit/` (`degerlendirme.csv`, `etiketli_siralama.csv`, `kural_oranlari.csv`, `puanlar.parquet`). Motorlu değerlendirmeler (sentetik, pencere, denetimli, SPK pencere) 13 ayla henüz koşulmadı.
+
+### 13.3 Senaryo tasarımı (öneri)
+
+Sabit senaryo kalıplarının yerine hisseye göre ayarlı senaryo tasarımı yazıldı: `senaryo-tasarimi.md` (uygulanmadı, kullanıcı onayı bekliyor). SPK etiketlerinden öğrenen bir üretici model değerlendirildi ve reddedildi: 13 ayda etiketli 27 pay, türü belli 5 vaka, emir düzeyinde etiket yok, üretici dedektörün gördüğünü öğrenir (tasarım 2). Ölçüm: SPK etiketli paylar küçük paylarda belirgin yoğunlaşmıyor (aylık piyasa değeri yüzdeliği ortancası 0,46; %22'si alt çeyrekte); değerleme verisi bu yüzden yalnız raporlamada kullanılır.
+
+### 13.4 Hisseye göre ayarlı senaryo: uygulama ve Mart denemesi
+
+Uygulama kararı (kullanıcı, 29.10.2026): `senaryo-tasarimi.md` önerilen aralıklarla uygulanır; önce Mart'ta 40 seçimlik yanıltıcı emir denemesi, sonra 13 ayda eski senaryoyla yan yana.
+
+**Kod.**
+
+- Yeni: `tespit/pay_profili.py` (önceki 5 günün emir ve işlem dağılımları), `tespit/ayarli_senaryo.py` (parametre çekimi ve planlı iptal), `tespit/kor_nokta.py` (bant raporu).
+- Değişen:
+  - `motor/senaryolar.py`: ayarlı olay üreticileri; eskiler aynen duruyor.
+  - `tespit/pencere_degerlendir.py`: `SENARYO_SURUM`, `SENARYOLAR`, vaka kaydı `senaryo_kayit.csv`. Pozitif pencere artık "en az bir sentetik olay içeren pencere"; sabit senaryolarda eskisiyle aynı sonucu verir.
+  - `tespit/denetimli.py`: `GRUP=pay`, pencere puanları.
+- Motorun eşleştirme kodu değişmedi. 40 test geçer (5 yeni).
+
+**Uygulamada tasarımdan iki fark** (`senaryo-tasarimi.md`'ye işlendi):
+
+1. **İptal planı enjeksiyonlu koşunun kendi dolum anlarından kuruluyor.** 1 sn'lik defter örneği yerine bu yol seçildi: işlem gören parça dolumdan 1 sn önce iptal edilir, 1–5 sn sonra aynı uzaklıktan yeniden girilir, en çok 5 tur.
+2. **Fiyat yükseltmede piyasa emri kullanılıyor.** Duman testinde piyasadan limite emir yalnız en iyi kademede işlem gördü ve etki 0 çıktı; piyasa emri k kademeyi süpürür. Etki, enjeksiyonlu ve enjeksiyonsuz koşunun son işlem fiyatı farkıdır; endeks gerekmez.
+
+**Duman testi** (Mart, 4 senaryo, birer seçim): dört senaryo uçtan uca çalıştı. Fiyat yükseltme düzeltmeden sonra 4 seçimde etki %0,15–0,49.
+
+**Deneme.** Mart, yalnız yanıltıcı emir, 40 seçim, tohum 11; dört uzaklık bandına 10'ar. `gunici-dogrulama/2025-03/tespit/pencere_ayarli_deneme/`; denetimli model pay bazında gruplu. Süre 390 sn, seçim başına ≈ 10 sn.
+
+Sonuç dağılımı:
+
+- 38 temiz vaka.
+- 1 vaka temizlik ölçütüyle dışarıda: ALTNY 25.03, bant 0; 5 turdan sonra katmanların %9,1'i doldu.
+- 1 hata: KLNMA 19.03 o gün yalnız tek fiyatla işlem gördü, sürekli işlem yok. Düzeltme: bu durumda senaryo "yer_yok" olarak kaydedilir.
+
+Planlı iptal, bant bazında:
+
+| Uzaklık bandı | Vaka | Ortalama / en çok plan turu | Ortalama yeniden giriş | En büyük dolum oranı |
+|---|---|---|---|---|
+| 0 | 10 | 2,3 / 5 | 4,6 | %9,1 (dışarıda) |
+| 1–2 | 10 | 0,1 / 1 | 0,1 | 0 |
+| 3–6 | 10 | 0,2 / 1 | 0,1 | 0 |
+| 7–10 | 9 | 0 / 0 | 0 | 0 |
+
+Eski senaryoda katmanlar en iyi fiyata konunca 20 vakanın 10'u doluyordu (`rapor.md` 8.3); planlı iptalle 10'da 1.
+
+Pencere düzeyi, bant bazında (ROC-AUC / ilk 3 isabeti; kontrol ilk 3 bütün hücrelerde 0):
+
+| Uzaklık bandı | Vaka | Z-skor | Kurallar | Isolation Forest | Denetimli (pay gruplu) |
+|---|---|---|---|---|---|
+| 0 | 9 | 0,65 / %33 | 0,66 / %33 | 0,66 / %11 | 0,66 / %44 |
+| 1–2 | 10 | 0,53 / %10 | 0,54 / %10 | 0,47 / %0 | 0,57 / %30 |
+| 3–6 | 10 | 0,67 / %0 | 0,69 / %10 | 0,59 / %0 | 0,69 / %50 |
+| 7–10 | 9 | 0,78 / %44 | 0,80 / %56 | 0,67 / %11 | 0,79 / %44 |
+| Hepsi | 38 | 0,65 / %21 | 0,67 / %26 | 0,59 / %5 | 0,67 / %42 |
+
+- **Sabit senaryonun başarısı ayarlı senaryoda tutmuyor.** Eski senaryo Mart'ta kurallarda 0,95 / %89 veriyordu. Ayarlı senaryoda 3–6 bandında bile 0,69 / %10.
+- **Nedenleri** (bantlara göre, küçük örneklem):
+  - **Boy:** Katmanlar payın kendi büyük emirlerinden; boy / %99 yüzdelik ortancası 0,3–0,55. Eski senaryoda katman günlük işlem miktarının %2'siydi ve pencerede olağandışı büyüktü.
+  - **Ömür:** Vakaların %35'inde 60 sn'yi aşıyor, `uzak_kisa_pay` tanımına girmiyor. 60–150 sn bandında kurallar %0, 150–300'de ROC-AUC 0,36.
+  - **Katman sayısı:** Tek katmanda kurallar %20.
+- Bu ölçüm 38 vakadır; bant başına 9–10 vaka olduğundan hücreler yalnız yön gösterir. 13 ayda bant başına yaklaşık 150 vaka hedeflendi.
+
+**13 ay koşuları (29.10.2026'da başladı).**
+
+- Eski senaryo: 520 seçim, tohum 11; `pencere/`, denetimli pay-gün ve pay gruplu (`pencere/grup_pay/`).
+- Yeni senaryo: 1.200 seçim, tohum 11, `SENARYOLAR=yaniltici,kapanis,yaniltici,yukseltme,yaniltici,karsilikli`; `pencere_ayarli/`, denetimli pay gruplu, `kor_nokta.py`.
+
+### 13.5 13 ay: eski ve hisseye göre ayarlı senaryo yan yana
+
+İki koşu aynı birleşik dosyayla (13 ay, 154.490 pay-gün) ve aynı tohumla (11) yapıldı:
+
+- Eski: 520 seçim. Süre 40 dk.
+- Ayarlı: 1.200 seçim; yanıltıcı emir 600, diğer üç senaryo 200'er. Süre 2 sa 47 dk, seçim başına 8,3 sn.
+
+Denetimli model iki koşuda da pay bazında gruplu çapraz doğrulamayla eğitildi. Eski senaryoda pay-gün gruplu sonuç da var (`pencere/`): pay gruplamasıyla fark en çok 0,02. Model eski senaryoda payı ezberlemiyor.
+
+Çıktılar `gunici-dogrulama/2024-06_2025-06/tespit/pencere/` (eski; `grup_pay/`) ve `pencere_ayarli/` (`senaryo_kayit.csv`, `kor_nokta*.csv`, `kor_nokta.log`).
+
+**Seçim sonuçları (ayarlı).**
+
+| Senaryo | Değerlendirilen | Temizlik ölçütüyle dışarıda | Yerleşemedi / kabul yok |
+|---|---|---|---|
+| Yanıltıcı emir | 568 | 15 (bant 0'da 13, 1–2'de 2) | 17 / 0 |
+| Fiyat yükseltme | 196 | 0 | 4 / 0 |
+| Karşılıklı işlem | 159 | 37 | 3 / 1 |
+| Kapanış etkileme | 195 | 0 | 0 / 5 |
+
+**Senaryo bazında, pencere düzeyi** (ROC-AUC / ilk 3 isabeti / kontrol ilk 3):
+
+| Senaryo | Kurallar, eski | Kurallar, ayarlı | Denetimli, eski | Denetimli, ayarlı |
+|---|---|---|---|---|
+| Yanıltıcı emir | 0,90 / %77 / %1 | 0,59 / %29 / %8 | 0,94 / %88 / %5 | 0,68 / %39 / %10 |
+| Fiyat yükseltme | 0,55 / %8 / %5 | 0,77 / %60 / %7 | 0,81 / %45 / %2 | 0,90 / %90 / %8 |
+| Karşılıklı işlem | 0,48 / %5 / %6 | 0,44 / %21 / %21 | 0,95 / %92 / %9 | 0,74 / %54 / %23 |
+| Kapanış etkileme (Z-skor) | 0,66 / %6 / %1 | 0,71 / %11 / %1 | — | — |
+| Hepsi (kapanış hariç) | — | — | 0,90 / %74 / %6 | 0,73 / %53 / %12 |
+
+Okuma notu:
+
+- Ayarlı senaryoda olaylar birçok pencereye yayılır: döngü, 30'a kadar tekrar, 5 dk'ya kadar ömür. Pozitif pencere sayısı arttıkça "ilk 3" şans eseri de tutar; kontrol ilk 3'ün yükselmesi bundandır (karşılıklı işlemde %21–23, 21–30 tekrarda %31–36).
+- Bu yüzden ayarlı senaryoda ilk 3 isabeti yalnız kontrol ilk 3 ile birlikte okunur. Senaryolar arası karşılaştırmada ROC-AUC esas alınır.
+
+**Yanıltıcı emir, kör nokta haritası** (bant başına 130–147 vaka; kurallar ve denetimli, ROC-AUC / ilk 3 / kontrol ilk 3):
+
+| Eksen | Bant | Vaka | Kurallar | Denetimli |
+|---|---|---|---|---|
+| Uzaklık | 0 | 130 | 0,53 / %18 / %7 | 0,63 / %27 / %8 |
+| Uzaklık | 1–2 | 145 | 0,57 / %25 / %8 | 0,64 / %29 / %9 |
+| Uzaklık | 3–6 | 147 | 0,61 / %36 / %12 | 0,72 / %52 / %15 |
+| Uzaklık | 7–10 | 146 | 0,64 / %37 / %6 | 0,70 / %47 / %8 |
+| Ömür | 5–30 sn | 261 | 0,70 / %41 / %7 | 0,77 / %55 / %9 |
+| Ömür | 30–60 sn | 98 | 0,69 / %38 / %5 | 0,77 / %53 / %6 |
+| Ömür | 60–150 sn | 113 | 0,50 / %12 / %12 | 0,59 / %16 / %13 |
+| Ömür | 150–300 sn | 96 | 0,46 / %10 / %12 | 0,57 / %10 / %12 |
+| Katman | 1 | 117 | 0,49 / %15 / %9 | 0,60 / %22 / %8 |
+| Katman | 5 | 111 | 0,71 / %42 / %7 | 0,76 / %57 / %10 |
+| Yeniden giriş | var | 138 | 0,54 / %21 / %14 | 0,62 / %26 / %13 |
+| Yeniden giriş | yok | 430 | 0,61 / %32 / %6 | 0,70 / %43 / %9 |
+
+Bantların ortalaması (yanıltıcı emir):
+
+- **Eşit ağırlıklı:** kurallar 0,59 / %29, denetimli 0,68 / %39.
+- **Gerçekçi ağırlıklı** (SPK vakalarındaki uzaklık dağılımı, `ayarli_senaryo.GERCEKCI_AGIRLIK`, kaba): kurallar 0,57 / %25, denetimli 0,66 / %34.
+
+**Diğer senaryolarda eksenler.**
+
+- **Fiyat yükseltme:** başarı gerçekleşen etkiyle artıyor. Kurallarda etki <%1'de 0,69 / %39, %1–3'te 0,81 / %65, >%5'te 0,88 / %85. Denetimlide <%1'de 0,83 / %80, %3'ün üstünde %100. k = 1 kademe (0,68 / %43) k = 3'ten (0,84 / %72) zayıf.
+- **Karşılıklı işlem:**
+  - Kurallar hiçbir bantta kontrolden ayrılmıyor (0,41–0,52).
+  - Denetimlide "göze batan" boy 0,85 / %77 (kontrol %24), "karışan" boy 0,60 / %24 (kontrol %21).
+  - Payın olağan işlem boyunda yapılan karşılıklı işlem yakalanmıyor.
+- **Kapanış etkileme:** başarı boyla artıyor. Payın kapanış toplama ortancasının 0,5–1 katında Z-skor 0,56, 1–2 katında 0,76, 2–3 katında 0,89. Kontrol ilk 3 %0–1.
+- **Piyasa değeri çeyreği ve piyasa hareketi (XUTUM):** belirgin etki yok. Yanıltıcı emirde denetimli model küçük paylarda (Q1 0,72) büyüklerden (Q4 0,64) biraz iyi; sakin piyasada biraz daha iyi.
+
+**Yorum.**
+
+- **Sabit senaryonun yanıltıcı emir başarısı iyimserdi.** Kurallar 0,90'dan 0,59'a, denetimli model 0,94'ten 0,68'e iniyor. Kayıp, dedektörün eşiklerinin dışına düşen vakalardan geliyor:
+  - ömrü 60 sn'yi aşan emirler: kurallar 0,46–0,50, rastgele;
+  - tek katman: 0,49;
+  - en iyi fiyata yakın katmanlar: 0,53–0,57.
+  - Eşiklerin içinde kalan vakalarda (ömür ≤ 60 sn) kurallar 0,69–0,70, denetimli 0,77. Sabit senaryodan yine düşük, çünkü katmanlar artık payın olağan büyük emirleri boyunda.
+- **Fiyat yükseltmede ilişki ters.** Eski senaryo (piyasadan limite KİE) fiyatı neredeyse hiç itmiyordu (13.4); gerçekçi etkisi olan yükseltme daha iyi yakalanıyor (kurallar 0,55 → 0,77). Eski "fiyat yükseltme zayıf yakalanıyor" sonucu (`rapor.md` 4.1, 11) senaryonun etkisizliğinden geliyordu.
+- **Karşılıklı işlemin eski başarısı (denetimli 0,95) boyun göze batmasından geliyordu.** Olağan boyda yapılan karşılıklı işlem bu veride görülemez: DataStore'da üye ya da hesap bilgisi yok, kurallar ve model yalnız işlem kalıbını görüyor.
+- **Kör noktalar sayısal olarak doğrulandı:**
+  - yanıltıcı emirde 60 sn'den uzun ömür, tek katman, en iyi fiyata yakınlık;
+  - karşılıklı işlemde olağan boy;
+  - fiyat yükseltme ve kapanışta küçük etki.
+  - 60 sn eşiğinin gözden geçirilmesi gerekiyor. Eşiği senaryoya göre değil veriye göre seçmek için önce gerçek veride ömür dağılımı ölçülecek (normal piyasa ile emir bazlı SPK vakaları); kabul ölçütü yanlış alarm ve SPK başarısı (kullanıcıyla konuşuldu, 29.10.2026).
+- **Sınırlar:**
+  - Aralıkların çoğu varsayımdır (`senaryo-tasarimi.md` 5).
+  - Denetimli model aynı senaryo ailesinin pencereleriyle eğitilip sınandı (pay gruplu); başka bir ailenin vakalarına genellemesi ölçülmedi ("bir bandı dışarıda bırak" sınaması yapılmadı).
+
+## 14. 29.10.2026 — 18 ay ve SPK etiketleriyle denetimli model
+
+### 14.1 Veri: 2024-01…05 ve 18 ay
+
+- 2024-01…05 DataStore dosyaları dönüştürüldü (gün sonu, endeks ve değerleme 2024-01…04; işlem ve emir 2024-01…05; emir günlük bölümlemeyle). 27 adım doğrulandı: dönüştürücülerin kayıpsızlık kontrolü, CSV satır sayısı birebir, gün kümesi gün sonuyla aynı. Hata 0, silinen zip yok. Ayrıntı `veri/README.md`.
+- Bu ayların pay-gün özellikleri hesaplandı (`ozellikler.py`, 104 gün, iki paralel pencere, ≈ 3 saat, hata 0). 18 ay birleştirildi: 211.698 pay-gün, 371 gün, 2024-01-02…2025-06-30 (`gunici-dogrulama/2024-01_2025-06/tespit/ozellikler.parquet`).
+- Özellik hesabı motora ve tarih parametrelerine bağlı değildir; pay-gün değerlendirmesi 2024-01…05 için parametre ölçümü gerektirmez. Motorlu değerlendirmeler (sentetik, pencere) bu aylarda henüz kullanılamaz (`VERI_DONEMI`).
+- SPK etiketleri: 2024-01…05, 152 B pay-günü ve 9 pay ekler; 7'si yalnız bu aylardadır (AKYHO, AVGYO, BJKAS, ISYAT, PEGYO, SEYKM, YAYLA). 18 ayda değerlendirmeye giren: A 93 pay-gün (4 pay), B 582 pay-gün (31 pay), toplam 34 pay (KRGYO ikisinde).
+
+### 14.2 Endeks göstergeleri
+
+`tespit/endeks_ozellikleri.py` pay-gün tablosuna sütun ekler:
+
+- `fazla_getiri`: payın getirisi eksi BIST TÜM (XUTUM) getirisi.
+- `sektor_fazla_getiri`: payın getirisi eksi kendi sektör endeksinin getirisi.
+- Bilgi sütunları: `piyasa_getiri`, `sektor_getiri`, `sektor_endeksi`.
+
+Hesap:
+
+- Endeksin gün sonu değeri, gün içi endeks dosyasındaki günün son kaydıdır.
+- Payın sektörü bir önceki ay sonunun değerleme dosyasından alınır. Sektör → endeks eşlemesi `tespit/sektor_endeks.csv`'dedir: 668 pay-sektör çiftinin 594'ünde sektör adı bir sektör endeksinin adıyla örtüşür; 17'si ana sektör endeksine (XUSIN, XUMAL, XUTEK), 57'si XUTUM'a bağlanır (22'si PÖİP).
+- Pay getirisinin sektör endeksiyle ilişkisi (0,357) piyasa endeksiyle ilişkisinden (0,338) biraz yüksek.
+- Gün bazlı piyasa ve sektör getirisi model girdisi yapılmaz. O gün bütün paylarda aynı olduğundan, pay gruplu doğrulamada etiketli günler tarih üzerinden tanınabilir.
+
+### 14.3 SPK denetimli model (`tespit/spk_denetimli.py`)
+
+- **Örnek ve hedef.** Örnek pay-gündür (özsermaye günleri ve baz fiyatı olmayanlar dışarıda); hedef SPK A ya da B etiketidir (B_belirsiz dışarıda). Etiketsiz pay-gün negatif sayılır, ama temiz olduğu bilinmez. Ölçütler bu yüzden alt sınırdır.
+- **Girdiler (80).** Göstergelerin ham oranları, payın kendi geçmişine göre z'leri, aynı gün aynı pazar içindeki yüzdelik sıraları, 5 günlük getiri ve hacim artışı, endeks göstergeleri.
+- **Girdi olmayanlar.** Pazar, BIST 100 üyeliği, piyasa yapıcı, brüt takas (tedbir; etiketle sızıntı), fiyat ve hacim düzeyi, sektör, piyasa değeri.
+- **Model.** Gradyan artırmalı karar ağacı; sınıf ağırlığı dengeli; küçük ağaç ayarları önceden sabitlendi, test katlarına bakılarak seçilmedi.
+- **Doğrulama.** Paya göre gruplu, pozitif payları katlara dengeleyen 5 katlı çapraz doğrulama (`StratifiedGroupKFold`). Her pay-günün puanı o payı hiç görmemiş katın modelinden gelir.
+- **Karşılaştırma.** Aynı satırlarda eğitimsiz puanlar.
+
+ROC-AUC (parantez içinde en üst %1'de kesinlik; taban oran A+B %0,32):
+
+| Puan | A+B (675) | A (93) | B (582) |
+|---|---|---|---|
+| SPK denetimli | **0,71** (%1,7) | **0,84** | **0,69** (%1,5) |
+| SPK denetimli, endeks göstergeleri olmadan | 0,71 (%1,8) | 0,83 | 0,69 |
+| Kesitsel (Isolation Forest) | 0,67 (%0,5) | 0,74 | 0,65 |
+| Kesitsel (en uç sıra) | 0,65 | 0,75 | 0,64 |
+| Isolation Forest (payın geçmişine göre) | 0,59 (%1,1) | 0,50 | 0,61 |
+| Z-skor | 0,58 | 0,47 | 0,60 |
+| Kurallar | 0,57 | 0,48 | 0,58 |
+
+Kat bazında ROC-AUC 0,66–0,80; her test katında 6–8 pozitif pay var. 13 aylık denemede (aynı betik, 27 pay) bu aralık 0,54–0,77 idi.
+
+Etiketli payların günlerinin gün içindeki ortalama yüzdelik sırası:
+
+- Model 35 pay-etiket çiftinin 21'inde 0,7'nin üstünde, 6'sında 0,5'in altında. Kesitsel karşılaştırmada bu sayılar 14 ve 8.
+- **A vakaları:** model / kesitsel sıra TDGYO 0,88 / 0,90, KRGYO 0,85 / 0,53, EUREN 0,77 / 0,95, ALKLC 0,72 / 0,81.
+- **Yeni B payları:** PEGYO 0,95, AVGYO ve SEYKM 0,78, BJKAS 0,66, YAYLA 0,59, AKYHO 0,54, ISYAT 0,36. AKYHO'da kesitsel 0,91.
+
+En önemli girdiler (test katlarında permütasyon önemi, ortalama kesinlik artışı):
+
+- hacmin aynı gün paylar içindeki sırası;
+- 5 günlük getirinin sırası;
+- AFK'lı emir payı;
+- kapanış seansı hacim payının sırası;
+- iptal oranının payın geçmişine göre z'si;
+- makasın sırası.
+
+Tek tek katkılar küçük (0,001–0,003): model tek bir göstergeye değil birlikteliklere dayanıyor.
+
+### 14.4 Yorum
+
+- **SPK etiketleriyle eğitilen model en iyi pay-gün yöntemi.** A+B'de 0,71; kesitsel karşılaştırma 0,67, kurallar 0,57. En üst %1'de kesinlik taban oranın 5 katı (%1,7). Mutlak düzeyi düşük: en şüpheli 2.111 pay-günün 36'sı etiketli.
+- **A'da 13 aydan 18 aya büyük artış (0,68 → 0,84).** A pozitifleri aynı; değişen, modelin öğrendiği B paylarının 24'ten 31'e çıkması. Az etiketle çalışan denetimli modelde her yeni vakanın değeri büyük.
+- **Endeks göstergeleri katkı vermedi** (0,7095 / 0,7098). Kesitsel sıralar aynı gün aynı pazardaki paylarla kıyasladığı için piyasa hareketini zaten büyük ölçüde gideriyor.
+- **Sınırlar:**
+  - 34 pozitif pay; kat sonuçları 0,66–0,80 arasında değişiyor.
+  - B etiketi tedbirden önceki 20 iş günü varsayımıdır; bazı günlerde manipülasyon olmayabilir.
+  - Etiketsiz günlerin bir kısmı yakalanmamış manipülasyon olabilir.
+  - Model aynı dönemin başka paylarına genellemeyi ölçüyor; zamanda ileriye (gelecek dönemlere) genelleme ayrıca sınanmadı.
+- **Çıktılar:** `gunici-dogrulama/2024-01_2025-06/tespit/spk_denetimli/` (`spk_denetimli_degerlendirme.csv`, `_kat.csv`, `_siralama.csv`, `_onem_endeksli.csv`, `_puanlar.parquet`); eğitimsiz yöntemlerin 18 aylık pay-gün değerlendirmesi aynı klasörde (`degerlendirme.csv`). 41 birim testi geçer.
+
+## 15. 30.10.2026 — Tarih parametreleri: Ocak–Mayıs 2024
+
+**Ölçüm.**
+
+- Betikler ve ölçütler 10.3 ile aynı. İki pencerede, ayları ortak kuyruktan alarak çalıştı; ay başına 45–65 dk, toplam yaklaşık 2 saat.
+- Marj kararı otomatik: sınır dışı sıra-günlerin hepsi özsermaye ya da `.R`/`.BE` olan ve tavana / tabana tam eşit işlem görülen en küçük aday.
+- Ocak ve Mart'ta bu kural birer istisnaya takıldı; elle incelendi (aşağıda), iki ayın tek fiyat adımları ±%10 ile ayrıca çalıştırıldı.
+- Özet betiği Haziran ve Ağustos 2024'te 12.2 tablosunu birebir verdi.
+
+| Ölçüm | Ocak 2024 | Şubat 2024 | Mart 2024 | Nisan 2024 | Mayıs 2024 |
+|---|---|---|---|---|---|
+| Fiyat marjı | ±%10 | ±%10 | ±%10 | ±%10 | ±%10 |
+| ±%10'u aşan sıra-gün (özsermaye + `.R`/`.BE`; açıklanmayan) | 36 (12 + 22; 2) | 24 (8 + 16; 0) | 17 (8 + 8; 1) | 8 (2 + 6; 0) | 13 (9 + 4; 0) |
+| Tavana / tabana tam eşit (±%10 sınırı) | 636 / 77 | 787 / 115 | 858 / 301 | 549 / 152 | 556 / 275 |
+| Emtia sertifikası en büyük sapma | +%1,5 / −%3,5 | +%2,4 / −%1,0 | +%3,9 / −%3,7 | +%2,4 / −%3,1 | +%1,5 / −%1,3 |
+| Devre kesici olayı (Ana / Yıldız / Alt) | 759 (366 / 272 / 121) | 962 (521 / 348 / 93) | 1.990 (1.041 / 737 / 212) | 1.198 (686 / 427 / 85) | 1.348 (846 / 398 / 104) |
+| Yükseliş yönlü devre kesici | 0 | 0 | 0 | 0 | 0 |
+| Sürekli işlemde en büyük düşüş / yükseliş | −%5,00 / %19,0 | −%5,00 / %22,1 | −%5,00 / %22,2 | −%5,00 / %21,5 | −%5,00 / %22,2 |
+| Tetiklemeden eşleştirmeye (%1–%99) | 899–929 sn | 900–929 sn | 899–928 sn | 899–929 sn | 899–929 sn |
+| Kapanışa taşma: en geç ayrı eşleştirmeli / en erken taşan | 17:39:54 / 17:40:04 | 17:39:59 / 17:40:02 | 17:39:36 / 17:40:05 | 17:39:56 / 17:40:03 | 17:39:44 / 17:40:29 |
+| Adım 4: baz ile / son işlemle tutan (toplam) | 165 / 125 (166) | 120 / 106 (122) | 145 / 115 (146) | 118 / 94 (118) | 153 / 118 (154) |
+| Temiz müzayedelerde fiyat uyumu | %99,98 (27.773 / 27.778) | %99,95 (26.991 / 27.005) | %99,95 (28.121 / 28.136) | %99,96 (23.564 / 23.573) | %99,94 (28.921 / 28.939) |
+| Açıklanmayan uyumsuz müzayede | 5 | 14 | 15 | 9 | 18 |
+| Karışık yön (kurala uyan / istisna) | 1 / 1 | 1 / 1 | 0 / 1 | 1 / 0 | 2 / 1 |
+| Açığa satış işlemi | 0 | 0 | 0 | 0 | 0 |
+| Varant salt kotasyon başlangıcı (en sık) | 10:00:02 | 10:00:01 | 10:00:01 | 10:00:01 | 10:00:04 |
+| EBDKS | yok | yok | yok | yok | yok |
+| İşlem günü | 22 | 21 | 21 | 18 | 22 |
+
+**Sonuç.** Bütün parametreler 2024-06…2025-06 ile aynı. `motor/tarih_parametreleri.csv`'de 9 ölçüm satırının başlangıcı 2024-06-03'ten 2024-01-02'ye alındı:
+
+- fiyat marjı (pay ve emtia sertifikası);
+- devre kesici yönü, oranı, emir toplama süresi, rastlantısal pencere, kapanışa taşma eşiği;
+- Adım 4 referansı;
+- "açığa satış yok".
+
+Varant satırının kaynağı genişletildi. `motor/parametreler.py` `VERI_DONEMI` 2024-01-01…2025-06-30 oldu; ölçüm testi ölçümsüz gün örneği olarak 2024-01-01'i (resmi tatil) kullanıyor. 41 test geçer.
+
+Bilgi notları `[BİLGİ]`:
+
+- **Ocak'taki 2 açıklanmayan aşım GSF katılma payıdır.** TPYGI.F2 (+%27) ve TPYTI.F2 (+%273) 26.01.2024'te 1 lot işlem gördü, özsermaye kaydı yok. Aralık 2024'teki RPSTP.F2 / RPTEK.F2 istisnasıyla aynı tür; `fiyat_marji` notuna eklendi. Paylarda aşım yok.
+- **Mart'taki 1 açıklanmayan aşım bir yuvarlama durumudur.** ISATR.E (İş Bankası A grubu, ayda 1 lot): baz 1.425.174,378 fiyat adımına oturmuyor; işlem fiyatı 1.567.692,5, baz × 1,10'un (1.567.691,8) bir adım üstü. Marj farkı değil; nota eklendi.
+- **Kapanışa taşma eşiği:** Ocak–Mayıs 2024'te en erken taşan 17:40:02,4 (Şubat), en geç ayrı eşleştirilen 17:39:58,6 (Şubat). Kayıtlı eşik aralığıyla (17:40:01,0006–17:40:01,649) uyumlu.
+- **Mart 2024'te devre kesici sayısı yüksek** (1.990; sonraki aylarda 760–1.350). Değer değil sayı farkı; incelenmedi.
+
+**Motorla sınama:**
+
+- ISYAT.E 05.02.2024 (SPK B vakası dönemi): 5.727 işlemin tamamı birebir; 5.986 emrin gerçekleşen miktarı aynı; 5,7 sn.
+- THYAO.E 15.03.2024: 103.540 işlemin %99,89'u birebir; toplam adet ve 104.514 emrin gerçekleşen miktarı aynı; fark kısmi görünmeli 48 emirden (görünen kısım veride yok; Mart 2025'te de %99,85).
+
+**Çıktılar:** `veri/gunici-dogrulama/2024-0N/` (`gunsonu/`, `seans-akisi/`, `devre-kesici/`, `tek-fiyat/`).
+
+## 16. 30.10.2026 — 18 ay: motorlu değerlendirmeler
+
+Parametre ölçümünden sonra (bölüm 15) motorlu değerlendirmeler 18 ayla (2024-01…2025-06, birleşik özellik tablosu) yeniden koşuldu. İki pencerede, yaklaşık 3,5 saatte; hata yok. Çıktılar `gunici-dogrulama/2024-01_2025-06/tespit/`:
+
+| Koşu | Seçim | Tohum | Süre |
+|---|---|---|---|
+| Ayarlı senaryo, pencere düzeyi (`pencere_ayarli/`) | 1.660 (ay başına 13 aydaki gibi; kullanıcı kararı) | 11 | 3 sa 18 dk |
+| Eski senaryo, pencere düzeyi (`pencere/`, `pencere/grup_pay/`) | 720 (ay başına 40) | 11 | 46 dk |
+| Eski senaryo, pay-gün (`sentetik/`) | 720 | 7 | 39 dk |
+| SPK etiketli günlerde pencere düzeyi (`spk_pencere/`) | 1.275 pay-gün | — | ≈ 50 dk |
+
+**Ayarlı senaryo (13 ay → 18 ay), pencere düzeyi.**
+
+Seçim sonuçları:
+
+- Değerlendirilen 1.548 vaka: yanıltıcı 789 (bant başına 190–203), yükseltme 260, karşılıklı 229, kapanış 270.
+- Temizlik ölçütüyle dışarıda: yanıltıcı 11 (10'u bant 0), karşılıklı 36.
+
+Senaryo bazında (ROC-AUC / ilk 3 isabeti):
+
+| Senaryo | Kurallar 13 ay | Kurallar 18 ay | Denetimli 13 ay | Denetimli 18 ay |
+|---|---|---|---|---|
+| Yanıltıcı emir | 0,59 / %29 | 0,57 / %25 | 0,68 / %39 | 0,68 / %33 |
+| Fiyat yükseltme | 0,77 / %60 | 0,78 / %56 | 0,90 / %90 | 0,89 / %87 |
+| Karşılıklı işlem | 0,44 / %21 | 0,45 / %15 | 0,74 / %54 | 0,73 / %61 |
+| Kapanış (Z-skor) | 0,71 / %11 | 0,67 / %7 | — | — |
+| Hepsi (denetimli, kapanış hariç) | — | — | 0,73 / %53 | 0,73 / %49 |
+
+Kör nokta haritası, yanıltıcı emir, 18 ay (ROC-AUC / ilk 3; kurallar ve denetimli):
+
+| Eksen | Bant | Kurallar | Denetimli |
+|---|---|---|---|
+| Uzaklık | 0 / 1–2 / 3–6 / 7–10 | 0,51 / 0,56 / 0,61 / 0,61 | 0,62 / 0,66 / 0,72 / 0,71 |
+| Ömür | 5–30 / 30–60 / 60–150 / 150–300 sn | 0,69 / 0,72 / 0,46 / 0,46 | 0,78 / 0,78 / 0,59 / 0,59 |
+| Katman | 1 / 3 / 5 | 0,50 / 0,59 / 0,65 | 0,63 / 0,68 / 0,74 |
+
+Gerçekçi ağırlıklı ortalama: kurallar 0,55 / %20, denetimli 0,65 / %26. 13 ayda bu değerler 0,57 / %25 ve 0,66 / %34'tü.
+
+**Eski senaryo (13 ay → 18 ay).**
+
+- Pencere düzeyinde değişmedi: yanıltıcı emir kurallarda 0,90 / %77 → 0,90 / %76.
+- Denetimli model (pay gruplu) hepsi 0,90 → 0,90; yanıltıcı 0,94 → 0,93; karşılıklı 0,95 → 0,96; yükseltme 0,81 → 0,80.
+- Pay-gün sentetik (9 ay → 18 ay):
+  - hepsi 0,56–0,58 → 0,53–0,55;
+  - kapanış 0,71 → 0,71;
+  - yanıltıcı, yükseltme ve karşılıklı işlem pay-gün düzeyinde 0,47–0,52, yani gün içi kısa senaryolar günlük özetlerde görülmüyor;
+  - enjeksiyonsuz kontrol 0,49–0,50, yani motor ile veri arasındaki fark yapay ayrım üretmiyor.
+
+**SPK etiketli günlerde pencere düzeyi (9 ay → 18 ay; negatif: aynı payların etiketsiz günleri ve rastgele pay-günler).**
+
+| Gün puanı | A, 9 ay | A, 18 ay | B, 9 ay | B, 18 ay |
+|---|---|---|---|---|
+| Uyarı penceresi sayısı | 0,60 | 0,61 | 0,53 | 0,54 |
+| Bent f uyarıları | 0,68 | 0,65 | 0,54 | 0,54 |
+| En yüksek pencere Z-skoru | 0,63 | 0,65 | 0,57 | 0,54 |
+
+**Yorum.**
+
+- **18 ay sonuçları 13 ayı doğruluyor.** Bant başına vaka sayısı 130–147'den 190–203'e çıktı; değerler 0,01–0,02 içinde.
+- **Yanıltıcı emir kör noktaları büyük örneklemle kesinleşti:**
+  - ömrü 60 sn'yi aşan emirlerde kurallar 0,46;
+  - en iyi fiyattaki katmanlarda 0,51;
+  - tek katmanda 0,50.
+  - Denetimli model aynı bantlarda 0,59–0,63.
+- **Gerçek SPK vakalarında 5 dakikalık uyarılar zayıf kalıyor** (A 0,61–0,65, B 0,54). Gerçek vakalar için en iyi araç pay-gün düzeyindeki SPK denetimli modeldir (A+B 0,71; bölüm 14).
+- **Sıradaki adım** (kullanıcıyla konuşuldu, 29.10.2026): 60 sn eşiğini veriye göre gözden geçirmek. Önce gerçek veride büyük, uzak, işlem görmeden iptal edilen emirlerin ömür dağılımı ölçülür (normal piyasa ve emir bazlı SPK vakaları); kabul ölçütü yanlış alarm ve SPK başarısıdır.

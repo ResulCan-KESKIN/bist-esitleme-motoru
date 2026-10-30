@@ -1,0 +1,49 @@
+ana_sektor,sektor,pay_sayisi,endeks_kodu,dayanak
+BİLGİ VE İLETİŞİM,BİLGİ HİZMET FAALİYETLERİ,1,XUTUM,karsiligi yok; BIST TUM
+BİLGİ VE İLETİŞİM,TELEKOMÜNİKASYON,2,XILTM,sektor adi endeks adiyla ortusuyor
+BİLGİ VE İLETİŞİM,YAYIMCILIK,3,XUTUM,karsiligi yok; BIST TUM
+ELEKTRİK GAZ VE SU,ELEKTRİK GAZ VE SU,36,XELKT,sektor adi endeks adiyla ortusuyor
+EĞİTİM SAĞLIK SPOR VE EĞLENCE HİZMETLERİ ,SPOR EGLENCE BOS ZAMANLARI DEGERLENDIRME HIZMETLERI,5,XSPOR,sektor adi endeks adiyla ortusuyor
+EĞİTİM SAĞLIK SPOR VE EĞLENCE HİZMETLERİ ,SPOR VE EĞLENCE HİZMETLERİ ,5,XSPOR,sektor adi endeks adiyla ortusuyor
+EĞİTİM SAĞLIK SPOR VE EĞLENCE HİZMETLERİ ,İNSAN SAĞLIĞI VE SOSYAL HİZMETLER,4,XUTUM,karsiligi yok; BIST TUM
+GAYRİMENKUL FAALİYETLERİ,GAYRİMENKUL FAALİYETLERİ,4,XUTUM,karsiligi yok; BIST TUM
+MADENCİLİK,MADENCİLİK,6,XMADN,sektor adi endeks adiyla ortusuyor
+MADENCİLİK VE TAŞ OCAKÇILIĞI,MADENCİLİK VE TAŞ OCAKÇILIĞI,8,XMADN,sektor adi endeks adiyla ortusuyor
+MALİ KURULUŞLAR,ARACI KURUMLAR,9,XAKUR,sektor adi endeks adiyla ortusuyor
+MALİ KURULUŞLAR,BANKALAR,12,XBANK,sektor adi endeks adiyla ortusuyor
+MALİ KURULUŞLAR,FİNANSAL KİRALAMA VE FAKTORİNG ŞİRKETLERİ,9,XFINK,sektor adi endeks adiyla ortusuyor
+MALİ KURULUŞLAR,FİNASMAN ŞİRKETLERİ,1,XUMAL,ana sektor endeksi
+MALİ KURULUŞLAR,GAYRİMENKUL YAT. ORT.,51,XGMYO,sektor adi endeks adiyla ortusuyor
+MALİ KURULUŞLAR,GİRİŞİM SERMAYESİ YAT. ORT.,8,XUMAL,ana sektor endeksi
+MALİ KURULUŞLAR,HOLDİNGLER VE YATIRIM ŞİRKETLERİ,52,XHOLD,sektor adi endeks adiyla ortusuyor
+MALİ KURULUŞLAR,MENKUL KIYMET YAT. ORT.,9,XYORT,sektor adi endeks adiyla ortusuyor
+MALİ KURULUŞLAR,SİGORTA ŞİRKETLERİ,6,XSGRT,sektor adi endeks adiyla ortusuyor
+MALİ KURULUŞLAR,VARLIK YÖNETİM ŞİRKETLERİ,3,XUMAL,ana sektor endeksi
+MESLEKİ BİLİMSEL VE TEKNİK FAALİYETLER,HUKUK VE MUHASEBE FAALİYETLERİ,2,XUTUM,karsiligi yok; BIST TUM
+MESLEKİ BİLİMSEL VE TEKNİK FAALİYETLER,MİMARLIK VE MÜHENDİSLİK FAALİYETLERİ TEKNİK MUAYENE VE ANALİZ,2,XUTUM,karsiligi yok; BIST TUM
+MESLEKİ BİLİMSEL VE TEKNİK FAALİYETLER,REKLAMCILIK VE PAZAR ARAŞTIRMASI,1,XUTUM,karsiligi yok; BIST TUM
+OTELLER VE LOKANTALAR,KONAKLAMA,8,XTRZM,sektor adi endeks adiyla ortusuyor
+OTELLER VE LOKANTALAR,YİYECEK VE İÇECEK HİZMETLERİ,5,XUTUM,karsiligi yok; BIST TUM
+PİYASA ÖNCESİ İŞLEM PLATFORMU (PÖİP),PİYASA ÖNCESİ İŞLEM PLATFORMU (PÖİP),22,XUTUM,karsiligi yok; BIST TUM
+TARIM ORMANCILIK VE BALIKÇILIK,TARIM ORMANCILIK VE BALIKÇILIK,5,XUTUM,karsiligi yok; BIST TUM
+TEKNOLOJİ,BİLİŞİM,34,XBLSM,sektor adi endeks adiyla ortusuyor
+TEKNOLOJİ,SAVUNMA,4,XUTEK,ana sektor endeksi
+TOPTAN VE PERAKENDE TİCARET,PERAKENDE TİCARET,17,XTCRT,sektor adi endeks adiyla ortusuyor
+TOPTAN VE PERAKENDE TİCARET,TOPTAN TİCARET,11,XTCRT,sektor adi endeks adiyla ortusuyor
+ULAŞTIRMA VE DEPOLAMA,ULAŞTIRMA VE DEPOLAMA,12,XULAS,sektor adi endeks adiyla ortusuyor
+İDARİ VE DESTEK HİZMET FAALİYETLERİ,BÜRO YÖNETİMİ BÜRO DESTEĞİ VE DİĞER ŞİRKET DESTEK FAALİYETLERİ,2,XUTUM,karsiligi yok; BIST TUM
+İDARİ VE DESTEK HİZMET FAALİYETLERİ,GÜVENLİK VE SORUŞTURMA FAALİYETLERİ,1,XUTUM,karsiligi yok; BIST TUM
+İDARİ VE DESTEK HİZMET FAALİYETLERİ,KİRALAMA VE LEASING FAALİYETLERİ,4,XUTUM,karsiligi yok; BIST TUM
+İDARİ VE DESTEK HİZMET FAALİYETLERİ,SEYAHAT ACENTESİ TUR OPERATÖRÜ VE DİĞER REZERVASYON HİZMETLERİ İLE İLGİLİ FAALİYETLER ,1,XUTUM,karsiligi yok; BIST TUM
+İMALAT SANAYİİ,ANA METAL SANAYİ,29,XMANA,sektor adi endeks adiyla ortusuyor
+İMALAT SANAYİİ,DİĞER İMALAT SANAYİİ,1,XUSIN,ana sektor endeksi
+İMALAT SANAYİİ,GIDA İÇECEK VE TÜTÜN,51,XGIDA,sektor adi endeks adiyla ortusuyor
+İMALAT SANAYİİ,KAĞIT VE KAĞIT ÜRÜNLERİ BASIM,14,XKAGT,sektor adi endeks adiyla ortusuyor
+İMALAT SANAYİİ,KİMYA İLAÇ PETROL LASTİK VE PLASTİK ÜRÜNLER,45,XKMYA,sektor adi endeks adiyla ortusuyor
+İMALAT SANAYİİ,METAL ANA SANAYİ,28,XMANA,sektor adi endeks adiyla ortusuyor
+İMALAT SANAYİİ,METAL EŞYA MAKİNE ELEKTRİKLİ CİHAZLAR VE ULAŞIM ARAÇLARI,44,XMESY,sektor adi endeks adiyla ortusuyor
+İMALAT SANAYİİ,ORMAN ÜRÜNLERİ VE MOBİLYA,3,XKAGT,sektor adi endeks adiyla ortusuyor
+İMALAT SANAYİİ,TAŞ VE TOPRAĞA DAYALI,25,XTAST,sektor adi endeks adiyla ortusuyor
+İMALAT SANAYİİ,TAŞ VE TOPRAĞA DAYALI SANAYİ,23,XTAST,sektor adi endeks adiyla ortusuyor
+İMALAT SANAYİİ,TEKSTİL GİYİM EŞYASI VE DERİ,26,XTEKS,sektor adi endeks adiyla ortusuyor
+İNŞAAT VE BAYINDIRLIK,İNŞAAT VE BAYINDIRLIK,14,XINSA,sektor adi endeks adiyla ortusuyor

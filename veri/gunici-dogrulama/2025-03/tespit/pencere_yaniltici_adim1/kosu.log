@@ -1,0 +1,140 @@
+YANILTICI_ADIM = 1
+1 2025-03-24 FROTO.E kapanis 1 13 sn
+2 2025-03-27 BURVA.E yaniltici 1 16 sn
+3 2025-03-24 DNISI.E yukseltme 1 18 sn
+4 2025-03-13 TUCLK.E karsilikli 3 23 sn
+5 2025-03-19 KLNMA.E kapanis 1 25 sn
+6 2025-03-28 SELGD.E yaniltici 1 27 sn
+7 2025-03-19 FRIGO.E yukseltme 2 29 sn
+8 2025-03-10 VBTYZ.E karsilikli 3 32 sn
+9 2025-03-11 BURCE.E kapanis 1 37 sn
+10 2025-03-20 SARKY.E yaniltici 1 40 sn
+11 2025-03-27 AKSA.E yukseltme 1 47 sn
+12 2025-03-27 MIATK.E karsilikli 3 73 sn
+13 2025-03-17 CVKMD.E kapanis 1 80 sn
+14 2025-03-14 CLEBI.E yaniltici 2 85 sn
+15 2025-03-20 ENDAE.E yukseltme 2 89 sn
+16 2025-03-18 PASEU.E karsilikli 3 95 sn
+17 2025-03-14 DMRGD.E kapanis 1 98 sn
+18 2025-03-20 GLCVY.E yaniltici 1 100 sn
+19 2025-03-11 MEDTR.E yukseltme 2 102 sn
+20 2025-03-17 KCAER.E karsilikli 3 109 sn
+21 2025-03-27 CELHA.E kapanis 1 111 sn
+2025-03-10 VERUS.E yaniltici temiz degil: 118
+23 2025-03-11 TARKM.E yukseltme 2 117 sn
+24 2025-03-26 KZGYO.E karsilikli 2 120 sn
+25 2025-03-19 TRILC.E kapanis 1 126 sn
+26 2025-03-25 YYAPI.E yaniltici 1 130 sn
+27 2025-03-10 ENKAI.E yukseltme 2 140 sn
+28 2025-03-19 SONME.E karsilikli 3 142 sn
+29 2025-03-18 SAHOL.E kapanis 1 152 sn
+30 2025-03-21 BTCIM.E yaniltici 1 156 sn
+31 2025-03-20 PCILT.E yukseltme 2 161 sn
+32 2025-03-11 INVEO.E karsilikli 3 163 sn
+33 2025-03-17 MAVI.E kapanis 1 177 sn
+34 2025-03-25 ALTNY.E yaniltici 1 201 sn
+35 2025-03-13 OZKGY.E yukseltme 1 205 sn
+36 2025-03-13 MERCN.E karsilikli 2 208 sn
+37 2025-03-19 PNLSN.E kapanis 1 211 sn
+38 2025-03-17 ANELE.E yaniltici 1 213 sn
+39 2025-03-21 ZRGYO.E yukseltme 2 217 sn
+40 2025-03-10 SEKUR.E karsilikli 3 219 sn
+41 2025-03-28 DENGE.E kapanis 1 221 sn
+42 2025-03-10 AGESA.E yaniltici 1 224 sn
+43 2025-03-17 SKTAS.E yukseltme 1 226 sn
+44 2025-03-20 IEYHO.E karsilikli 3 230 sn
+45 2025-03-20 IZFAS.E kapanis 1 234 sn
+46 2025-03-11 PAMEL.E yaniltici 1 237 sn
+47 2025-03-27 OZGYO.E yukseltme 1 239 sn
+48 2025-03-19 ORCAY.E karsilikli 3 241 sn
+49 2025-03-24 KARSN.E kapanis 1 248 sn
+50 2025-03-12 ORCAY.E yaniltici 1 251 sn
+51 2025-03-17 ACSEL.E yukseltme 1 253 sn
+52 2025-03-13 IHYAY.E karsilikli 3 256 sn
+53 2025-03-13 ENKAI.E kapanis 1 267 sn
+54 2025-03-17 ULKER.E yaniltici 1 276 sn
+55 2025-03-17 NUHCM.E yukseltme 2 279 sn
+56 2025-03-25 BIMAS.E karsilikli 3 304 sn
+57 2025-03-21 ZEDUR.E kapanis 1 306 sn
+58 2025-03-18 KSTUR.E yaniltici 1 307 sn
+59 2025-03-28 HRKET.E yukseltme 2 314 sn
+60 2025-03-13 PENTA.E karsilikli 3 320 sn
+61 2025-03-14 A1CAP.E kapanis 1 324 sn
+62 2025-03-13 MNDTR.E yaniltici 1 326 sn
+63 2025-03-25 CEOEM.E yukseltme 2 331 sn
+64 2025-03-18 EDATA.E karsilikli 3 334 sn
+65 2025-03-13 ALKIM.E kapanis 1 337 sn
+66 2025-03-11 MAKIM.E yaniltici 1 340 sn
+67 2025-03-10 HOROZ.E yukseltme 2 348 sn
+68 2025-03-19 SAYAS.E karsilikli 3 352 sn
+69 2025-03-28 GOZDE.E kapanis 1 354 sn
+70 2025-03-20 ERCB.E yaniltici 1 359 sn
+71 2025-03-12 MAALT.E yukseltme 2 363 sn
+72 2025-03-28 PNSUT.E karsilikli 3 365 sn
+73 2025-03-21 IHAAS.E kapanis 1 368 sn
+74 2025-03-28 MSGYO.E yaniltici 1 370 sn
+75 2025-03-18 ISYAT.E yukseltme 2 373 sn
+76 2025-03-19 BURCE.E karsilikli 3 377 sn
+77 2025-03-21 CEMZY.E kapanis 1 382 sn
+2025-03-21 VAKBN.E yaniltici kabul edilen sentetik olay yok; red: P_GECICI_DURDUR_EBDK:emir_tipi_A, P_GECICI_DURDUR_EBDK:emir_tipi_C, P_GECICI_DURDUR_EBDK:iptal
+79 2025-03-14 LILAK.E yukseltme 2 395 sn
+80 2025-03-27 ISKPL.E karsilikli 2 398 sn
+        kume    senaryo         puan  pay_gun  roc_auc  ilk3_isabet
+enjeksiyonlu      hepsi   puan_zskor       78    0.626        0.179
+enjeksiyonlu      hepsi   puan_kural       78    0.631        0.231
+enjeksiyonlu      hepsi puan_iforest       78    0.586        0.026
+enjeksiyonlu    kapanis   puan_zskor       20    0.778        0.150
+enjeksiyonlu    kapanis   puan_kural       20    0.769        0.200
+enjeksiyonlu    kapanis puan_iforest       20      NaN        0.000
+enjeksiyonlu  yaniltici   puan_zskor       18    0.927        0.611
+enjeksiyonlu  yaniltici   puan_kural       18    0.939        0.611
+enjeksiyonlu  yaniltici puan_iforest       18    0.800        0.056
+enjeksiyonlu  yukseltme   puan_zskor       20    0.583        0.000
+enjeksiyonlu  yukseltme   puan_kural       20    0.597        0.100
+enjeksiyonlu  yukseltme puan_iforest       20    0.596        0.000
+enjeksiyonlu karsilikli   puan_zskor       20    0.476        0.000
+enjeksiyonlu karsilikli   puan_kural       20    0.478        0.050
+enjeksiyonlu karsilikli puan_iforest       20    0.495        0.050
+     kontrol      hepsi   puan_zskor       78    0.465        0.000
+     kontrol      hepsi   puan_kural       78    0.469        0.051
+     kontrol      hepsi puan_iforest       78    0.459        0.013
+     kontrol    kapanis   puan_zskor       20    0.499        0.000
+     kontrol    kapanis   puan_kural       20    0.493        0.050
+     kontrol    kapanis puan_iforest       20      NaN        0.000
+     kontrol  yaniltici   puan_zskor       18    0.404        0.000
+     kontrol  yaniltici   puan_kural       18    0.416        0.056
+     kontrol  yaniltici puan_iforest       18    0.415        0.000
+     kontrol  yukseltme   puan_zskor       20    0.488        0.000
+     kontrol  yukseltme   puan_kural       20    0.498        0.050
+     kontrol  yukseltme puan_iforest       20    0.526        0.000
+     kontrol karsilikli   puan_zskor       20    0.444        0.000
+     kontrol karsilikli   puan_kural       20    0.448        0.050
+     kontrol karsilikli puan_iforest       20    0.419        0.050
+   senaryo           puan  pay_gun  roc_auc  ort_kesinlik  taban_oran  ilk3_isabet  kontrol_ilk3
+     hepsi     puan_zskor       58    0.596         0.029       0.019        0.190         0.000
+     hepsi     puan_kural       58    0.604         0.031       0.019        0.241         0.052
+     hepsi   puan_iforest       58    0.586         0.023       0.019        0.034         0.017
+     hepsi puan_denetimli       58    0.820         0.209       0.019        0.534         0.069
+karsilikli     puan_zskor       20    0.476         0.028       0.029        0.000         0.000
+karsilikli     puan_kural       20    0.477         0.028       0.029        0.050         0.050
+karsilikli   puan_iforest       20    0.495         0.028       0.029        0.050         0.050
+karsilikli puan_denetimli       20    0.885         0.326       0.029        0.650         0.150
+ yaniltici     puan_zskor       18    0.926         0.228       0.010        0.611         0.000
+ yaniltici     puan_kural       18    0.938         0.184       0.010        0.611         0.056
+ yaniltici   puan_iforest       18    0.800         0.037       0.010        0.056         0.000
+ yaniltici puan_denetimli       18    0.906         0.259       0.010        0.611         0.000
+ yukseltme     puan_zskor       20    0.583         0.022       0.017        0.000         0.000
+ yukseltme     puan_kural       20    0.597         0.024       0.017        0.100         0.050
+ yukseltme   puan_iforest       20    0.596         0.020       0.017        0.000         0.000
+ yukseltme puan_denetimli       20    0.658         0.100       0.017        0.350         0.050
+z_hacim                   0.2540
+aktif_dengesizlik         0.0459
+uzak_kisa_pay             0.0137
+z_derinlik                0.0009
+z_aktif_dengesizlik       0.0006
+z_iptal                   0.0004
+z_getiri                  0.0000
+z_derinlik_dengesizlik   -0.0000
+z_iptal_orani            -0.0000
+fiyat_kademesi           -0.0000
+BITTI 1 0

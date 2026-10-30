@@ -2,7 +2,7 @@
 ciktisindan ozellikler hesaplanir ve gunun tablosunda o pay-gunun satiri degistirilir; yontemlerin enjekte edilen
 pay-gunleri yakalama orani olculur.
 
-- Pay-gun secimi: 10.03.2025 ve sonrasi (Z-skor icin en az 5 gun gecmis), surekli islemde en az ISLEM_EN_AZ islem,
+- Pay-gun secimi: verinin 6. islem gunu ve sonrasi (Z-skor icin en az 5 gun gecmis; Mart 2025: 10.03), surekli islemde en az ISLEM_EN_AZ islem,
   ozsermaye gunu ve SPK etiketli pay-gun haric. Senaryolar sirayla; saat 10:30-17:00 arasinda rastgele (kapanis haric).
 - Olcek: payin o gunku toplam islem miktari (lot) H. Kapanis: emir H x KAPANIS_ORAN; yaniltici: 3 katman (son islem
   tarafin en iyi fiyatindan YANILTICI_ADIM adim geriden baslayarak; en iyi fiyat taban oynatmasinin defter orneginden),
@@ -123,7 +123,8 @@ if __name__ == "__main__":
     T = T[T["ozsermaye"].isna() & T["baz"].notna()].reset_index(drop=True)
     e = y.etiketler(vaka)
     etiketli = set(zip(e["islem_kodu"], e["tarih"]))
-    aday = T[(T["tarih"] >= "2025-03-10") & (T["islem_sayisi"] >= ISLEM_EN_AZ)]
+    # Z-skor icin en az 5 gunluk gecmis: verinin 6. gununden itibaren (Mart 2025: 10.03)
+    aday = T[(T["tarih"] >= np.sort(T["tarih"].unique())[5]) & (T["islem_sayisi"] >= ISLEM_EN_AZ)]
     aday = aday[[(k, t) not in etiketli for k, t in zip(aday["islem_kodu"], aday["tarih"])]]
     secim = aday.sample(n=min(adet, len(aday)), random_state=int(rng.integers(1 << 31))).reset_index(drop=True)
     enj, kontrol, kayit, fark = [], [], [], []

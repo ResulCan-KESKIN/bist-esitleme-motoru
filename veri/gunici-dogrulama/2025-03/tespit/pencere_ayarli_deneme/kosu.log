@@ -1,0 +1,76 @@
+1 2025-03-24 FROTO.E yaniltici 2 28 sn
+2 2025-03-27 BURVA.E yaniltici 2 32 sn
+3 2025-03-24 DNISI.E yaniltici 5 39 sn
+4 2025-03-13 TUCLK.E yaniltici 2 46 sn
+2025-03-19 KLNMA.E yaniltici HATA StopIteration 
+6 2025-03-28 SELGD.E yaniltici 4 54 sn
+7 2025-03-19 FRIGO.E yaniltici 1 60 sn
+8 2025-03-10 VBTYZ.E yaniltici 6 66 sn
+9 2025-03-11 BURCE.E yaniltici 3 73 sn
+10 2025-03-20 SARKY.E yaniltici 1 79 sn
+11 2025-03-27 AKSA.E yaniltici 4 90 sn
+12 2025-03-27 MIATK.E yaniltici 3 123 sn
+13 2025-03-17 CVKMD.E yaniltici 1 133 sn
+14 2025-03-14 CLEBI.E yaniltici 3 144 sn
+15 2025-03-20 ENDAE.E yaniltici 2 152 sn
+16 2025-03-18 PASEU.E yaniltici 1 159 sn
+17 2025-03-14 DMRGD.E yaniltici 3 165 sn
+18 2025-03-20 GLCVY.E yaniltici 2 173 sn
+19 2025-03-11 MEDTR.E yaniltici 2 177 sn
+20 2025-03-17 KCAER.E yaniltici 2 187 sn
+21 2025-03-27 CELHA.E yaniltici 3 192 sn
+22 2025-03-10 VERUS.E yaniltici 3 198 sn
+23 2025-03-11 TARKM.E yaniltici 4 205 sn
+24 2025-03-26 KZGYO.E yaniltici 5 210 sn
+25 2025-03-19 TRILC.E yaniltici 3 220 sn
+26 2025-03-25 YYAPI.E yaniltici 1 227 sn
+27 2025-03-10 ENKAI.E yaniltici 5 241 sn
+28 2025-03-19 SONME.E yaniltici 1 246 sn
+29 2025-03-18 SAHOL.E yaniltici 5 259 sn
+30 2025-03-21 BTCIM.E yaniltici 4 269 sn
+31 2025-03-20 PCILT.E yaniltici 8 277 sn
+32 2025-03-11 INVEO.E yaniltici 4 282 sn
+33 2025-03-17 MAVI.E yaniltici 2 299 sn
+2025-03-25 ALTNY.E yaniltici temiz degil: 4732
+35 2025-03-13 OZKGY.E yaniltici 3 360 sn
+36 2025-03-13 MERCN.E yaniltici 2 367 sn
+37 2025-03-19 PNLSN.E yaniltici 4 373 sn
+38 2025-03-17 ANELE.E yaniltici 2 378 sn
+39 2025-03-21 ZRGYO.E yaniltici 1 385 sn
+40 2025-03-10 SEKUR.E yaniltici 4 390 sn
+senaryo    sonuc      
+yaniltici  hata            1
+           tamam          38
+           temiz_degil     1
+        kume   senaryo         puan  pay_gun  roc_auc  ilk3_isabet
+enjeksiyonlu     hepsi   puan_zskor       38    0.654        0.211
+enjeksiyonlu     hepsi   puan_kural       38    0.670        0.263
+enjeksiyonlu     hepsi puan_iforest       38    0.591        0.053
+enjeksiyonlu yaniltici   puan_zskor       38    0.654        0.211
+enjeksiyonlu yaniltici   puan_kural       38    0.670        0.263
+enjeksiyonlu yaniltici puan_iforest       38    0.591        0.053
+     kontrol     hepsi   puan_zskor       38    0.425        0.000
+     kontrol     hepsi   puan_kural       38    0.424        0.000
+     kontrol     hepsi puan_iforest       38    0.437        0.000
+     kontrol yaniltici   puan_zskor       38    0.425        0.000
+     kontrol yaniltici   puan_kural       38    0.424        0.000
+     kontrol yaniltici puan_iforest       38    0.437        0.000
+  senaryo           puan  pay_gun  roc_auc  ort_kesinlik  taban_oran  ilk3_isabet  kontrol_ilk3
+    hepsi     puan_zskor       38    0.654         0.073        0.03        0.211           0.0
+    hepsi     puan_kural       38    0.669         0.080        0.03        0.263           0.0
+    hepsi   puan_iforest       38    0.591         0.038        0.03        0.053           0.0
+    hepsi puan_denetimli       38    0.671         0.175        0.03        0.421           0.0
+yaniltici     puan_zskor       38    0.654         0.073        0.03        0.211           0.0
+yaniltici     puan_kural       38    0.669         0.080        0.03        0.263           0.0
+yaniltici   puan_iforest       38    0.591         0.038        0.03        0.053           0.0
+yaniltici puan_denetimli       38    0.671         0.175        0.03        0.421           0.0
+uzak_kisa_pay             0.1097
+derinlik_dengesizlik      0.0151
+derinlik                  0.0109
+z_fiyat_kademesi          0.0107
+z_derinlik_dengesizlik    0.0009
+z_uzak_kisa_pay           0.0008
+z_getiri                  0.0002
+z_derinlik                0.0000
+z_aktif_dengesizlik       0.0000
+aktif_dengesizlik         0.0000

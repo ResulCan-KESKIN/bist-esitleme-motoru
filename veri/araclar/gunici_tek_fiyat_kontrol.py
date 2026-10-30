@@ -8,7 +8,9 @@ emir_durumu = 1 ve kalan > 0. Piyasa emri (fiyat turu 2) ve fiyatsiz piyasadan l
 piyasa emri gibi; dengeleyici (66) ve orta nokta (emir turu 64) haric.
 Referans adaylari: baz (onceki kapanis), son islem (M'den onceki son surekli/muzayede islemi).
 Sinirli varyant: gunluk fiyat sinirlari; kapanis seansinda ayrica son islem fiyatinin +-%3'u (ice yuvarlanmis).
-Kullanim: python -I gunici_tek_fiyat_kontrol.py GUNLUK_EMIR_KLASORU ISLEM.parquet GUNSONU.parquet CIKTI
+Yalniz GUNSONU dosyasinin ayindaki gunler islenir (ISLEM ve GUNSONU aylik dosyalardir). MARJ: o ayin fiyat marji
+(gunici_marj_kontrol.py ile olculur; varsayilan 0.10).
+Kullanim: python -I gunici_tek_fiyat_kontrol.py GUNLUK_EMIR_KLASORU ISLEM.parquet GUNSONU.parquet CIKTI [MARJ]
 """
 import sys, os, glob, datetime
 import numpy as np
@@ -26,7 +28,7 @@ TOPLAMA = {"P_ACILIS_EMIR_TPL", "P_ACS_EMR_TP_EIY", "P_ACS_EMR_TP2_PY", "P_ACS_E
            "P_KAPANIS_EMIR_TPL", "P_KAPANIS_EMIR_TPL2", "P_TEKFIYAT_EMIR_TPL", "P_TEKFIYAT_EMIR_TPL2",
            "P_DK_TEKFIY_EMIR_TPL", "P_DK_TEKFIY_EMR_TPL2", "P_TF_EMIR_TPL_EBDK", "P_TF_EMIR_TPL2_EBDK"}
 ESLESTIRME = {"P_ESLESTIRME", "P_ESLESTIRMETEKFIYAT", "P_ESLESTIRME_EBDK"}
-MARJ = 0.10  # Mart 2025 verisinden (gunici_fiyat_adimi_sinir_kontrol.py); tarihe bagli parametre
+MARJ = float(sys.argv[5]) if len(sys.argv) > 5 else 0.10  # tarihe bagli; Mart 2025: 0.10
 cols = ["islem_kodu", "emir_no", "emir_giris_zamani", "emir_degistirilme_zamani", "alis_satis",
         "emir_fiyat_turu", "emir_turu", "emir_kategorisi", "emir_durumu", "degisiklik_sebebi",
         "kalan_miktar", "fiyat", "seans", "guncelleme_no"]
@@ -92,7 +94,8 @@ def sinif(tur, M):
 
 
 kayit = []
-for gun in sorted(os.path.basename(p) for p in glob.glob(os.path.join(emir_dir, "20*"))):
+ay = str(gs.index.get_level_values("tarih").min())[:7]
+for gun in sorted(os.path.basename(p) for p in glob.glob(os.path.join(emir_dir, ay + "-*"))):
     d = datetime.date.fromisoformat(gun)
     isl = islemler(d)
     isl_g = {k: v for k, v in isl.groupby("islem_kodu", sort=False)}

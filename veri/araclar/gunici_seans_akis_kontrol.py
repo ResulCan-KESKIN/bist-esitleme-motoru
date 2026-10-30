@@ -3,7 +3,8 @@
 Emir satirlarinda seans, olayin oldugu andaki bolumdur; bolum gecis ani dogrudan yazilmaz, yalniz ilk/son
 olay zamani gorulur. Cikti: kosular (tarih, islem_kodu, sira, seans, ilk, son, satir, sebep sayilari) ve
 devre kesici olaylari (tetikleme oncesi son surekli satir, ilk DK satiri, ilk eslestirme satiri, surekliye donus).
-Kullanim: python -I gunici_seans_akis_kontrol.py GUNLUK_EMIR_KLASORU CIKTI [GUN ...]
+GUN yerine ay (YYYY-MM) da verilebilir: o aydaki gunler islenir.
+Kullanim: python -I gunici_seans_akis_kontrol.py GUNLUK_EMIR_KLASORU CIKTI [GUN|AY ...]
 """
 import sys, os, glob
 import numpy as np
@@ -17,7 +18,7 @@ cols = ["islem_kodu", "emir_no", "emir_degistirilme_zamani", "seans", "degisikli
         "emir_fiyat_turu", "kalan_miktar", "guncelleme_no"]
 kosu, dk = [], []
 for gun in sorted(os.path.basename(p) for p in glob.glob(os.path.join(emir_dir, "20*"))):
-    if secili and gun not in secili:
+    if secili and not any(gun.startswith(s) for s in secili):
         continue
     for f in sorted(glob.glob(os.path.join(emir_dir, gun, "*.parquet"))):
         df = pq.read_table(f, columns=cols).to_pandas()

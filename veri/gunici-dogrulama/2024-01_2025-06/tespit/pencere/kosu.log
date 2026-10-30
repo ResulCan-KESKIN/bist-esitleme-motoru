@@ -1,0 +1,814 @@
+1 2024-11-18 ASGYO.E kapanis 1 3 sn
+2 2024-07-09 KFEIN.E yaniltici 1 6 sn
+3 2024-08-07 AKCNS.E yukseltme 1 9 sn
+4 2025-05-13 DERIM.E karsilikli 3 12 sn
+5 2024-01-09 PRDGS.E kapanis 1 14 sn
+6 2024-02-29 GOZDE.E yaniltici 1 17 sn
+7 2024-02-07 PRDGS.E yukseltme 2 19 sn
+8 2024-10-24 ULUSE.E karsilikli 3 21 sn
+9 2024-02-05 EGPRO.E kapanis 1 24 sn
+10 2024-06-10 ICBCT.E yaniltici 1 26 sn
+11 2024-05-09 AYEN.E yukseltme 1 29 sn
+2025-06-03 MEGAP.E karsilikli temiz degil: 0
+13 2024-12-31 DOKTA.E kapanis 1 32 sn
+14 2024-02-13 OSTIM.E yaniltici 2 35 sn
+15 2024-09-26 KRDMA.E yukseltme 2 37 sn
+2025-01-17 BUCIM.E karsilikli temiz degil: 124038
+17 2024-06-26 EBEBK.E kapanis 1 43 sn
+18 2024-11-22 HATEK.E yaniltici 1 46 sn
+19 2025-02-25 MERKO.E yukseltme 2 50 sn
+20 2024-04-01 MARKA.E karsilikli 3 51 sn
+21 2024-08-20 UFUK.E kapanis 1 53 sn
+22 2025-06-02 HEKTS.E yaniltici 1 60 sn
+23 2024-03-28 CRDFA.E yukseltme 2 62 sn
+24 2024-10-24 PRKME.E karsilikli 2 63 sn
+25 2024-09-23 SKYLP.E kapanis 1 65 sn
+26 2024-09-27 BASGZ.E yaniltici 1 68 sn
+27 2024-12-17 BMSCH.E yukseltme 2 74 sn
+28 2025-01-23 ALFAS.E karsilikli 2 83 sn
+29 2025-05-16 CCOLA.E kapanis 1 89 sn
+30 2024-04-17 DMSAS.E yaniltici 1 91 sn
+31 2024-01-19 ALBRK.E yukseltme 2 94 sn
+32 2024-05-13 GIPTA.E karsilikli 3 97 sn
+33 2024-01-10 PINSU.E kapanis 1 98 sn
+34 2025-06-23 MACKO.E yaniltici 1 101 sn
+35 2024-02-27 GRNYO.E yukseltme 1 103 sn
+36 2024-12-17 ETYAT.E karsilikli 2 105 sn
+37 2024-10-28 KONYA.E kapanis 1 107 sn
+38 2024-05-22 BANVT.E yaniltici 1 112 sn
+39 2024-02-05 TDGYO.E yukseltme 2 114 sn
+40 2024-11-22 KRDMB.E karsilikli 3 118 sn
+41 2025-03-19 ISGYO.E kapanis 1 122 sn
+42 2024-03-29 GOZDE.E yaniltici 1 124 sn
+43 2025-03-14 CWENE.E yukseltme 1 131 sn
+44 2024-11-11 MZHLD.E karsilikli 3 133 sn
+45 2024-08-28 BARMA.E kapanis 1 135 sn
+46 2025-05-21 SNGYO.E yaniltici 1 138 sn
+47 2025-06-02 PEKGY.E yukseltme 1 144 sn
+48 2024-11-20 MAALT.E karsilikli 3 146 sn
+49 2025-03-20 VAKKO.E kapanis 1 150 sn
+50 2025-04-21 VERUS.E yaniltici 1 154 sn
+51 2024-11-25 AKSA.E yukseltme 1 159 sn
+52 2025-01-10 ISDMR.E karsilikli 3 162 sn
+53 2024-06-10 ICUGS.E kapanis 1 163 sn
+54 2024-03-22 EMKEL.E yaniltici 1 166 sn
+55 2024-08-28 TTRAK.E yukseltme 2 171 sn
+56 2024-10-10 NETAS.E karsilikli 3 174 sn
+57 2024-04-19 KRPLS.E kapanis 1 176 sn
+58 2024-04-05 AHGAZ.E yaniltici 1 179 sn
+59 2024-09-11 NETAS.E yukseltme 2 183 sn
+60 2025-06-02 ESCOM.E karsilikli 3 185 sn
+61 2025-03-03 BFREN.E kapanis 1 189 sn
+62 2025-05-26 SMART.E yaniltici 1 192 sn
+63 2024-04-24 IHLAS.E yukseltme 2 197 sn
+2024-06-05 ISBIR.E karsilikli temiz degil: 0
+65 2024-07-05 SKBNK.E kapanis 1 202 sn
+66 2024-03-08 ISKPL.E yaniltici 1 206 sn
+67 2024-12-06 TKNSA.E yukseltme 2 210 sn
+68 2024-12-24 BIENY.E karsilikli 2 213 sn
+69 2024-05-20 MAVI.E kapanis 1 220 sn
+70 2024-01-19 MEKAG.E yaniltici 1 224 sn
+71 2025-04-11 TCKRC.E yukseltme 2 228 sn
+72 2024-05-20 INVEO.E karsilikli 3 230 sn
+73 2024-02-20 ATEKS.E kapanis 1 232 sn
+74 2024-09-24 MERCN.E yaniltici 1 234 sn
+75 2025-06-13 BORSK.E yukseltme 2 238 sn
+76 2024-03-04 FRIGO.E karsilikli 3 241 sn
+77 2024-08-22 FZLGY.E kapanis 1 244 sn
+2024-09-10 ONRYT.E yaniltici temiz degil: 14715
+79 2024-05-07 MMCAS.E yukseltme 2 250 sn
+2024-11-26 SODSN.E karsilikli temiz degil: 0
+81 2024-09-27 DMRGD.E kapanis 1 252 sn
+82 2024-01-22 MGROS.E yaniltici 2 260 sn
+83 2025-03-24 AKGRT.E yukseltme 2 264 sn
+84 2024-08-29 ERCB.E karsilikli 3 268 sn
+85 2024-09-20 AKGRT.E kapanis 1 271 sn
+86 2025-04-04 KLYPV.E yaniltici 1 277 sn
+87 2024-02-29 KRDMB.E yukseltme 2 279 sn
+88 2025-03-17 CWENE.E karsilikli 3 285 sn
+2024-06-06 DOBUR.E kapanis kabul edilen sentetik olay yok; red: P_KAPANIS_EMIR_TPL:fiyat_siniri
+90 2024-12-16 ARZUM.E yaniltici 1 289 sn
+91 2024-04-01 INTEM.E yukseltme 2 291 sn
+92 2025-04-11 ENTRA.E karsilikli 3 296 sn
+93 2024-03-27 TNZTP.E kapanis 1 298 sn
+94 2024-11-12 ONCSM.E yaniltici 2 301 sn
+95 2024-08-20 OTKAR.E yukseltme 2 304 sn
+96 2024-10-01 HKTM.E karsilikli 3 307 sn
+97 2025-01-16 RGYAS.E kapanis 1 310 sn
+98 2024-11-22 VERTU.E yaniltici 1 312 sn
+99 2025-01-06 IZMDC.E yukseltme 2 314 sn
+2025-01-08 KSTUR.E karsilikli temiz degil: 0
+101 2024-02-09 KNFRT.E kapanis 1 317 sn
+102 2024-04-30 MARTI.E yaniltici 2 319 sn
+103 2024-06-10 CWENE.E yukseltme 2 325 sn
+2024-04-04 ATSYH.E karsilikli temiz degil: 0
+105 2025-04-30 AKGRT.E kapanis 1 329 sn
+106 2024-03-08 KRONT.E yaniltici 1 332 sn
+107 2025-01-15 MOBTL.E yukseltme 1 335 sn
+108 2025-05-27 ENDAE.E karsilikli 3 340 sn
+109 2024-11-25 CONSE.E kapanis 1 343 sn
+110 2024-10-02 ZEDUR.E yaniltici 1 344 sn
+111 2024-02-23 SELGD.E yukseltme 1 346 sn
+112 2025-05-09 DCTTR.E karsilikli 3 355 sn
+113 2024-06-21 EBEBK.E kapanis 1 358 sn
+114 2025-04-24 SELVA.E yaniltici 1 360 sn
+115 2024-05-22 TCELL.E yukseltme 1 372 sn
+116 2025-06-10 FZLGY.E karsilikli 3 375 sn
+117 2025-05-20 UNLU.E kapanis 1 377 sn
+118 2024-03-19 KLMSN.E yaniltici 1 379 sn
+119 2024-05-10 ISBIR.E yukseltme 2 380 sn
+120 2025-02-17 MRSHL.E karsilikli 3 381 sn
+121 2024-09-10 YKSLN.E kapanis 1 383 sn
+122 2025-05-02 HUNER.E yaniltici 1 387 sn
+123 2024-07-02 KUTPO.E yukseltme 1 390 sn
+124 2024-01-30 SISE.E karsilikli 3 405 sn
+125 2024-11-27 CANTE.E kapanis 1 415 sn
+126 2025-01-16 MAKIM.E yaniltici 2 417 sn
+127 2024-08-06 AKSEN.E yukseltme 2 422 sn
+128 2025-01-02 BVSAN.E karsilikli 3 426 sn
+129 2024-04-22 POLHO.E kapanis 1 429 sn
+130 2024-01-10 MARKA.E yaniltici 1 432 sn
+131 2024-11-21 MERIT.E yukseltme 2 434 sn
+132 2025-04-17 KLMSN.E karsilikli 3 436 sn
+133 2025-04-03 SKYLP.E kapanis 1 438 sn
+134 2024-02-22 BAKAB.E yaniltici 1 440 sn
+135 2024-07-05 IHAAS.E yukseltme 1 444 sn
+136 2024-10-31 GRTHO.E karsilikli 3 446 sn
+137 2024-06-21 AZTEK.E kapanis 1 449 sn
+138 2024-09-09 DGATE.E yaniltici 2 451 sn
+139 2024-12-19 OYYAT.E yukseltme 2 454 sn
+140 2024-05-02 EUREN.E karsilikli 2 459 sn
+141 2024-07-29 SELVA.E kapanis 1 462 sn
+142 2024-07-04 EUYO.E yaniltici 1 463 sn
+143 2025-02-19 KAREL.E yukseltme 2 466 sn
+144 2024-09-25 ISFIN.E karsilikli 3 468 sn
+145 2024-01-25 TRGYO.E kapanis 1 471 sn
+146 2024-11-15 TSPOR.E yaniltici 1 488 sn
+147 2025-03-20 MEPET.E yukseltme 2 490 sn
+2024-09-11 ATSYH.E karsilikli temiz degil: 0
+149 2024-06-03 MEDTR.E kapanis 1 493 sn
+150 2025-03-12 DAPGM.E yaniltici 1 496 sn
+151 2024-04-18 ARSAN.E yukseltme 2 499 sn
+2025-04-29 RNPOL.E karsilikli temiz degil: 2591
+153 2024-11-14 KORDS.E kapanis 1 504 sn
+154 2024-04-19 KARSN.E yaniltici 1 512 sn
+155 2025-06-11 BEGYO.E yukseltme 1 514 sn
+156 2024-09-17 ALBRK.E karsilikli 3 517 sn
+157 2025-05-15 PNLSN.E kapanis 1 519 sn
+158 2024-09-25 ALARK.E yaniltici 1 526 sn
+159 2024-10-01 PRKAB.E yukseltme 2 530 sn
+160 2024-01-30 ISDMR.E karsilikli 3 534 sn
+161 2024-12-04 GENTS.E kapanis 1 536 sn
+162 2024-06-28 PARSN.E yaniltici 1 538 sn
+163 2024-03-26 SRVGY.E yukseltme 2 539 sn
+164 2024-10-17 KCAER.E karsilikli 3 544 sn
+165 2024-09-30 EKOS.E kapanis 1 550 sn
+166 2024-02-28 EKIZ.E yaniltici 1 551 sn
+167 2024-08-12 MNDRS.E yukseltme 1 554 sn
+168 2025-05-08 KAPLM.E karsilikli 2 557 sn
+169 2024-06-25 BAKAB.E kapanis 1 558 sn
+170 2024-07-30 DGATE.E yaniltici 1 561 sn
+171 2024-10-22 EKOS.E yukseltme 2 564 sn
+172 2025-01-02 ARDYZ.E karsilikli 3 568 sn
+173 2025-02-17 VERTU.E kapanis 1 570 sn
+174 2024-08-22 VKGYO.E yaniltici 2 574 sn
+175 2025-01-27 CEMZY.E yukseltme 1 577 sn
+176 2024-06-21 ALBRK.E karsilikli 3 581 sn
+177 2025-05-06 DZGYO.E kapanis 1 585 sn
+178 2024-09-11 LOGO.E yaniltici 1 588 sn
+179 2024-03-29 FRIGO.E yukseltme 2 590 sn
+180 2025-04-04 KMPUR.E karsilikli 3 593 sn
+181 2025-02-14 KRDMB.E kapanis 1 596 sn
+182 2024-08-19 RTALB.E yaniltici 1 605 sn
+183 2024-07-08 KAREL.E yukseltme 2 607 sn
+184 2025-02-21 TCELL.E karsilikli 3 617 sn
+185 2024-08-06 OFSYM.E kapanis 1 620 sn
+186 2025-03-13 TNZTP.E yaniltici 1 623 sn
+187 2024-11-12 NATEN.E yukseltme 2 625 sn
+188 2025-05-28 MEGMT.E karsilikli 2 629 sn
+189 2024-10-10 SONME.E kapanis 1 631 sn
+190 2024-07-11 ISSEN.E yaniltici 1 633 sn
+191 2024-05-06 TEKTU.E yukseltme 1 636 sn
+192 2025-05-20 OYAKC.E karsilikli 3 642 sn
+193 2024-08-09 MAKIM.E kapanis 1 644 sn
+194 2025-04-17 HLGYO.E yaniltici 1 647 sn
+195 2024-11-14 TNZTP.E yukseltme 2 650 sn
+196 2024-07-18 SUWEN.E karsilikli 3 652 sn
+197 2024-04-24 ULUSE.E kapanis 1 654 sn
+198 2025-03-11 SEYKM.E yaniltici 1 656 sn
+199 2024-08-15 ERSU.E yukseltme 1 662 sn
+200 2024-01-11 MNDTR.E karsilikli 3 664 sn
+201 2025-05-12 TTRAK.E kapanis 1 670 sn
+202 2025-02-06 ASUZU.E yaniltici 1 672 sn
+203 2024-09-16 INDES.E yukseltme 1 675 sn
+204 2024-05-27 MAKTK.E karsilikli 3 679 sn
+205 2024-12-12 BIENY.E kapanis 1 682 sn
+206 2025-03-13 FORMT.E yaniltici 1 686 sn
+207 2024-01-15 DIRIT.E yukseltme 2 687 sn
+208 2024-03-12 DOCO.E karsilikli 3 689 sn
+209 2024-07-09 QNBFB.E kapanis 1 690 sn
+210 2024-05-31 ONCSM.E yaniltici 1 693 sn
+211 2024-06-26 LILAK.E yukseltme 2 699 sn
+212 2024-02-16 ZEDUR.E karsilikli 3 701 sn
+213 2025-06-30 CRFSA.E kapanis 1 704 sn
+214 2024-03-29 BEGYO.E yaniltici 1 708 sn
+215 2024-03-06 MAKIM.E yukseltme 1 711 sn
+2024-05-22 EUKYO.E karsilikli temiz degil: 0
+217 2024-02-09 TMPOL.E kapanis 1 714 sn
+218 2024-05-15 ANELE.E yaniltici 1 716 sn
+219 2024-09-25 ANSGR.E yukseltme 2 719 sn
+220 2025-06-05 PASEU.E karsilikli 3 722 sn
+2024-04-05 UZERB.E kapanis kabul edilen sentetik olay yok; red: P_KAPANIS_EMIR_TPL2:fiyat_siniri
+222 2024-03-29 TBORG.E yaniltici 1 724 sn
+223 2024-09-27 YGGYO.E yukseltme 1 725 sn
+224 2025-06-19 KLGYO.E karsilikli 2 729 sn
+225 2024-05-22 LMKDC.E kapanis 1 736 sn
+226 2024-04-29 FZLGY.E yaniltici 1 738 sn
+227 2025-02-20 PAPIL.E yukseltme 2 742 sn
+228 2024-05-09 THYAO.E karsilikli 3 762 sn
+229 2024-05-21 UNLU.E kapanis 1 764 sn
+230 2024-01-31 ISSEN.E yaniltici 1 766 sn
+231 2024-12-13 ZOREN.E yukseltme 1 773 sn
+2024-05-14 YONGA.E karsilikli temiz degil: 0
+233 2024-06-12 DESPC.E kapanis 1 776 sn
+234 2024-07-26 ALTNY.E yaniltici 1 793 sn
+235 2025-04-28 EMKEL.E yukseltme 2 798 sn
+236 2025-06-03 ERBOS.E karsilikli 3 800 sn
+237 2024-09-06 KUTPO.E kapanis 1 802 sn
+238 2024-09-06 CRDFA.E yaniltici 1 804 sn
+239 2024-03-08 GMTAS.E yukseltme 2 807 sn
+240 2025-03-24 YGGYO.E karsilikli 3 809 sn
+241 2024-09-12 SAHOL.E kapanis 1 824 sn
+242 2025-02-25 MERIT.E yaniltici 1 827 sn
+243 2024-06-27 RNPOL.E yukseltme 1 828 sn
+244 2025-03-27 IZFAS.E karsilikli 3 832 sn
+245 2025-06-13 ARZUM.E kapanis 1 834 sn
+246 2024-09-19 VBTYZ.E yaniltici 1 837 sn
+247 2024-05-28 VESTL.E yukseltme 1 844 sn
+248 2024-09-18 BEGYO.E karsilikli 3 846 sn
+249 2024-12-05 CLEBI.E kapanis 1 850 sn
+250 2025-04-29 YATAS.E yaniltici 1 852 sn
+251 2024-10-22 ERCB.E yukseltme 2 854 sn
+252 2024-03-01 KRSTL.E karsilikli 3 858 sn
+253 2025-05-08 KNFRT.E kapanis 1 861 sn
+254 2024-07-04 DESPC.E yaniltici 1 862 sn
+255 2025-03-18 BORSK.E yukseltme 1 865 sn
+256 2024-05-16 FLAP.E karsilikli 3 869 sn
+257 2024-12-06 SNGYO.E kapanis 1 872 sn
+258 2025-02-27 ADEL.E yaniltici 1 875 sn
+259 2025-05-13 AHGAZ.E yukseltme 1 880 sn
+260 2025-03-25 VSNMD.E karsilikli 3 883 sn
+261 2025-02-05 PASEU.E kapanis 1 886 sn
+262 2025-01-30 VAKKO.E yaniltici 1 888 sn
+263 2025-06-02 ISFIN.E yukseltme 2 892 sn
+264 2024-09-24 LMKDC.E karsilikli 3 896 sn
+265 2024-11-20 PETKM.E kapanis 1 907 sn
+266 2024-06-06 DERIM.E yaniltici 1 908 sn
+267 2024-08-20 DGNMO.E yukseltme 2 911 sn
+268 2025-02-10 RGYAS.E karsilikli 3 913 sn
+269 2025-01-28 HUNER.E kapanis 1 917 sn
+270 2024-09-04 TTKOM.E yaniltici 1 922 sn
+271 2024-11-13 PRDGS.E yukseltme 1 924 sn
+272 2025-02-05 PRZMA.E karsilikli 3 927 sn
+2024-01-16 KAPLM.E kapanis kabul edilen sentetik olay yok; red: P_KAPANIS_EMIR_TPL:fiyat_siniri
+274 2024-09-11 BUCIM.E yaniltici 1 930 sn
+275 2024-02-14 OZRDN.E yukseltme 1 932 sn
+276 2024-02-06 JANTS.E karsilikli 3 935 sn
+277 2024-08-06 MPARK.E kapanis 1 939 sn
+278 2025-04-28 TTRAK.E yaniltici 1 946 sn
+279 2025-04-25 TERA.E yukseltme 1 951 sn
+280 2024-12-31 BRYAT.E karsilikli 3 954 sn
+281 2024-12-18 VAKFN.E kapanis 1 958 sn
+282 2024-05-09 ESEN.E yaniltici 1 961 sn
+283 2024-12-27 NATEN.E yukseltme 1 964 sn
+284 2024-09-06 KAREL.E karsilikli 3 966 sn
+285 2024-02-01 ZRGYO.E kapanis 1 969 sn
+286 2024-07-01 ISFIN.E yaniltici 1 973 sn
+287 2024-09-09 GOLTS.E yukseltme 1 976 sn
+288 2025-05-27 PSDTC.E karsilikli 3 978 sn
+289 2025-06-10 MOGAN.E kapanis 1 982 sn
+290 2024-07-04 ICBCT.E yaniltici 1 984 sn
+291 2024-02-13 BYDNR.E yukseltme 1 988 sn
+292 2024-09-17 ORCAY.E karsilikli 2 990 sn
+293 2025-05-26 DOFER.E kapanis 1 993 sn
+294 2024-09-04 ASTOR.E yaniltici 2 1003 sn
+295 2024-12-23 FROTO.E yukseltme 1 1011 sn
+296 2025-06-25 SASA.E karsilikli 3 1026 sn
+297 2025-03-10 YKSLN.E kapanis 1 1028 sn
+298 2024-06-11 TGSAS.E yaniltici 1 1029 sn
+299 2024-06-07 GMTAS.E yukseltme 2 1031 sn
+300 2024-06-21 KRVGD.E karsilikli 3 1033 sn
+301 2024-03-07 DOAS.E kapanis 1 1042 sn
+302 2024-12-03 MAALT.E yaniltici 1 1044 sn
+303 2025-02-19 ISDMR.E yukseltme 2 1048 sn
+304 2025-01-28 PGSUS.E karsilikli 3 1063 sn
+305 2024-02-16 PKART.E kapanis 1 1064 sn
+306 2024-12-02 JANTS.E yaniltici 1 1069 sn
+307 2024-11-28 INGRM.E yukseltme 1 1070 sn
+308 2024-10-24 SEKUR.E karsilikli 3 1072 sn
+309 2024-09-11 KOZAA.E kapanis 1 1079 sn
+2024-06-11 VANGD.E yaniltici temiz degil: 5622
+311 2024-12-13 LOGO.E yukseltme 1 1084 sn
+312 2025-04-10 PATEK.E karsilikli 3 1093 sn
+313 2024-03-25 INTEM.E kapanis 1 1095 sn
+314 2024-11-14 CIMSA.E yaniltici 1 1105 sn
+315 2025-04-21 VAKBN.E yukseltme 2 1116 sn
+316 2024-01-11 TTRAK.E karsilikli 3 1120 sn
+317 2024-05-23 ASGYO.E kapanis 1 1123 sn
+318 2025-06-03 ACSEL.E yaniltici 1 1125 sn
+319 2024-05-24 JANTS.E yukseltme 1 1131 sn
+320 2024-11-20 SAHOL.E karsilikli 3 1143 sn
+321 2024-02-13 PAGYO.E kapanis 1 1145 sn
+322 2024-12-03 UFUK.E yaniltici 1 1147 sn
+323 2024-05-15 KLSER.E yukseltme 1 1152 sn
+324 2025-02-10 EGPRO.E karsilikli 3 1155 sn
+325 2025-01-20 CWENE.E kapanis 1 1159 sn
+326 2024-08-02 ARSAN.E yaniltici 1 1161 sn
+327 2024-11-27 ISCTR.E yukseltme 2 1179 sn
+328 2024-02-22 DOBUR.E karsilikli 2 1182 sn
+329 2025-02-13 YYAPI.E kapanis 1 1186 sn
+330 2024-12-06 VAKFN.E yaniltici 1 1193 sn
+331 2025-03-04 GENTS.E yukseltme 2 1195 sn
+2025-02-24 GSDHO.E karsilikli temiz degil: 0
+333 2024-08-16 CMBTN.E kapanis 1 1202 sn
+334 2024-08-23 FMIZP.E yaniltici 1 1204 sn
+335 2024-06-14 BRKSN.E yukseltme 1 1205 sn
+336 2024-02-09 RAYSG.E karsilikli 2 1207 sn
+337 2025-06-02 KZGYO.E kapanis 1 1210 sn
+338 2025-05-13 YAYLA.E yaniltici 1 1212 sn
+339 2024-03-21 OYAKC.E yukseltme 1 1220 sn
+340 2025-03-19 ISDMR.E karsilikli 3 1227 sn
+341 2024-01-26 EGEEN.E kapanis 1 1231 sn
+342 2025-05-05 BULGS.E yaniltici 1 1240 sn
+343 2024-12-31 KZGYO.E yukseltme 1 1243 sn
+344 2025-01-10 EMKEL.E karsilikli 2 1246 sn
+345 2025-06-24 MIATK.E kapanis 1 1257 sn
+346 2025-03-21 GRNYO.E yaniltici 1 1258 sn
+347 2024-03-05 ISFIN.E yukseltme 2 1262 sn
+348 2025-04-15 FRIGO.E karsilikli 3 1264 sn
+349 2025-02-27 RODRG.E kapanis 1 1266 sn
+350 2024-08-05 EUYO.E yaniltici 1 1267 sn
+351 2024-04-03 ASELS.E yukseltme 2 1280 sn
+352 2024-10-14 KUYAS.E karsilikli 3 1283 sn
+353 2024-02-29 IHLAS.E kapanis 1 1288 sn
+354 2025-03-24 HURGZ.E yaniltici 1 1291 sn
+355 2025-01-08 TRCAS.E yukseltme 2 1293 sn
+356 2024-11-19 CWENE.E karsilikli 3 1304 sn
+357 2025-02-24 PRZMA.E kapanis 1 1306 sn
+358 2024-12-09 INTEM.E yaniltici 1 1309 sn
+359 2025-02-05 EKOS.E yukseltme 1 1312 sn
+360 2024-09-04 ALKLC.E karsilikli 3 1315 sn
+361 2024-04-15 ANGEN.E kapanis 1 1318 sn
+362 2024-04-29 SUMAS.E yaniltici 1 1319 sn
+363 2024-03-08 BAYRK.E yukseltme 1 1322 sn
+364 2024-09-23 ASTOR.E karsilikli 3 1331 sn
+365 2024-08-01 MRSHL.E kapanis 1 1333 sn
+366 2024-03-01 FLAP.E yaniltici 2 1339 sn
+367 2025-02-07 SEKUR.E yukseltme 2 1340 sn
+368 2024-05-07 RYSAS.E karsilikli 3 1342 sn
+369 2024-03-12 MAVI.E kapanis 1 1348 sn
+370 2024-10-18 ENJSA.E yaniltici 1 1356 sn
+371 2025-06-27 KGYO.E yukseltme 2 1358 sn
+372 2024-08-14 BORLS.E karsilikli 3 1360 sn
+373 2024-02-16 GENIL.E kapanis 1 1366 sn
+374 2025-01-02 ODAS.E yaniltici 1 1372 sn
+375 2025-02-03 ANHYT.E yukseltme 2 1377 sn
+376 2024-10-01 GARFA.E karsilikli 3 1379 sn
+377 2024-05-09 MMCAS.E kapanis 1 1380 sn
+378 2024-06-21 BNTAS.E yaniltici 1 1384 sn
+379 2024-09-20 EUPWR.E yukseltme 2 1390 sn
+380 2025-01-08 EUPWR.E karsilikli 3 1395 sn
+381 2024-06-20 QUAGR.E kapanis 1 1401 sn
+382 2024-03-22 HTTBT.E yaniltici 1 1403 sn
+383 2024-05-30 PETKM.E yukseltme 2 1411 sn
+2025-05-16 EUHOL.E karsilikli temiz degil: 0
+385 2025-02-24 UNLU.E kapanis 1 1414 sn
+386 2024-05-07 KONKA.E yaniltici 1 1416 sn
+387 2025-05-27 GEREL.E yukseltme 1 1422 sn
+2024-09-24 SEYKM.E karsilikli temiz degil: 147126
+389 2024-06-26 SAHOL.E kapanis 1 1436 sn
+390 2024-09-17 SEKUR.E yaniltici 1 1438 sn
+391 2024-07-31 ETYAT.E yukseltme 2 1439 sn
+392 2025-01-16 DGNMO.E karsilikli 3 1441 sn
+393 2025-05-27 DYOBY.E kapanis 1 1445 sn
+394 2025-02-26 SASA.E yaniltici 2 1474 sn
+395 2024-12-13 MOGAN.E yukseltme 2 1478 sn
+396 2025-01-15 NUHCM.E karsilikli 3 1480 sn
+397 2024-05-21 TEKTU.E kapanis 1 1483 sn
+398 2025-05-23 VKING.E yaniltici 1 1485 sn
+399 2025-05-28 KRDMD.E yukseltme 1 1496 sn
+400 2024-02-08 TKNSA.E karsilikli 3 1501 sn
+401 2025-03-07 KLMSN.E kapanis 1 1503 sn
+402 2024-09-11 TCELL.E yaniltici 1 1517 sn
+403 2024-10-01 TGSAS.E yukseltme 2 1520 sn
+404 2024-08-09 AYEN.E karsilikli 3 1522 sn
+405 2025-03-06 FRIGO.E kapanis 1 1524 sn
+406 2024-05-23 PNSUT.E yaniltici 1 1526 sn
+407 2024-01-11 CONSE.E yukseltme 1 1529 sn
+408 2024-11-05 NTHOL.E karsilikli 3 1532 sn
+409 2024-04-24 MHRGY.E kapanis 1 1536 sn
+410 2025-03-17 HDFGS.E yaniltici 1 1539 sn
+411 2025-03-20 CEMTS.E yukseltme 2 1542 sn
+2024-03-21 QNBFL.E karsilikli kabul edilen sentetik olay yok; red: P_TEKFIYAT_EMIR_TPL2:fiyat_siniri
+413 2024-11-25 KOPOL.E kapanis 1 1548 sn
+414 2024-10-16 AKSUE.E yaniltici 1 1549 sn
+415 2024-08-16 TRILC.E yukseltme 2 1568 sn
+416 2024-01-22 TTKOM.E karsilikli 3 1580 sn
+417 2025-06-11 DMSAS.E kapanis 1 1583 sn
+418 2025-02-25 ISGYO.E yaniltici 1 1586 sn
+419 2025-05-08 DZGYO.E yukseltme 1 1589 sn
+420 2025-01-10 INDES.E karsilikli 3 1592 sn
+421 2024-03-15 MAKTK.E kapanis 1 1595 sn
+422 2024-08-27 ALMAD.E yaniltici 1 1597 sn
+423 2024-11-13 KLSER.E yukseltme 1 1600 sn
+424 2025-03-07 CRDFA.E karsilikli 2 1602 sn
+425 2024-12-10 SAFKR.E kapanis 1 1605 sn
+426 2024-12-10 GEDIK.E yaniltici 1 1606 sn
+427 2025-05-15 OBAMS.E yukseltme 1 1612 sn
+428 2024-10-15 DGATE.E karsilikli 3 1614 sn
+429 2024-10-31 KONYA.E kapanis 1 1616 sn
+430 2024-07-24 ISKPL.E yaniltici 1 1618 sn
+431 2024-10-08 NATEN.E yukseltme 1 1621 sn
+432 2024-11-28 ATEKS.E karsilikli 3 1622 sn
+433 2024-07-09 PRKAB.E kapanis 1 1624 sn
+434 2025-06-10 MOPAS.E yaniltici 1 1628 sn
+435 2024-05-24 KIMMR.E yukseltme 2 1630 sn
+436 2025-04-29 TABGD.E karsilikli 3 1635 sn
+437 2024-02-08 AGESA.E kapanis 1 1637 sn
+438 2024-04-30 FENER.E yaniltici 1 1640 sn
+439 2024-11-20 AYCES.E yukseltme 2 1642 sn
+440 2024-05-21 ONCSM.E karsilikli 3 1644 sn
+441 2024-10-24 DGNMO.E kapanis 1 1646 sn
+442 2025-02-11 POLTK.E yaniltici 1 1648 sn
+443 2025-05-14 SNPAM.E yukseltme 1 1649 sn
+444 2024-11-25 LYDYE.E karsilikli 3 1651 sn
+445 2024-10-30 A1CAP.E kapanis 1 1652 sn
+446 2024-11-18 CANTE.E yaniltici 2 1661 sn
+447 2024-11-29 KONTR.E yukseltme 2 1671 sn
+448 2024-03-14 ATLAS.E karsilikli 2 1673 sn
+449 2024-11-12 YYLGD.E kapanis 1 1676 sn
+450 2024-10-02 BAYRK.E yaniltici 1 1680 sn
+451 2024-03-08 POLHO.E yukseltme 1 1683 sn
+452 2024-06-11 TKNSA.E karsilikli 2 1688 sn
+453 2024-03-21 BYDNR.E kapanis 1 1691 sn
+454 2024-09-19 ICBCT.E yaniltici 1 1693 sn
+455 2024-11-14 ATEKS.E yukseltme 1 1694 sn
+456 2024-11-20 KARSN.E karsilikli 3 1700 sn
+457 2024-08-05 OZKGY.E kapanis 1 1702 sn
+458 2025-04-14 CGCAM.E yaniltici 1 1709 sn
+459 2025-04-08 TURGG.E yukseltme 2 1711 sn
+2025-01-31 HEKTS.E karsilikli temiz degil: 350742
+461 2025-02-17 ARMGD.E kapanis 1 1722 sn
+462 2025-01-16 PRKAB.E yaniltici 1 1724 sn
+463 2024-09-26 AYES.E yukseltme 2 1725 sn
+464 2025-04-25 ARMGD.E karsilikli 3 1729 sn
+2025-05-21 DENGE.E kapanis kabul edilen sentetik olay yok; red: P_KAPANIS_EMIR_TPL:fiyat_siniri
+466 2024-06-07 PETKM.E yaniltici 1 1741 sn
+467 2025-01-02 ANHYT.E yukseltme 2 1744 sn
+468 2024-09-19 OYYAT.E karsilikli 3 1745 sn
+469 2024-01-29 SANKO.E kapanis 1 1747 sn
+470 2025-02-27 CLEBI.E yaniltici 1 1751 sn
+471 2025-02-18 RGYAS.E yukseltme 1 1754 sn
+472 2024-09-24 RTALB.E karsilikli 3 1757 sn
+473 2024-03-21 IHLAS.E kapanis 1 1762 sn
+474 2024-02-12 KLSYN.E yaniltici 1 1765 sn
+475 2024-06-07 SUWEN.E yukseltme 1 1767 sn
+476 2025-06-26 TDGYO.E karsilikli 3 1769 sn
+477 2024-05-08 OZGYO.E kapanis 1 1771 sn
+478 2024-07-25 KLKIM.E yaniltici 2 1773 sn
+479 2024-12-05 FADE.E yukseltme 1 1775 sn
+480 2024-04-04 MEGMT.E karsilikli 3 1781 sn
+481 2025-03-25 BUCIM.E kapanis 1 1784 sn
+482 2025-01-10 NTHOL.E yaniltici 1 1787 sn
+483 2024-01-30 KLKIM.E yukseltme 2 1790 sn
+2024-11-11 PENGD.E karsilikli temiz degil: 33961
+485 2025-05-22 HLGYO.E kapanis 1 1795 sn
+486 2024-03-07 HALKB.E yaniltici 1 1802 sn
+487 2024-07-08 BIOEN.E yukseltme 1 1805 sn
+488 2024-01-25 TETMT.E karsilikli 3 1807 sn
+2024-04-22 FONET.E kapanis kabul edilen sentetik olay yok; red: P_KAPANIS_EMIR_TPL2:fiyat_siniri
+490 2024-09-30 HOROZ.E yaniltici 1 1811 sn
+491 2025-02-11 FORTE.E yukseltme 1 1814 sn
+492 2024-03-15 BOSSA.E karsilikli 3 1816 sn
+493 2025-03-04 FORMT.E kapanis 1 1820 sn
+494 2024-01-10 PNSUT.E yaniltici 1 1822 sn
+495 2024-09-24 DOGUB.E yukseltme 2 1823 sn
+496 2024-03-21 KLKIM.E karsilikli 3 1826 sn
+497 2024-03-11 GIPTA.E kapanis 1 1831 sn
+498 2024-09-04 INVEO.E yaniltici 1 1833 sn
+499 2025-04-07 ISCTR.E yukseltme 2 1858 sn
+500 2024-07-12 GZNMI.E karsilikli 3 1860 sn
+501 2024-11-19 KATMR.E kapanis 1 1864 sn
+502 2024-08-01 DOKTA.E yaniltici 1 1867 sn
+503 2024-05-21 KENT.E yukseltme 2 1868 sn
+2024-09-03 INTEK.E karsilikli temiz degil: 0
+505 2024-07-12 ADEL.E kapanis 1 1870 sn
+506 2025-05-30 HATSN.E yaniltici 1 1874 sn
+507 2025-02-07 HEKTS.E yukseltme 1 1883 sn
+508 2024-07-31 YYLGD.E karsilikli 2 1887 sn
+2024-03-19 MIATK.E kapanis kabul edilen sentetik olay yok; red: P_KAPANIS_EMIR_TPL:fiyat_siniri
+510 2025-02-18 AGYO.E yaniltici 1 1905 sn
+511 2024-01-12 ISGYO.E yukseltme 2 1912 sn
+2024-07-24 CEMAS.E karsilikli kabul edilen sentetik olay yok; red: P_SUREKLI_ISLEM:fiyat_siniri
+513 2024-03-27 GOODY.E kapanis 1 1919 sn
+514 2024-07-19 TTRAK.E yaniltici 1 1925 sn
+515 2024-04-04 RYGYO.E yukseltme 1 1927 sn
+516 2024-07-26 BORLS.E karsilikli 3 1931 sn
+2024-04-04 MMCAS.E kapanis kabul edilen sentetik olay yok; red: P_KAPANIS_EMIR_TPL2:fiyat_siniri
+518 2024-02-12 AKGRT.E yaniltici 1 1936 sn
+519 2025-05-15 MANAS.E yukseltme 2 1942 sn
+520 2025-03-07 HEKTS.E karsilikli 3 1951 sn
+521 2024-04-02 REEDR.E kapanis 1 1967 sn
+522 2024-06-25 PRKAB.E yaniltici 1 1969 sn
+523 2024-10-09 ALCTL.E yukseltme 2 1971 sn
+524 2024-03-25 KZBGY.E karsilikli 3 1974 sn
+525 2024-08-02 KUTPO.E kapanis 1 1977 sn
+526 2025-03-28 IHAAS.E yaniltici 1 1979 sn
+527 2024-11-12 YUNSA.E yukseltme 1 1984 sn
+528 2024-02-28 BRLSM.E karsilikli 3 1991 sn
+529 2025-03-18 INFO.E kapanis 1 1993 sn
+530 2025-04-18 BRLSM.E yaniltici 2 1997 sn
+531 2024-07-17 SOKE.E yukseltme 2 1999 sn
+2024-02-15 QNBFB.E karsilikli temiz degil: 0
+533 2025-01-15 ODAS.E kapanis 1 2006 sn
+534 2025-02-04 PNLSN.E yaniltici 2 2009 sn
+535 2025-03-18 EGGUB.E yukseltme 1 2013 sn
+536 2024-05-22 DOCO.E karsilikli 3 2015 sn
+537 2025-03-12 ANELE.E kapanis 1 2017 sn
+538 2024-08-23 AGROT.E yaniltici 1 2028 sn
+539 2024-11-29 IEYHO.E yukseltme 2 2036 sn
+2025-04-24 PEKGY.E karsilikli temiz degil: 0
+541 2024-03-28 GEDZA.E kapanis 1 2043 sn
+542 2024-06-06 KRONT.E yaniltici 1 2046 sn
+543 2025-03-14 KBORU.E yukseltme 1 2049 sn
+544 2024-07-30 DARDL.E karsilikli 3 2051 sn
+545 2024-01-15 SRVGY.E kapanis 1 2053 sn
+546 2024-03-19 VAKKO.E yaniltici 1 2055 sn
+547 2024-01-17 SAFKR.E yukseltme 2 2057 sn
+548 2025-02-19 TATGD.E karsilikli 3 2059 sn
+549 2024-10-23 EBEBK.E kapanis 1 2061 sn
+550 2024-02-20 AGYO.E yaniltici 1 2065 sn
+551 2024-12-20 AKSUE.E yukseltme 2 2067 sn
+552 2025-02-11 DEVA.E karsilikli 3 2070 sn
+553 2024-08-29 MPARK.E kapanis 1 2073 sn
+554 2024-09-25 LUKSK.E yaniltici 1 2074 sn
+555 2025-05-29 AKSA.E yukseltme 1 2080 sn
+556 2024-04-03 SMART.E karsilikli 3 2083 sn
+557 2024-04-22 AKSA.E kapanis 1 2088 sn
+558 2024-02-22 OSTIM.E yaniltici 1 2091 sn
+559 2024-06-14 NIBAS.E yukseltme 2 2094 sn
+560 2025-06-26 TRILC.E karsilikli 3 2099 sn
+561 2024-08-15 SKBNK.E kapanis 1 2103 sn
+562 2024-10-14 IZENR.E yaniltici 1 2105 sn
+563 2024-09-25 ATLAS.E yukseltme 1 2106 sn
+564 2024-05-24 IHAAS.E karsilikli 2 2109 sn
+565 2024-07-17 GSRAY.E kapanis 1 2114 sn
+566 2024-01-24 CRDFA.E yaniltici 1 2117 sn
+567 2024-03-15 PRDGS.E yukseltme 1 2119 sn
+568 2024-09-11 IZINV.E karsilikli 2 2121 sn
+569 2025-02-25 KRSTL.E kapanis 1 2124 sn
+570 2024-11-29 RYSAS.E yaniltici 1 2129 sn
+571 2025-02-11 TUPRS.E yukseltme 2 2152 sn
+572 2025-01-13 GRTHO.E karsilikli 3 2154 sn
+573 2024-12-30 HEDEF.E kapanis 1 2156 sn
+574 2025-06-05 DOGUB.E yaniltici 1 2157 sn
+575 2024-05-17 IMASM.E yukseltme 1 2177 sn
+2024-10-28 OYAKC.E karsilikli temiz degil: 20241
+577 2025-06-23 SASA.E kapanis 1 2198 sn
+578 2024-03-08 BRMEN.E yaniltici 1 2199 sn
+579 2024-02-27 KOPOL.E yukseltme 2 2203 sn
+580 2025-03-03 INVES.E karsilikli 2 2208 sn
+581 2024-03-08 AKSGY.E kapanis 1 2210 sn
+582 2024-12-18 ADGYO.E yaniltici 1 2212 sn
+583 2025-05-07 JANTS.E yukseltme 2 2216 sn
+584 2024-05-14 KLKIM.E karsilikli 3 2219 sn
+585 2025-01-15 ETYAT.E kapanis 1 2220 sn
+586 2025-04-15 HALKB.E yaniltici 1 2233 sn
+587 2024-03-29 DGATE.E yukseltme 2 2234 sn
+588 2025-01-30 YATAS.E karsilikli 3 2236 sn
+589 2024-03-20 PSDTC.E kapanis 1 2238 sn
+590 2024-06-10 LUKSK.E yaniltici 1 2240 sn
+591 2024-08-05 EUKYO.E yukseltme 2 2242 sn
+592 2024-01-26 NUHCM.E karsilikli 3 2244 sn
+593 2024-06-28 SUWEN.E kapanis 1 2247 sn
+594 2024-11-18 VESBE.E yaniltici 1 2250 sn
+595 2024-12-06 ANHYT.E yukseltme 1 2254 sn
+596 2025-03-19 GENTS.E karsilikli 2 2259 sn
+597 2024-11-06 GLYHO.E kapanis 1 2262 sn
+598 2024-12-13 ESCAR.E yaniltici 1 2264 sn
+599 2024-07-08 MAKIM.E yukseltme 1 2266 sn
+600 2024-09-20 MERKO.E karsilikli 3 2269 sn
+601 2025-01-14 DOGUB.E kapanis 1 2271 sn
+602 2024-07-05 HEDEF.E yaniltici 1 2272 sn
+603 2025-01-03 BRKSN.E yukseltme 1 2274 sn
+604 2024-10-30 OYLUM.E karsilikli 3 2276 sn
+605 2024-08-02 AKSUE.E kapanis 1 2278 sn
+606 2025-04-07 SELGD.E yaniltici 2 2280 sn
+607 2024-04-01 SKBNK.E yukseltme 2 2284 sn
+608 2025-05-22 SAYAS.E karsilikli 2 2289 sn
+609 2024-09-13 BAYRK.E kapanis 1 2297 sn
+610 2024-02-12 DGGYO.E yaniltici 1 2300 sn
+611 2024-08-01 ORGE.E yukseltme 1 2302 sn
+612 2025-01-17 LOGO.E karsilikli 2 2305 sn
+613 2024-01-31 DYOBY.E kapanis 1 2307 sn
+614 2024-10-10 KNFRT.E yaniltici 2 2309 sn
+615 2024-08-01 SNGYO.E yukseltme 2 2311 sn
+616 2024-03-14 TSKB.E karsilikli 3 2316 sn
+617 2025-02-26 OFSYM.E kapanis 1 2318 sn
+618 2024-07-03 BRYAT.E yaniltici 1 2321 sn
+619 2025-05-13 CELHA.E yukseltme 2 2324 sn
+620 2024-08-13 KTLEV.E karsilikli 3 2348 sn
+621 2024-11-14 DEVA.E kapanis 1 2350 sn
+622 2024-09-27 EREGL.E yaniltici 1 2363 sn
+623 2024-06-10 ULUUN.E yukseltme 2 2366 sn
+624 2025-02-26 MPARK.E karsilikli 2 2372 sn
+625 2025-03-19 HATEK.E kapanis 1 2373 sn
+626 2025-06-18 KRPLS.E yaniltici 1 2375 sn
+627 2024-06-26 PRKAB.E yukseltme 2 2377 sn
+628 2025-02-13 TATEN.E karsilikli 2 2384 sn
+2024-09-23 CVKMD.E kapanis kabul edilen sentetik olay yok; red: P_KAPANIS_EMIR_TPL:fiyat_siniri
+630 2024-03-28 SKBNK.E yaniltici 1 2394 sn
+631 2025-03-03 BRYAT.E yukseltme 2 2397 sn
+632 2024-08-12 PKENT.E karsilikli 3 2399 sn
+633 2025-05-12 KRSTL.E kapanis 1 2404 sn
+634 2025-01-07 CATES.E yaniltici 1 2408 sn
+635 2025-02-27 ADGYO.E yukseltme 1 2410 sn
+636 2024-04-24 DZGYO.E karsilikli 3 2413 sn
+637 2024-08-16 FZLGY.E kapanis 1 2416 sn
+638 2025-04-11 KLMSN.E yaniltici 1 2418 sn
+639 2025-03-07 ENSRI.E yukseltme 1 2420 sn
+640 2024-12-18 TURSG.E karsilikli 3 2426 sn
+641 2025-04-10 ALKLC.E kapanis 1 2430 sn
+642 2024-02-12 HLGYO.E yaniltici 1 2433 sn
+643 2024-08-21 BUCIM.E yukseltme 2 2437 sn
+644 2024-07-29 SEKFK.E karsilikli 2 2440 sn
+645 2024-03-08 ECILC.E kapanis 1 2445 sn
+646 2025-05-30 USAK.E yaniltici 1 2458 sn
+647 2024-03-13 TOASO.E yukseltme 2 2468 sn
+648 2024-10-31 BNTAS.E karsilikli 3 2470 sn
+649 2024-07-08 EYGYO.E kapanis 1 2473 sn
+650 2024-05-10 ATLAS.E yaniltici 1 2475 sn
+651 2024-07-02 NIBAS.E yukseltme 1 2477 sn
+652 2024-09-10 HEKTS.E karsilikli 2 2488 sn
+653 2025-03-14 BINBN.E kapanis 1 2491 sn
+654 2024-09-26 ARSAN.E yaniltici 1 2493 sn
+655 2024-01-16 AFYON.E yukseltme 1 2496 sn
+2024-01-15 VKGYO.E karsilikli temiz degil: 0
+657 2024-10-25 DURKN.E kapanis 1 2504 sn
+658 2024-06-24 LOGO.E yaniltici 1 2507 sn
+659 2024-12-11 MHRGY.E yukseltme 2 2509 sn
+660 2025-01-08 KRDMA.E karsilikli 3 2513 sn
+661 2024-10-14 TDGYO.E kapanis 1 2515 sn
+662 2025-01-06 ALMAD.E yaniltici 1 2518 sn
+663 2024-06-20 GEREL.E yukseltme 1 2520 sn
+664 2024-10-10 KERVT.E karsilikli 3 2523 sn
+665 2024-12-06 TEKTU.E kapanis 1 2525 sn
+666 2024-12-31 BARMA.E yaniltici 1 2527 sn
+667 2024-12-30 SONME.E yukseltme 2 2529 sn
+668 2024-05-28 MIPAZ.E karsilikli 2 2530 sn
+669 2024-02-06 KORDS.E kapanis 1 2534 sn
+670 2024-11-12 AVOD.E yaniltici 1 2536 sn
+671 2024-09-30 RGYAS.E yukseltme 2 2540 sn
+672 2025-03-13 PARSN.E karsilikli 3 2542 sn
+673 2025-03-28 ECILC.E kapanis 1 2546 sn
+674 2024-11-19 QNBFL.E yaniltici 1 2547 sn
+675 2024-03-29 ONCSM.E yukseltme 1 2550 sn
+2024-12-23 KENT.E karsilikli temiz degil: 0
+677 2024-11-29 MSGYO.E kapanis 1 2553 sn
+678 2024-06-05 AGESA.E yaniltici 1 2555 sn
+679 2024-08-08 AKBNK.E yukseltme 1 2577 sn
+680 2024-11-22 SNGYO.E karsilikli 2 2579 sn
+681 2024-09-06 INTEK.E kapanis 1 2580 sn
+682 2024-08-08 GOKNR.E yaniltici 2 2584 sn
+683 2024-09-16 VRGYO.E yukseltme 2 2587 sn
+684 2024-04-22 YATAS.E karsilikli 3 2591 sn
+685 2025-06-26 INVES.E kapanis 1 2593 sn
+686 2024-10-25 INTEK.E yaniltici 1 2594 sn
+687 2024-02-19 PKENT.E yukseltme 1 2600 sn
+688 2025-02-10 ONRYT.E karsilikli 3 2605 sn
+689 2024-06-06 AKFYE.E kapanis 1 2609 sn
+690 2024-04-19 USAK.E yaniltici 1 2611 sn
+691 2024-02-22 EBEBK.E yukseltme 1 2617 sn
+692 2024-09-11 VKFYO.E karsilikli 3 2619 sn
+693 2024-02-15 THYAO.E kapanis 1 2649 sn
+694 2024-02-08 ALKA.E yaniltici 1 2651 sn
+695 2024-08-14 MPARK.E yukseltme 1 2655 sn
+696 2024-10-10 BRSAN.E karsilikli 3 2665 sn
+697 2024-08-22 PKART.E kapanis 1 2667 sn
+698 2025-04-30 A1CAP.E yaniltici 1 2670 sn
+699 2024-12-20 SEGMN.E yukseltme 2 2674 sn
+700 2024-12-30 MACKO.E karsilikli 2 2677 sn
+701 2025-02-05 KAREL.E kapanis 1 2680 sn
+702 2024-04-09 ALGYO.E yaniltici 1 2681 sn
+703 2025-03-07 TGSAS.E yukseltme 2 2683 sn
+704 2024-09-09 ASTOR.E karsilikli 3 2700 sn
+705 2025-03-07 TDGYO.E kapanis 1 2701 sn
+706 2024-08-21 PAGYO.E yaniltici 1 2702 sn
+707 2024-02-19 SELEC.E yukseltme 2 2706 sn
+2024-07-30 DERHL.E karsilikli kabul edilen sentetik olay yok; red: P_SUREKLI_ISLEM:fiyat_siniri
+709 2025-03-03 KAPLM.E kapanis 1 2710 sn
+710 2025-04-16 ISDMR.E yaniltici 1 2714 sn
+711 2025-04-09 PLTUR.E yukseltme 2 2718 sn
+712 2025-01-21 HTTBT.E karsilikli 3 2722 sn
+713 2024-08-26 AYGAZ.E kapanis 1 2725 sn
+714 2025-06-30 MHRGY.E yaniltici 1 2729 sn
+715 2024-08-19 BTCIM.E yukseltme 1 2734 sn
+716 2024-05-27 EGEPO.E karsilikli 3 2736 sn
+717 2024-11-28 MTRYO.E kapanis 1 2738 sn
+718 2025-05-08 BAGFS.E yaniltici 1 2740 sn
+719 2025-02-25 ECILC.E yukseltme 1 2743 sn
+720 2025-03-12 SMRVA.E karsilikli 3 2748 sn
+senaryo     sonuc      
+kapanis     kabul_yok        8
+            tamam          172
+karsilikli  kabul_yok        3
+            tamam          156
+            temiz_degil     21
+yaniltici   tamam          178
+            temiz_degil      2
+yukseltme   tamam          180
+        kume    senaryo         puan  pay_gun  roc_auc  ilk3_isabet
+enjeksiyonlu      hepsi   puan_zskor      686    0.603        0.206
+enjeksiyonlu      hepsi   puan_kural      686    0.605        0.236
+enjeksiyonlu      hepsi puan_iforest      686    0.620        0.028
+enjeksiyonlu    kapanis   puan_zskor      172    0.684        0.035
+enjeksiyonlu    kapanis   puan_kural      172    0.664        0.035
+enjeksiyonlu    kapanis puan_iforest      172      NaN        0.000
+enjeksiyonlu  yaniltici   puan_zskor      178    0.889        0.725
+enjeksiyonlu  yaniltici   puan_kural      178    0.899        0.764
+enjeksiyonlu  yaniltici puan_iforest      178    0.771        0.045
+enjeksiyonlu  yukseltme   puan_zskor      180    0.526        0.017
+enjeksiyonlu  yukseltme   puan_kural      180    0.532        0.061
+enjeksiyonlu  yukseltme puan_iforest      180    0.539        0.028
+enjeksiyonlu karsilikli   puan_zskor      156    0.486        0.019
+enjeksiyonlu karsilikli   puan_kural      156    0.489        0.058
+enjeksiyonlu karsilikli puan_iforest      156    0.592        0.038
+     kontrol      hepsi   puan_zskor      686    0.442        0.020
+     kontrol      hepsi   puan_kural      686    0.444        0.044
+     kontrol      hepsi puan_iforest      686    0.461        0.015
+     kontrol    kapanis   puan_zskor      172    0.332        0.006
+     kontrol    kapanis   puan_kural      172    0.327        0.006
+     kontrol    kapanis puan_iforest      172      NaN        0.000
+     kontrol  yaniltici   puan_zskor      178    0.458        0.006
+     kontrol  yaniltici   puan_kural      178    0.459        0.017
+     kontrol  yaniltici puan_iforest      178    0.454        0.011
+     kontrol  yukseltme   puan_zskor      180    0.448        0.028
+     kontrol  yukseltme   puan_kural      180    0.452        0.044
+     kontrol  yukseltme puan_iforest      180    0.447        0.017
+     kontrol karsilikli   puan_zskor      156    0.469        0.045
+     kontrol karsilikli   puan_kural      156    0.473        0.115
+     kontrol karsilikli puan_iforest      156    0.460        0.032
+   senaryo           puan  pay_gun  roc_auc  ort_kesinlik  taban_oran  ilk3_isabet  kontrol_ilk3
+     hepsi     puan_zskor      514    0.586         0.034       0.018        0.263         0.025
+     hepsi     puan_kural      514    0.591         0.037       0.018        0.304         0.056
+     hepsi   puan_iforest      514    0.617         0.023       0.018        0.037         0.019
+     hepsi puan_denetimli      514    0.907         0.488       0.018        0.741         0.054
+karsilikli     puan_zskor      156    0.484         0.025       0.028        0.019         0.045
+karsilikli     puan_kural      156    0.487         0.026       0.028        0.058         0.115
+karsilikli   puan_iforest      156    0.592         0.033       0.028        0.038         0.032
+karsilikli puan_denetimli      156    0.960         0.620       0.028        0.936         0.096
+ yaniltici     puan_zskor      178    0.889         0.122       0.011        0.725         0.006
+ yaniltici     puan_kural      178    0.898         0.133       0.011        0.764         0.017
+ yaniltici   puan_iforest      178    0.771         0.027       0.011        0.045         0.011
+ yaniltici puan_denetimli      178    0.939         0.753       0.011        0.916         0.011
+ yukseltme     puan_zskor      180    0.524         0.016       0.015        0.017         0.028
+ yukseltme     puan_kural      180    0.530         0.018       0.015        0.061         0.044
+ yukseltme   puan_iforest      180    0.539         0.017       0.015        0.028         0.017
+ yukseltme puan_denetimli      180    0.806         0.146       0.015        0.400         0.061
+z_hacim                 0.6508
+uzak_kisa_pay           0.3568
+aktif_dengesizlik       0.1884
+z_yeni                  0.1568
+z_aktif_dengesizlik     0.1362
+derinlik_dengesizlik    0.0815
+z_derinlik              0.0712
+getiri                  0.0690
+z_iptal                 0.0554
+derinlik                0.0498
+   senaryo           puan  pay_gun  roc_auc  ort_kesinlik  taban_oran  ilk3_isabet  kontrol_ilk3
+     hepsi     puan_zskor      514    0.586         0.034       0.018        0.263         0.025
+     hepsi     puan_kural      514    0.591         0.037       0.018        0.304         0.056
+     hepsi   puan_iforest      514    0.617         0.023       0.018        0.037         0.019
+     hepsi puan_denetimli      514    0.902         0.494       0.018        0.761         0.056
+karsilikli     puan_zskor      156    0.484         0.025       0.028        0.019         0.045
+karsilikli     puan_kural      156    0.487         0.026       0.028        0.058         0.115
+karsilikli   puan_iforest      156    0.592         0.033       0.028        0.038         0.032
+karsilikli puan_denetimli      156    0.958         0.630       0.028        0.936         0.135
+ yaniltici     puan_zskor      178    0.889         0.122       0.011        0.725         0.006
+ yaniltici     puan_kural      178    0.898         0.133       0.011        0.764         0.017
+ yaniltici   puan_iforest      178    0.771         0.027       0.011        0.045         0.011
+ yaniltici puan_denetimli      178    0.930         0.753       0.011        0.921         0.011
+ yukseltme     puan_zskor      180    0.524         0.016       0.015        0.017         0.028
+ yukseltme     puan_kural      180    0.530         0.018       0.015        0.061         0.044
+ yukseltme   puan_iforest      180    0.539         0.017       0.015        0.028         0.017
+ yukseltme puan_denetimli      180    0.796         0.145       0.015        0.450         0.033
+z_hacim                 0.6508
+uzak_kisa_pay           0.3568
+aktif_dengesizlik       0.1884
+z_yeni                  0.1568
+z_aktif_dengesizlik     0.1362
+derinlik_dengesizlik    0.0815
+z_derinlik              0.0712
+getiri                  0.0690
+z_iptal                 0.0554
+derinlik                0.0498

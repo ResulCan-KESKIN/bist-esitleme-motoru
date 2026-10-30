@@ -1,0 +1,26 @@
+1275 pay-gun islendi, toplam 1275/1275, 2339 sn
+                            uyari  uyari_orani  uyari_ab  uyari_d  uyari_f  en_yuksek_z
+grup               seviye                                                              
+ayni_pay_etiketsiz -       14.247        0.140     7.437    0.003    7.573      699.970
+etiketli           A       18.591        0.183    10.290    0.000    9.968     7421.736
+                   B       15.321        0.151     8.280    0.017    7.942     1084.673
+rastgele           -       13.663        0.134     7.600    0.013    6.760     1419.690
+etiket negatif        puan  pozitif  negatif_n  roc_auc
+     A   hepsi       uyari       93        600    0.605
+     A   hepsi uyari_orani       93        600    0.605
+     A   hepsi    uyari_ab       93        600    0.474
+     A   hepsi     uyari_d       93        600    0.496
+     A   hepsi     uyari_f       93        600    0.651
+     A   hepsi en_yuksek_z       93        600    0.649
+     B   hepsi       uyari      582        600    0.537
+     B   hepsi uyari_orani      582        600    0.540
+     B   hepsi    uyari_ab      582        600    0.513
+     B   hepsi     uyari_d      582        600    0.504
+     B   hepsi     uyari_f      582        600    0.542
+     B   hepsi en_yuksek_z      582        600    0.542
+   A+B   hepsi       uyari      675        600    0.546
+   A+B   hepsi uyari_orani      675        600    0.549
+   A+B   hepsi    uyari_ab      675        600    0.507
+   A+B   hepsi     uyari_d      675        600    0.503
+   A+B   hepsi     uyari_f      675        600    0.557
+   A+B   hepsi en_yuksek_z      675        600    0.557

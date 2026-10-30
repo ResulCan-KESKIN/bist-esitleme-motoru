@@ -8,6 +8,8 @@ kaynaklar/
 veri/gun-ici-emir/
 veri/gun-ici-islem/
 veri/gun-sonu-fiyat-hacim/
+veri/gun-ici-endeks/
+veri/degerleme-orani/
 PP_*
 
 # Dogrulama ara ciktilari (betiklerle yeniden uretilir; ozet csv/txt git'te kalir)
