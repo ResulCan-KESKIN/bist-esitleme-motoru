@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>Elimizdeki BIST verisi</title>
+<style>
+  @page { size: A4; margin: 12mm 14mm 12mm 14mm; }
+  :root { --koyu: #1f3a5f; --acik: #eef3f8; --cizgi: #c9d4e0; --metin: #1d2329; --gri: #5b6672; }
+  body { font-family: "Segoe UI", Calibri, Arial, sans-serif; font-size: 9.6pt; line-height: 1.38; color: var(--metin); margin: 0; background: #fff; }
+  h1 { font-size: 17pt; color: var(--koyu); margin: 0 0 2px; }
+  .alt { color: var(--gri); font-size: 9.2pt; margin: 0 0 12px; }
+  h2 { font-size: 11.5pt; color: var(--koyu); margin: 16px 0 6px; padding-bottom: 3px; border-bottom: 1.5px solid var(--koyu); }
+  table { width: 100%; border-collapse: collapse; margin: 4px 0 6px; page-break-inside: auto; }
+  tr { page-break-inside: avoid; }
+  th { background: var(--koyu); color: #fff; text-align: left; font-weight: 600; padding: 4px 6px; font-size: 9pt; }
+  td { border-bottom: 1px solid var(--cizgi); padding: 3.5px 6px; vertical-align: top; }
+  tr.grup td { background: var(--acik); font-weight: 600; color: var(--koyu); padding-top: 4px; }
+  td.dosya { white-space: nowrap; color: var(--koyu); font-weight: 600; }
+  .not { color: var(--gri); font-size: 8.6pt; margin: 2px 0 0; }
+  ul { margin: 4px 0 0 0; padding-left: 18px; }
+  li { margin: 2px 0; }
+  .kutu { background: var(--acik); border-left: 3px solid var(--koyu); padding: 6px 10px; margin: 8px 0 0; }
+  b { font-weight: 600; }
+  code { font-family: Consolas, "Courier New", monospace; font-size: 8.6pt; }
+</style>
+</head>
+<body>
+
+<h1>Elimizdeki BIST verisi</h1>
+<p class="alt">Ne var, ne işe yarıyor, bir pay hakkında ne biliyoruz · Bitirme projesi · 30.10.2026</p>
+
+<h2>1. Dosyalar</h2>
+<table>
+  <tr><th style="width:19%">Dosya</th><th style="width:30%">İçinde ne var</th><th style="width:17%">Dönem</th><th>Ne işe yarıyor</th></tr>
+  <tr><td class="dosya">Gün içi emir</td><td>Her emrin her hareketi: giriş, değişiklik, iptal, işlem, süre dolumu</td><td>2024-01 … 2025-06</td><td>Emir defterini yeniden kurmak, motoru gerçek emirlerle tekrar oynatmak, sahte emir göstergeleri</td></tr>
+  <tr><td class="dosya">Gün içi işlem</td><td>Gerçekleşen her işlem (alış ve satış tarafı ayrı)</td><td>2024-01 … 2025-06</td><td>Motorun doğruluğunu ölçmek (gerçek işlemlerle birebir karşılaştırma); getiri, alış-satış baskısı</td></tr>
+  <tr><td class="dosya">Gün sonu fiyat-hacim</td><td>Her payın günlük özeti</td><td>2024-01 … 2025-06</td><td>Baz fiyat ve fiyat sınırları, pazar kuralları, günlük hacim, tedbir ve sermaye işlemi günleri</td></tr>
+  <tr><td class="dosya">Gün içi endeks</td><td>75–77 endeksin saniyelik değeri</td><td>2024-01 … 2025-06</td><td>Endekse bağlı devre kesici eşiği; o an piyasanın sakin mi hareketli mi olduğu</td></tr>
+  <tr><td class="dosya">Değerleme oranları</td><td>Şirketlerin ay sonu finansal göstergeleri</td><td>2024-01 … 2025-06</td><td>Küçük / büyük pay ayrımı, sektör bilgisi</td></tr>
+  <tr><td class="dosya">ITCH</td><td>Borsanın canlı veri akışı mesajları</td><td>Yalnız 08.10.2018</td><td>Emir defteri kurallarının (öncelik vb.) çapraz kontrolü</td></tr>
+</table>
+<p class="not">Büyüklük: ayda 0,7–1,1 milyar emir satırı ve 0,17–0,35 milyar işlem satırı. 18 ayın hepsi dönüştürüldü ve doğrulandı; emirler gün gün bölümlendi. Tarih parametreleri (fiyat marjı, devre kesici vb.) 18 ayın hepsinde ölçüldü; motor 2024-01-02 … 2025-06-30 arasında çalışır (motor/parametreler.py VERI_DONEMI, rapor.md 15).</p>
+
+<h2>2. Bir pay hakkında elimizdeki bilgiler</h2>
+<table>
+  <tr><th style="width:55%">Bilgi</th><th style="width:27%">Açıklama</th><th>Dosya</th></tr>
+
+  <tr class="grup"><td colspan="3">Kimlik ve sınıflandırma</td></tr>
+  <tr><td>Pay kodu ve adı</td><td>Örn. THYAO.E</td><td class="dosya">Gün sonu</td></tr>
+  <tr><td>Pazar (Yıldız, Ana, Alt Pazar vb.) ve alt bölüm</td><td>Pazar kurallarını belirler</td><td class="dosya">Gün sonu</td></tr>
+  <tr><td>İşlem yöntemi: sürekli işlem ya da tek fiyat</td><td>Günlük</td><td class="dosya">Gün sonu</td></tr>
+  <tr><td>BIST 100 / BIST 30 üyeliği, piyasa yapıcı var mı</td><td>Günlük</td><td class="dosya">Gün sonu</td></tr>
+  <tr><td>Sektör ve ana sektör</td><td>Aylık</td><td class="dosya">Değerleme</td></tr>
+
+  <tr class="grup"><td colspan="3">Fiyat</td></tr>
+  <tr><td>Önceki kapanış (baz fiyat), açılış, en düşük, en yüksek, kapanış, ağırlıklı ortalama fiyat, referans fiyat</td><td>Günlük</td><td class="dosya">Gün sonu</td></tr>
+  <tr><td>Her işlemin fiyatı ve zamanı</td><td>Mikrosaniye</td><td class="dosya">İşlem</td></tr>
+  <tr><td>Her emir olayı anında en iyi alış ve en iyi satış fiyatı</td><td>Makas, en iyi fiyata uzaklık</td><td class="dosya">Emir</td></tr>
+
+  <tr class="grup"><td colspan="3">Hacim</td></tr>
+  <tr><td>Günlük toplam hacim (TL), adet ve işlem sayısı</td><td>Günlük</td><td class="dosya">Gün sonu</td></tr>
+  <tr><td>Açılış seansı, kapanış seansı ve kapanış fiyatından işlemlerin hacmi</td><td>Günlük</td><td class="dosya">Gün sonu</td></tr>
+  <tr><td>Her işlemin adedi, TL hacmi ve işlemi başlatan taraf (alıcı mı satıcı mı)</td><td>İşlem başına</td><td class="dosya">İşlem</td></tr>
+
+  <tr class="grup"><td colspan="3">Emirler ve emir defteri</td></tr>
+  <tr><td>Her emrin fiyatı, miktarı, kalan ve görünen miktarı</td><td>Her olayda güncel hâli</td><td class="dosya">Emir</td></tr>
+  <tr><td>Emir tipi (limit, piyasa, piyasadan limite…) ve geçerlilik (gün, kalanı iptal et)</td><td></td><td class="dosya">Emir</td></tr>
+  <tr><td>Emrin başına gelen her şey: yeni, değişiklik, iptal, işlem, süre dolumu</td><td>Emrin ömrü ölçülebilir</td><td class="dosya">Emir</td></tr>
+  <tr><td>Açığa satış emri mi; günlük açığa satış özeti</td><td></td><td class="dosya">Emir, Gün sonu</td></tr>
+  <tr><td>AFK (emir aracısı / fon kodu)</td><td>Kimlik değil</td><td class="dosya">Emir</td></tr>
+  <tr><td>Emir defterinin herhangi bir andaki hâli</td><td>Motorla yeniden kurulur</td><td class="dosya">Emir → motor</td></tr>
+  <tr><td>Gün sonunda defterde kalan alış ve satış miktarı</td><td>Günlük</td><td class="dosya">Gün sonu</td></tr>
+
+  <tr class="grup"><td colspan="3">Seans ve durum</td></tr>
+  <tr><td>Olayın hangi bölümde olduğu: açılış, sürekli işlem, kapanış, devre kesici…</td><td>Her satırda</td><td class="dosya">Emir, İşlem</td></tr>
+  <tr><td>İşleme kapalı mı, brüt takas (tedbir), sermaye artırımı / temettü günü</td><td>Günlük</td><td class="dosya">Gün sonu</td></tr>
+
+  <tr class="grup"><td colspan="3">Şirket ve değerleme</td></tr>
+  <tr><td>Piyasa değeri, özsermaye, son 4 çeyrek net kâr, nakit temettü</td><td>Aylık, ay sonu</td><td class="dosya">Değerleme</td></tr>
+  <tr><td>F/K, PD/DD, temettü verimi</td><td>Aylık, ay sonu</td><td class="dosya">Değerleme</td></tr>
+
+  <tr class="grup"><td colspan="3">Piyasa bağlamı</td></tr>
+  <tr><td>BIST 100, BIST TÜM ve sektör endekslerinin değeri</td><td>Saniyelik</td><td class="dosya">Endeks</td></tr>
+  <tr><td>Aynı gün bütün payların özeti (kesitsel karşılaştırma için)</td><td>Günlük</td><td class="dosya">Gün sonu</td></tr>
+</table>
+
+<h2>3. Elimizde olmayanlar</h2>
+<ul>
+  <li><b>Kimin emir verdiği (üye, hesap no).</b> Aynı kişinin emirleri birbirine bağlanamaz; olağan boyda kendi kendine alıp satma (karşılıklı işlem) görülemez.</li>
+  <li><b>Yatırımcı türü:</b> yerli / yabancı, bireysel / kurumsal ayrımı yok.</li>
+  <li><b>Haberler ve KAP bildirimleri:</b> yanlış haberle yapılan (bilgi bazlı) manipülasyon bu veriyle görülemez.</li>
+  <li><b>Hazır emir defteri görüntüsü:</b> defter, emir olaylarından motorla yeniden kuruluyor.</li>
+</ul>
+<div class="kutu">SPK etiketleri (hangi payda hangi dönemde manipülasyon olduğu) BIST verisi değildir; SPK haftalık bültenlerinden çıkarıldı (<b>veri/etiketler/vaka.csv</b>). 18 ayda değerlendirmeye giren 34 pay: A seviyesi 4 pay (93 pay-gün), B seviyesi 31 pay (582 pay-gün); KRGYO ikisinde de var (rapor.md 14).</div>
+
+<h2>4. Dosyaların yeri</h2>
+<p class="not" style="margin:0 0 4px">Ham veri git dışıdır; bütün dosyalar parquet'e çevrilmiştir. Klasör düzeni ve kontroller <b>veri/README.md</b>'de, alan tanımları <b>veri/datastore-dosya-formatlari.md</b> ve <b>veri/gunici-veri-dogrulama.md</b>'dedir.</p>
+<table>
+  <tr><th style="width:24%">Dosya</th><th>Yol</th></tr>
+  <tr><td class="dosya">Gün içi emir</td><td><code>veri/gun-ici-emir/gunluk/YYYY-MM-DD/{pay,varant}-{0..7}.parquet</code> (371 gün, motorun girdisi); aylık dosyalar harici diskte (F:)</td></tr>
+  <tr><td class="dosya">Gün içi işlem</td><td><code>veri/gun-ici-islem/PP_GUNICIISLEM.M.YYYYAA.parquet</code></td></tr>
+  <tr><td class="dosya">Gün sonu fiyat-hacim</td><td><code>veri/gun-sonu-fiyat-hacim/PP_GUNSONUFIYATHACIM.M.YYYYAA.parquet</code></td></tr>
+  <tr><td class="dosya">Gün içi endeks</td><td><code>veri/gun-ici-endeks/PP_GUNICITUMENDEKS.M.YYYYAA.parquet</code></td></tr>
+  <tr><td class="dosya">Değerleme oranları</td><td><code>veri/degerleme-orani/degoran_M_YYYYAA.parquet</code></td></tr>
+  <tr><td class="dosya">ITCH</td><td><code>veri/itch/2018-10-08/</code></td></tr>
+  <tr><td class="dosya">SPK etiketleri</td><td><code>veri/etiketler/vaka.csv</code></td></tr>
+  <tr><td class="dosya">Pay-gün özellikleri (18 ay)</td><td><code>veri/gunici-dogrulama/2024-01_2025-06/tespit/ozellikler.parquet</code> (211.698 pay-gün)</td></tr>
+</table>
+
+</body>
+</html>

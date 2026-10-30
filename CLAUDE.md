@@ -42,6 +42,7 @@ Her dosyada `Kurallar` (madde no sona yazılı), `Açık sorular` (`[DOĞRULA]` 
 | `rapor.md` | Çalışma raporu (vize raporunun kaynağı): 21.10.2026'ya kadar yapılanların özeti ve oturum kayıtları |
 | `ANLATIM.md` | Sistemin sıfırdan, ayrıntılı anlatımı (borsa kavramları, veri, motor, senaryolar, tespit, sonuçlar, sınırlar, sunum soruları) |
 | `VERI.md` | Elimizdeki verinin kısa özeti: dosyalar ve dönemleri, bir pay hakkında hangi bilginin hangi dosyada olduğu, olmayanlar, dosya yolları |
+| `pdf-kaynak/` | Kökteki PDF'lerin (ANLATIM, DURUM, TASARIM, VERI) kaynakları ve üretim betiği (`python -I pdf-kaynak/uret.py`); DURUM ve TASARIM PDF'leri md'lerin baskısı değil, ayrıca yazılmış sade anlatımlarıdır |
 | `veri/gunici-veri-dogrulama.md` | Mart 2025 DataStore gün içi verisi doğrulamaları (alan anlamları, gün sonu, marj, seans, Ek-19, emir kuralları, öncelik, tek fiyat, devre kesiciler, tarih parametreleri) |
 | `veri/itch-ornek-veri-dogrulama.md` | 08.10.2018 ITCH örnek verisi doğrulama sonuçları |
 | `veri/araclar/` | Doğrulama betikleri (yollar oturuma özgüdür) |

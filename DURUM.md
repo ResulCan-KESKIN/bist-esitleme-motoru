@@ -24,6 +24,7 @@ Son güncelleme: 25.10.2026. Bu dosya sohbet geçmişi olmadan çalışmaya deva
 - **Veri 2024-01…05 eklendi (29.10.2026, kullanıcı isteği; ayrıntı `veri/README.md`):** gün sonu, gün içi endeks ve değerleme 2024-01…04; işlem ve emir 2024-01…05 (emir günlük bölümlemeyle). 27 adımın hepsi doğrulandı (kayıpsızlık kontrolü, CSV satır sayısı birebir, gün kümesi gün sonuyla aynı), hata 0, silinen zip yok. Günlük bölümler artık 2024-01…2025-06 (18 ay). Emir zip'leri 2024-03…05 ve aylık emir parquet'leri F:'de (kullanıcı taşıdı); 2024-02 aylık emir parquet'i D:'de, taşınabilir. Tarih parametreleri ölçüldü ve `VERI_DONEMI` 2024-01-01'e genişletildi (30.10.2026, `rapor.md` 15); motorlu değerlendirmeler bu aylarda da çalışır.
 - **18 ay ve SPK denetimli model (29.10.2026, `rapor.md` 14):** 2024-01…05 özellikleri hesaplandı; 18 ay birleşik (`gunici-dogrulama/2024-01_2025-06/tespit/ozellikler.parquet`, 211.698 pay-gün). Endeks göstergeleri (`tespit/endeks_ozellikleri.py`, sektör eşlemesi `tespit/sektor_endeks.csv`) katkı vermedi. `tespit/spk_denetimli.py` (pay gruplu 5 katlı doğrulama, 34 pozitif pay): A+B 0,71, A 0,84, B 0,69; kesitsel 0,67 / 0,74 / 0,65; kurallar 0,57. En üst %1 kesinlik %1,7 (taban %0,32). Açık: zamanda ileriye genelleme sınanmadı.
 - **18 ay motorlu değerlendirmeler (30.10.2026, `rapor.md` 16):** ayarlı senaryo 1.660 seçim, eski senaryo 720 (pencere ve pay-gün), SPK pencere 1.275 pay-gün; çıktılar `gunici-dogrulama/2024-01_2025-06/tespit/`. Sonuçlar 13 ayla tutarlı: ayarlı yanıltıcı emir kurallar 0,57, denetimli 0,68; kör noktalar (ömür 60 sn üstü 0,46, en iyi fiyatta 0,51, tek katman 0,50) büyük örneklemle kesin; SPK pencere A 0,61–0,65, B 0,54. **Sıradaki:** 60 sn eşiğinin veriye göre gözden geçirilmesi (önce ömür dağılımı ölçümü, kabul ölçütü yanlış alarm + SPK); zamanda ileriye genelleme.
+- **Belgeler (30.10.2026):** `VERI.md` (verinin kısa özeti). Kökteki PDF'ler (ANLATIM, DURUM, TASARIM, VERI) ve kaynakları `pdf-kaynak/`'ta; üretim `python -I pdf-kaynak/uret.py`. `DURUM.pdf` bu dosyanın 30.10.2026 durumuna göre yeniden yazılmış sade anlatımıdır (`pdf-kaynak/DURUM-anlatim.md`); `TASARIM.pdf` `TASARIM.md`'nin (26.10.2026) sade anlatımıdır.
 
 **Kaldığımız yer (24.10.2026).**
 - 22.10.2026 sonundaki listeden yapılanlar:
@@ -61,6 +62,7 @@ Son güncelleme: 25.10.2026. Bu dosya sohbet geçmişi olmadan çalışmaya deva
 - `ekler/` Prosedür Ek-1…Ek-21 (kullanıcı doğrulamalı, `README.md` var).
 - `kurallar/` kural dosyaları. `veri/` çeviriler, DataStore md, DataStore gün içi verisi (`veri/gun-ici-emir/`, `veri/gun-ici-islem/`, `veri/gun-sonu-fiyat-hacim/`, git dışı), ITCH örnek verisi (`veri/itch/`, git dışı), doğrulama sonuçları (`veri/gunici-dogrulama/`) ve betikler (`veri/araclar/`).
 - `TASARIM.md` sistem tasarımı (sürüm 2, 21.10.2026). `rapor.md` çalışma raporu (vize raporunun kaynağı).
+- `ANLATIM.md` sistemin anlatımı, `VERI.md` verinin özeti; kökteki PDF'lerin kaynakları `pdf-kaynak/`.
 
 ## Kural dosyaları
 | Dosya | Durum |
